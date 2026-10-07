@@ -1,100 +1,94 @@
-const canvas = document.getElementById("gameCanvas");
+const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 const scoreText = document.getElementById("score");
 const livesText = document.getElementById("lives");
 
-const gameOverScreen = document.getElementById("gameOver");
-const finalScore = document.getElementById("finalScore");
+const menu = document.getElementById("menu");
+const gameOver = document.getElementById("gameOver");
 
 let score = 0;
 let lives = 3;
 
 let fruits = [];
 let particles = [];
+let slash = [];
 
-let mouse = {
-    x: 0,
-    y: 0,
-    down: false
-};
+let playing = false;
+let fruitTimer;
 
-const fruitTypes = [
-    {
-        emoji: "🍎",
-        color: "#ff3333"
-    },
-    {
-        emoji: "🍊",
-        color: "#ff8c00"
-    },
-    {
-        emoji: "🍉",
-        color: "#ff4d6d"
-    },
-    {
-        emoji: "🍌",
-        color: "#ffd60a"
-    },
-    {
-        emoji: "🍍",
-        color: "#f9c74f"
-    },
-    {
-        emoji: "🥝",
-        color: "#7cb342"
-    }
-];
 
-function resizeCanvas() {
+// =====================
+// RESIZE
+// =====================
 
+function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
 }
 
-window.addEventListener("resize", resizeCanvas);
+resize();
 
-resizeCanvas();
+window.addEventListener("resize", resize);
 
 
-// ===============================
+// =====================
 // FRUIT
-// ===============================
+// =====================
 
 class Fruit {
 
     constructor() {
 
-        const type =
-            fruitTypes[
-                Math.floor(Math.random() * fruitTypes.length)
-            ];
-
+        // Start from the bottom
         this.x =
             Math.random() *
-            (canvas.width - 100) +
-            50;
+            (canvas.width - 120) + 60;
 
-        this.y = canvas.height + 50;
+        this.y =
+            canvas.height + 60;
 
-        this.radius = 35;
+        this.size = 65;
 
+        // Calculate direction toward center
+        const centerX = canvas.width / 2;
+
+        const direction =
+            centerX - this.x;
+
+        // Keep horizontal movement controlled
         this.speedX =
-            (Math.random() - 0.5) * 8;
+            direction * 0.008;
 
+        // Add a small random movement
+        this.speedX +=
+            (Math.random() - 0.5) * 2;
+
+        // Limit horizontal speed
+        this.speedX =
+            Math.max(
+                -4,
+                Math.min(
+                    4,
+                    this.speedX
+                )
+            );
+
+        // Strong upward movement
         this.speedY =
-            -(Math.random() * 8 + 13);
+            -(Math.random() * 4 + 13);
 
         this.gravity = 0.35;
 
-        this.emoji = type.emoji;
-        this.color = type.color;
-
-        this.rotation = 0;
+        this.emoji =
+            fruitsList[
+                Math.floor(
+                    Math.random() *
+                    fruitsList.length
+                )
+            ];
 
         this.sliced = false;
-
     }
 
 
@@ -106,85 +100,104 @@ class Fruit {
 
         this.speedY += this.gravity;
 
-        this.rotation += 0.05;
+
+        // Keep fruit inside the screen
+
+        if (this.x < 35) {
+            this.x = 35;
+            this.speedX *= -0.5;
+        }
+
+        if (this.x > canvas.width - 35) {
+            this.x = canvas.width - 35;
+            this.speedX *= -0.5;
+        }
 
     }
 
 
     draw() {
 
-        ctx.save();
-
-        ctx.translate(this.x, this.y);
-
-        ctx.rotate(this.rotation);
-
-        ctx.font = "60px Arial";
+        ctx.font =
+            this.size + "px Arial";
 
         ctx.textAlign = "center";
+
         ctx.textBaseline = "middle";
 
-        ctx.fillText(this.emoji, 0, 0);
-
-        ctx.restore();
+        ctx.fillText(
+            this.emoji,
+            this.x,
+            this.y
+        );
 
     }
-
 }
 
 
-// ===============================
+// =====================
+// FRUIT TYPES
+// =====================
+
+const fruitsList = [
+    "🍎",
+    "🍊",
+    "🍉",
+    "🍌",
+    "🍍",
+    "🥝",
+    "🍓"
+];
+
+
+// =====================
 // PARTICLES
-// ===============================
+// =====================
 
 class Particle {
 
-    constructor(x, y, color) {
+    constructor(x, y) {
 
         this.x = x;
         this.y = y;
 
-        this.speedX =
-            (Math.random() - 0.5) * 10;
+        this.vx =
+            (Math.random() - 0.5) * 12;
 
-        this.speedY =
-            (Math.random() - 0.5) * 10;
-
-        this.size =
-            Math.random() * 6 + 2;
+        this.vy =
+            (Math.random() - 0.5) * 12;
 
         this.life = 1;
-
-        this.color = color;
-
     }
 
 
     update() {
 
-        this.x += this.speedX;
+        this.x += this.vx;
 
-        this.y += this.speedY;
+        this.y += this.vy;
 
-        this.speedY += 0.2;
+        this.vy += 0.3;
 
-        this.life -= 0.03;
+        this.life -= 0.04;
 
     }
 
 
     draw() {
 
-        ctx.globalAlpha = this.life;
+        ctx.globalAlpha =
+            this.life;
 
-        ctx.fillStyle = this.color;
+        ctx.fillStyle =
+            "white";
 
         ctx.beginPath();
 
         ctx.arc(
             this.x,
             this.y,
-            this.size,
+            4,
             0,
             Math.PI * 2
         );
@@ -194,83 +207,84 @@ class Particle {
         ctx.globalAlpha = 1;
 
     }
-
 }
 
 
-// ===============================
+// =====================
 // CREATE FRUIT
-// ===============================
+// =====================
 
 function createFruit() {
 
-    if (lives <= 0) return;
+    if (!playing) return;
 
-    fruits.push(new Fruit());
+    fruits.push(
+        new Fruit()
+    );
 
 }
 
-setInterval(() => {
 
-    createFruit();
+// =====================
+// SLICE
+// =====================
 
-}, 800);
+function sliceFruit(fruit) {
 
-
-// ===============================
-// SLASH
-// ===============================
-
-function slashFruit(fruit) {
+    if (fruit.sliced) return;
 
     fruit.sliced = true;
 
     score += 10;
 
-    scoreText.textContent = score;
+    scoreText.textContent =
+        score;
 
-    // Create particles
-
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 15; i++) {
 
         particles.push(
             new Particle(
                 fruit.x,
-                fruit.y,
-                fruit.color
+                fruit.y
             )
         );
 
     }
-
 }
 
 
-// ===============================
-// CHECK COLLISION
-// ===============================
+// =====================
+// TOUCH
+// =====================
 
-function checkSlash() {
+function touchMove(x, y) {
 
-    if (!mouse.down) return;
+    if (!playing) return;
 
-    for (let i = fruits.length - 1; i >= 0; i--) {
+    slash.push({
+        x: x,
+        y: y
+    });
 
-        const fruit = fruits[i];
+    if (slash.length > 8) {
+        slash.shift();
+    }
+
+
+    for (const fruit of fruits) {
 
         const distance =
-            Math.sqrt(
-                Math.pow(mouse.x - fruit.x, 2) +
-                Math.pow(mouse.y - fruit.y, 2)
+            Math.hypot(
+                x - fruit.x,
+                y - fruit.y
             );
 
         if (
             distance <
-            fruit.radius + 30 &&
-            !fruit.sliced
+            fruit.size / 2 + 35
         ) {
 
-            slashFruit(fruit);
+            sliceFruit(fruit);
 
         }
 
@@ -279,59 +293,23 @@ function checkSlash() {
 }
 
 
-// ===============================
-// MOUSE
-// ===============================
-
-canvas.addEventListener("mousemove", function(e) {
-
-    const rect =
-        canvas.getBoundingClientRect();
-
-    mouse.x =
-        e.clientX - rect.left;
-
-    mouse.y =
-        e.clientY - rect.top;
-
-});
-
-canvas.addEventListener("mousedown", function() {
-
-    mouse.down = true;
-
-});
-
-canvas.addEventListener("mouseup", function() {
-
-    mouse.down = false;
-
-});
-
-
-// ===============================
-// TOUCH SUPPORT
-// ===============================
+// =====================
+// MOBILE TOUCH
+// =====================
 
 canvas.addEventListener(
-    "touchmove",
+    "touchstart",
     function(e) {
 
-        e.preventDefault();
-
-        const rect =
-            canvas.getBoundingClientRect();
+        if (!playing) return;
 
         const touch =
             e.touches[0];
 
-        mouse.x =
-            touch.clientX - rect.left;
-
-        mouse.y =
-            touch.clientY - rect.top;
-
-        mouse.down = true;
+        touchMove(
+            touch.clientX,
+            touch.clientY
+        );
 
     },
     { passive: false }
@@ -339,24 +317,23 @@ canvas.addEventListener(
 
 
 canvas.addEventListener(
-    "touchstart",
+    "touchmove",
     function(e) {
 
-        const rect =
-            canvas.getBoundingClientRect();
+        e.preventDefault();
+
+        if (!playing) return;
 
         const touch =
             e.touches[0];
 
-        mouse.x =
-            touch.clientX - rect.left;
+        touchMove(
+            touch.clientX,
+            touch.clientY
+        );
 
-        mouse.y =
-            touch.clientY - rect.top;
-
-        mouse.down = true;
-
-    }
+    },
+    { passive: false }
 );
 
 
@@ -364,15 +341,57 @@ canvas.addEventListener(
     "touchend",
     function() {
 
-        mouse.down = false;
+        slash = [];
 
     }
 );
 
 
-// ===============================
+// =====================
+// SLASH TRAIL
+// =====================
+
+function drawSlash() {
+
+    if (slash.length < 2)
+        return;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        slash[0].x,
+        slash[0].y
+    );
+
+    for (
+        let i = 1;
+        i < slash.length;
+        i++
+    ) {
+
+        ctx.lineTo(
+            slash[i].x,
+            slash[i].y
+        );
+
+    }
+
+    ctx.strokeStyle =
+        "white";
+
+    ctx.lineWidth = 6;
+
+    ctx.lineCap =
+        "round";
+
+    ctx.stroke();
+
+}
+
+
+// =====================
 // GAME LOOP
-// ===============================
+// =====================
 
 function gameLoop() {
 
@@ -392,14 +411,18 @@ function gameLoop() {
         i--
     ) {
 
-        const fruit = fruits[i];
+        const fruit =
+            fruits[i];
 
         fruit.update();
 
-        fruit.draw();
 
+        if (!fruit.sliced) {
 
-        // Remove sliced fruit
+            fruit.draw();
+
+        }
+
 
         if (fruit.sliced) {
 
@@ -410,7 +433,7 @@ function gameLoop() {
         }
 
 
-        // Fruit missed
+        // Missed fruit
 
         if (
             fruit.y >
@@ -423,6 +446,7 @@ function gameLoop() {
 
             livesText.textContent =
                 lives;
+
 
             if (lives <= 0) {
 
@@ -450,7 +474,10 @@ function gameLoop() {
 
         particle.draw();
 
-        if (particle.life <= 0) {
+
+        if (
+            particle.life <= 0
+        ) {
 
             particles.splice(i, 1);
 
@@ -459,50 +486,111 @@ function gameLoop() {
     }
 
 
-    checkSlash();
+    drawSlash();
 
-
-    requestAnimationFrame(gameLoop);
+    requestAnimationFrame(
+        gameLoop
+    );
 
 }
 
 
-// ===============================
+// =====================
+// START BUTTON
+// =====================
+
+document
+    .getElementById("startBtn")
+    .addEventListener(
+        "click",
+        startGame
+    );
+
+
+function startGame() {
+
+    score = 0;
+
+    lives = 3;
+
+    fruits = [];
+
+    particles = [];
+
+    slash = [];
+
+
+    scoreText.textContent =
+        "0";
+
+    livesText.textContent =
+        "3";
+
+
+    menu.style.display =
+        "none";
+
+    gameOver.style.display =
+        "none";
+
+
+    playing = true;
+
+
+    // Spawn first fruit immediately
+
+    createFruit();
+
+
+    // Then keep spawning
+
+    clearInterval(fruitTimer);
+
+    fruitTimer =
+        setInterval(
+            createFruit,
+            750
+        );
+
+}
+
+
+// =====================
 // GAME OVER
-// ===============================
+// =====================
 
 function endGame() {
 
-    gameOverScreen.style.display =
-        "block";
+    playing = false;
 
-    finalScore.textContent =
-        score;
+    clearInterval(
+        fruitTimer
+    );
+
+    document.getElementById(
+        "finalScore"
+    ).textContent = score;
+
+    gameOver.style.display =
+        "block";
 
 }
 
 
-// ===============================
+// =====================
 // RESTART
-// ===============================
+// =====================
 
 function restartGame() {
 
-    score = 0;
-    lives = 3;
-
-    scoreText.textContent = score;
-    livesText.textContent = lives;
-
-    fruits = [];
-    particles = [];
-
-    gameOverScreen.style.display =
+    gameOver.style.display =
         "none";
+
+    startGame();
 
 }
 
 
-// START GAME
+// START LOOP
 
 gameLoop();

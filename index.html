@@ -1,182 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,
+      initial-scale=1.0,
+      maximum-scale=1.0,
+      user-scalable=no">
 
-    <meta charset="UTF-8">
+<title>Ninja Fruit</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width,
-        initial-scale=1.0,
-        maximum-scale=1.0,
-        user-scalable=no"
-    >
-
-    <title>Ninja Fruit Zen</title>
-
-    <link rel="stylesheet" href="style.css">
-
+<link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
-    <div id="game">
+<div id="game">
 
-        <!-- BACKGROUND MUSIC -->
+    <audio id="zenMusic" loop preload="auto">
+        <source src="zen.mp3" type="audio/mpeg">
+    </audio>
 
-        <audio
-            id="zenMusic"
-            loop
-            preload="auto"
-        >
-            <source
-                src="zen.mp3"
-                type="audio/mpeg"
-            >
-        </audio>
+    <!-- TOP BAR -->
+    <div id="topBar">
 
-
-        <!-- TOP BAR -->
-
-        <div id="topBar">
-
-            <div class="stat">
-                SCORE
-                <strong id="score">0</strong>
-            </div>
-
-            <div class="stat">
-                SPEED
-                <strong id="speed">1x</strong>
-            </div>
-
-            <div class="stat">
-                ❤️
-                <strong id="lives">3</strong>
-            </div>
-
+        <div class="stat">
+            <span>SCORE</span>
+            <strong id="score">0</strong>
         </div>
 
-
-        <!-- MUSIC BUTTON -->
-
-        <button
-            id="musicButton"
-            class="music-button"
-        >
-            🔊
-        </button>
-
-
-        <!-- GAME CANVAS -->
-
-        <canvas id="canvas"></canvas>
-
-
-        <!-- START SCREEN -->
-
-        <div
-            id="menu"
-            class="screen"
-        >
-
-            <div class="panel">
-
-                <div class="logo">
-                    🥷
-                </div>
-
-                <h1>
-                    NINJA FRUIT
-                </h1>
-
-                <p>
-                    ZEN MODE
-                </p>
-
-                <div class="instructions">
-
-                    <div>
-                        👆
-                        <span>
-                            Swipe to slice
-                        </span>
-                    </div>
-
-                    <div>
-                        💣
-                        <span>
-                            Avoid bombs
-                        </span>
-                    </div>
-
-                    <div>
-                        ⚡
-                        <span>
-                            Get faster
-                        </span>
-                    </div>
-
-                </div>
-
-                <button
-                    id="startBtn"
-                    class="main-button"
-                >
-                    START GAME
-                </button>
-
-            </div>
-
+        <div class="stat">
+            <span>COMBO</span>
+            <strong id="comboDisplay">—</strong>
         </div>
 
+        <div class="stat">
+            <span>LIVES</span>
+            <strong id="lives">3</strong>
+        </div>
 
-        <!-- GAME OVER -->
+    </div>
 
-        <div
-            id="gameOver"
-            class="screen hidden"
-        >
+    <button id="musicButton" class="music-button">
+        🔊
+    </button>
 
-            <div class="panel">
+    <!-- GAME CANVAS -->
+    <canvas id="canvas"></canvas>
 
-                <div class="logo">
-                    💥
-                </div>
+    <!-- MENU -->
+    <div id="menu" class="screen">
 
-                <h1>
-                    GAME OVER
-                </h1>
+        <div class="menu-panel">
 
-                <p>
-                    FINAL SCORE
-                </p>
+            <div class="ninja-icon">🥷</div>
 
-                <div
-                    id="finalScore"
-                    class="final-score"
-                >
-                    0
-                </div>
+            <div class="title-small">THE</div>
 
-                <button
-                    id="restartBtn"
-                    class="main-button"
-                >
-                    PLAY AGAIN
-                </button>
+            <h1>
+                NINJA
+                <span>FRUIT</span>
+            </h1>
 
+            <div class="blade-line">
+                <span></span>
+                ⚔
+                <span></span>
             </div>
+
+            <p class="tagline">
+                SLICE • COMBO • SURVIVE
+            </p>
+
+            <button id="startBtn" class="main-button">
+                START GAME
+            </button>
+
+            <p class="hint">
+                Tap start to choose your mode
+            </p>
 
         </div>
 
     </div>
 
 
-    <script src="script.js"></script>
+    <!-- MODE SELECT -->
+    <div id="modeScreen" class="screen hidden">
+
+        <div class="mode-selection">
+
+            <div class="mode-title">
+                <span>CHOOSE</span>
+                YOUR MODE
+            </div>
+
+
+            <div class="mode-rings">
+
+                <!-- CLASSIC -->
+                <button
+                    id="classicBtn"
+                    class="mode-ring classic-ring"
+                    type="button">
+
+                    <div class="ring-inner">
+
+                        <div class="mode-icon">
+                            💣
+                        </div>
+
+                        <strong>
+                            CLASSIC
+                        </strong>
+
+                        <small>
+                            MODE
+                        </small>
+
+                    </div>
+
+                </button>
+
+
+                <!-- ZEN -->
+                <button
+                    id="zenBtn"
+                    class="mode-ring zen-ring"
+                    type="button">
+
+                    <div class="ring-inner">
+
+                        <div class="mode-icon">
+                            🌿
+                        </div>
+
+                        <strong>
+                            ZEN
+                        </strong>
+
+                        <small>
+                            MODE
+                        </small>
+
+                    </div>
+
+                </button>
+
+            </div>
+
+
+            <p class="mode-help">
+                SLICE OR TAP A MODE
+            </p>
+
+
+            <button
+                id="backBtn"
+                class="back-button"
+                type="button">
+
+                ← BACK
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- GAME OVER -->
+    <div id="gameOver" class="screen hidden">
+
+        <div class="menu-panel">
+
+            <div class="ninja-icon">
+                💥
+            </div>
+
+            <div class="title-small">
+                GAME
+            </div>
+
+            <h1>OVER</h1>
+
+            <div class="blade-line">
+                <span></span>
+                ⚔
+                <span></span>
+            </div>
+
+            <p class="final-label">
+                FINAL SCORE
+            </p>
+
+            <div id="finalScore" class="final-score">
+                0
+            </div>
+
+            <div id="finalMode" class="final-mode">
+                CLASSIC MODE
+            </div>
+
+            <button
+                id="restartBtn"
+                class="main-button"
+                type="button">
+
+                PLAY AGAIN
+
+            </button>
+
+            <button
+                id="menuBtn"
+                class="back-button"
+                type="button">
+
+                MAIN MENU
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
 
 </body>
-
 </html>

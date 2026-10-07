@@ -4,7 +4,6 @@
     padding: 0;
 }
 
-
 html,
 body {
 
@@ -13,7 +12,7 @@ body {
 
     overflow: hidden;
 
-    background: #08140d;
+    background: #030604;
 
     font-family:
         Arial,
@@ -26,10 +25,9 @@ body {
 
     -webkit-user-select: none;
 
+    -webkit-tap-highlight-color: transparent;
 }
 
-
-/* GAME */
 
 #game {
 
@@ -44,16 +42,18 @@ body {
 
     background:
         radial-gradient(
-            circle at center,
-            #244b2b 0%,
-            #102819 45%,
-            #06100a 100%
+            circle at 50% 42%,
+            #304b34 0%,
+            #17291b 35%,
+            #081109 70%,
+            #020403 100%
         );
-
 }
 
 
-/* CANVAS */
+/* =========================
+   CANVAS
+========================= */
 
 #canvas {
 
@@ -66,10 +66,13 @@ body {
 
     z-index: 1;
 
+    touch-action: none;
 }
 
 
-/* TOP BAR */
+/* =========================
+   TOP BAR
+========================= */
 
 #topBar {
 
@@ -79,33 +82,28 @@ body {
     left: 0;
 
     width: 100%;
-
-    height: 75px;
+    height: 82px;
 
     padding:
         10px
-        75px
+        72px
         8px
         15px;
 
     display: flex;
 
-    justify-content:
-        space-between;
+    align-items: center;
 
-    align-items:
-        center;
+    justify-content: space-between;
 
     z-index: 10;
 
     background:
         linear-gradient(
-            rgba(0,0,0,0.55),
-            rgba(0,0,0,0)
+            rgba(0,0,0,.72),
+            transparent
         );
-
 }
-
 
 .stat {
 
@@ -115,36 +113,31 @@ body {
 
     align-items: center;
 
-    gap: 2px;
+    gap: 3px;
 
-    color: rgba(
-        255,
-        255,
-        255,
-        0.75
-    );
+    color:
+        rgba(255,255,255,.55);
 
-    font-size: 10px;
+    font-size: 9px;
 
     font-weight: bold;
 
-    letter-spacing: 1px;
-
+    letter-spacing: 2px;
 }
-
 
 .stat strong {
 
     color: white;
 
-    font-size: 21px;
+    font-size: 23px;
 
     letter-spacing: 0;
-
 }
 
 
-/* MUSIC BUTTON */
+/* =========================
+   MUSIC
+========================= */
 
 .music-button {
 
@@ -156,35 +149,28 @@ body {
     width: 45px;
     height: 45px;
 
-    border: none;
-
     border-radius: 50%;
 
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
     background:
-        rgba(0,0,0,0.55);
+        rgba(0,0,0,.55);
 
     color: white;
 
-    font-size: 20px;
+    font-size: 19px;
 
-    z-index: 30;
+    z-index: 100;
 
-    box-shadow:
-        0 4px 15px
-        rgba(0,0,0,0.3);
-
+    touch-action: manipulation;
 }
 
 
-.music-button:active {
-
-    transform:
-        scale(0.9);
-
-}
-
-
-/* SCREENS */
+/* =========================
+   SCREEN
+========================= */
 
 .screen {
 
@@ -192,227 +178,630 @@ body {
 
     inset: 0;
 
+    z-index: 50;
+
     display: flex;
 
-    justify-content:
-        center;
+    align-items: center;
 
-    align-items:
-        center;
+    justify-content: center;
 
-    z-index: 20;
-
-    padding: 25px;
+    padding: 20px;
 
     background:
-        rgba(
-            0,
-            0,
-            0,
-            0.25
+        radial-gradient(
+            circle,
+            rgba(0,0,0,.02),
+            rgba(0,0,0,.64)
         );
-
 }
-
 
 .hidden {
-
     display: none !important;
-
 }
 
 
-/* PANEL */
+/* =========================
+   MENU
+========================= */
 
-.panel {
+.menu-panel {
 
     width: 100%;
 
-    max-width: 380px;
+    max-width: 390px;
 
-    padding: 35px 25px;
+    padding:
+        30px
+        25px
+        28px;
 
     text-align: center;
 
     border-radius: 30px;
 
     background:
-        rgba(
-            5,
-            15,
-            9,
-            0.92
+        linear-gradient(
+            145deg,
+            rgba(18,28,20,.97),
+            rgba(4,9,6,.98)
         );
 
     border:
         1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.1
-        );
+        rgba(255,255,255,.08);
 
     box-shadow:
-        0 20px 60px
-        rgba(
-            0,
-            0,
-            0,
-            0.5
-        );
-
+        0 30px 80px
+        rgba(0,0,0,.75);
 }
 
-
-/* LOGO */
-
-.logo {
+.ninja-icon {
 
     font-size: 65px;
 
-    margin-bottom: 5px;
+    line-height: 1;
 
+    margin-bottom: 12px;
+
+    filter:
+        drop-shadow(
+            0 8px 15px
+            rgba(0,0,0,.6)
+        );
 }
 
+.title-small {
 
-/* TITLE */
+    color:
+        rgba(255,255,255,.48);
 
-.panel h1 {
+    font-size: 11px;
+
+    font-weight: bold;
+
+    letter-spacing: 7px;
+}
+
+h1 {
 
     color: white;
 
-    font-size: 36px;
+    font-size: 43px;
 
-    letter-spacing: 2px;
+    line-height: .95;
 
-    margin-bottom: 5px;
+    letter-spacing: 3px;
 
+    font-weight: 900;
+
+    text-shadow:
+        0 5px 18px
+        rgba(0,0,0,.8);
 }
 
+h1 span {
 
-.panel > p {
+    display: block;
 
-    color:
-        #a7dcae;
+    color: #d95038;
 
-    font-size: 14px;
-
-    letter-spacing: 5px;
-
-    margin-bottom: 25px;
-
+    font-size: 47px;
 }
 
-
-/* INSTRUCTIONS */
-
-.instructions {
-
-    margin-bottom: 30px;
-
-}
-
-
-.instructions div {
+.blade-line {
 
     display: flex;
 
     align-items: center;
 
-    justify-content:
-        center;
+    justify-content: center;
 
-    gap: 15px;
+    gap: 10px;
 
-    margin: 12px 0;
+    margin:
+        14px
+        0
+        12px;
 
     color:
-        rgba(
-            255,
-            255,
-            255,
-            0.8
-        );
-
-    font-size: 15px;
-
+        rgba(255,255,255,.6);
 }
 
+.blade-line span {
 
-/* BUTTON */
+    width: 70px;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.4)
+        );
+}
+
+.blade-line span:last-child {
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.4),
+            transparent
+        );
+}
+
+.tagline {
+
+    color:
+        rgba(255,255,255,.5);
+
+    font-size: 10px;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 25px;
+}
 
 .main-button {
 
     width: 100%;
 
+    min-height: 54px;
+
     border: none;
 
-    padding: 17px;
-
-    border-radius: 50px;
+    border-radius: 30px;
 
     background:
         linear-gradient(
             135deg,
-            #55b86a,
-            #2c823e
+            #e25b3d,
+            #a92e20
         );
 
     color: white;
 
-    font-size: 18px;
+    font-size: 17px;
 
-    font-weight: bold;
+    font-weight: 900;
 
-    letter-spacing: 1px;
+    letter-spacing: 2px;
 
     box-shadow:
-        0 8px 25px
-        rgba(
-            40,
-            150,
-            70,
-            0.3
-        );
+        0 10px 30px
+        rgba(190,55,35,.4);
 
+    touch-action: manipulation;
 }
-
 
 .main-button:active {
+    transform: scale(.96);
+}
 
-    transform:
-        scale(0.96);
+.hint {
 
+    color:
+        rgba(255,255,255,.3);
+
+    font-size: 11px;
+
+    margin-top: 13px;
 }
 
 
-/* FINAL SCORE */
+/* ==================================================
+   MODE SELECTOR
+================================================== */
+
+#modeScreen {
+
+    z-index: 80;
+
+    /*
+       IMPORTANT:
+       The mode screen receives
+       the finger movement.
+    */
+
+    touch-action: none;
+}
+
+
+.mode-selection {
+
+    width: 100%;
+
+    max-width: 450px;
+
+    text-align: center;
+
+    position: relative;
+}
+
+
+.mode-title {
+
+    color: white;
+
+    font-size: 28px;
+
+    font-weight: 900;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 32px;
+
+    text-shadow:
+        0 4px 15px
+        rgba(0,0,0,.8);
+}
+
+.mode-title span {
+
+    display: block;
+
+    color:
+        rgba(255,255,255,.4);
+
+    font-size: 12px;
+
+    letter-spacing: 6px;
+
+    margin-bottom: 4px;
+}
+
+
+/* =========================
+   RINGS
+========================= */
+
+.mode-rings {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 28px;
+}
+
+
+.mode-ring {
+
+    position: relative;
+
+    width: 160px;
+    height: 160px;
+
+    padding: 0;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: transparent;
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    cursor: pointer;
+
+    /*
+       Important:
+       Browser does not interpret
+       the swipe as page scrolling.
+    */
+
+    touch-action: none;
+
+    -webkit-tap-highlight-color:
+        transparent;
+}
+
+
+/* =========================
+   NEON OUTER RING
+========================= */
+
+.mode-ring::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    border-radius: 50%;
+
+    border: 2px solid;
+
+    background:
+        rgba(255,255,255,.035);
+
+    backdrop-filter:
+        blur(8px);
+
+    -webkit-backdrop-filter:
+        blur(8px);
+
+    transition:
+        .15s ease;
+}
+
+
+/* =========================
+   SECOND RING
+========================= */
+
+.mode-ring::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 9px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(255,255,255,.25);
+
+    pointer-events: none;
+}
+
+
+/* =========================
+   INNER CIRCLE
+========================= */
+
+.ring-inner {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: 128px;
+    height: 128px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        rgba(5,14,8,.76);
+
+    border:
+        1px solid
+        rgba(255,255,255,.1);
+
+    box-shadow:
+        inset 0 0 30px
+        rgba(0,0,0,.8);
+
+    pointer-events: none;
+}
+
+
+/* =========================
+   CLASSIC
+========================= */
+
+.classic-ring::before {
+
+    border-color:
+        rgba(255,72,42,.85);
+
+    background:
+        rgba(255,65,35,.07);
+
+    box-shadow:
+
+        0 0 8px
+        rgba(255,65,35,.65),
+
+        0 0 25px
+        rgba(255,65,35,.3),
+
+        inset 0 0 25px
+        rgba(255,65,35,.12);
+}
+
+
+/* =========================
+   ZEN
+========================= */
+
+.zen-ring::before {
+
+    border-color:
+        rgba(83,255,119,.85);
+
+    background:
+        rgba(70,255,110,.07);
+
+    box-shadow:
+
+        0 0 8px
+        rgba(70,255,110,.65),
+
+        0 0 25px
+        rgba(70,255,110,.3),
+
+        inset 0 0 25px
+        rgba(70,255,110,.12);
+}
+
+
+/* =========================
+   ICON
+========================= */
+
+.mode-icon {
+
+    font-size: 29px;
+
+    margin-bottom: 8px;
+}
+
+
+/* =========================
+   TEXT
+========================= */
+
+.mode-ring strong {
+
+    font-size: 14px;
+
+    letter-spacing: 1px;
+}
+
+.mode-ring small {
+
+    margin-top: 5px;
+
+    color:
+        rgba(255,255,255,.42);
+
+    font-size: 9px;
+
+    letter-spacing: 2px;
+}
+
+
+/* =========================
+   PRESS
+========================= */
+
+.mode-ring:active {
+
+    transform:
+        scale(.93);
+}
+
+
+/* =========================
+   HELP
+========================= */
+
+.mode-help {
+
+    margin-top: 30px;
+
+    color:
+        rgba(255,255,255,.42);
+
+    font-size: 9px;
+
+    letter-spacing: 3px;
+}
+
+
+/* =========================
+   BACK
+========================= */
+
+.back-button {
+
+    border: none;
+
+    background: transparent;
+
+    color:
+        rgba(255,255,255,.42);
+
+    font-size: 11px;
+
+    letter-spacing: 2px;
+
+    padding: 12px 20px;
+
+    margin-top: 4px;
+
+    touch-action: manipulation;
+}
+
+
+/* =========================
+   GAME OVER
+========================= */
+
+.final-label {
+
+    color:
+        rgba(255,255,255,.4);
+
+    font-size: 10px;
+
+    letter-spacing: 4px;
+
+    margin-top: 15px;
+}
 
 .final-score {
 
-    font-size: 55px;
+    color: white;
+
+    font-size: 65px;
+
+    font-weight: 900;
+
+    line-height: 1;
+
+    margin:
+        8px 0
+        10px;
+}
+
+.final-mode {
+
+    color: #dc5940;
+
+    font-size: 11px;
 
     font-weight: bold;
 
-    color: white;
+    letter-spacing: 2px;
 
     margin-bottom: 25px;
-
 }
 
 
-/* DESKTOP */
+/* =========================
+   MOBILE
+========================= */
 
-@media (
-    min-width: 700px
-) {
+@media (max-width: 390px) {
 
-    #topBar {
-
-        padding-left: 30px;
-        padding-right: 85px;
-
+    .mode-rings {
+        gap: 10px;
     }
 
+    .mode-ring {
+        width: 142px;
+        height: 142px;
+    }
+
+    .ring-inner {
+        width: 113px;
+        height: 113px;
+    }
+
+    .mode-title {
+        font-size: 24px;
+    }
 }

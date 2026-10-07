@@ -1,157 +1,270 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width,
-      initial-scale=1.0,
-      maximum-scale=1.0,
-      user-scalable=no">
 
-<title>Ninja Fruit</title>
+    <meta charset="UTF-8">
 
-<link rel="stylesheet" href="style.css">
+    <meta
+        name="viewport"
+        content="width=device-width,
+        initial-scale=1.0,
+        maximum-scale=1.0,
+        user-scalable=no">
+
+    <title>Ninja Fruit</title>
+
+    <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
 <div id="game">
 
+
+    <!-- MUSIC -->
+
     <audio id="zenMusic" loop preload="auto">
-        <source src="zen.mp3" type="audio/mpeg">
+
+        <source
+            src="zen.mp3"
+            type="audio/mpeg">
+
     </audio>
 
-    <!-- TOP BAR -->
+
+    <!-- =========================
+         TOP BAR
+    ========================== -->
+
     <div id="topBar">
 
         <div class="stat">
+
             <span>SCORE</span>
-            <strong id="score">0</strong>
+
+            <strong id="score">
+                0
+            </strong>
+
         </div>
 
+
         <div class="stat">
+
             <span>COMBO</span>
-            <strong id="comboDisplay">—</strong>
+
+            <strong id="comboDisplay">
+                —
+            </strong>
+
         </div>
 
+
         <div class="stat">
+
             <span>LIVES</span>
-            <strong id="lives">3</strong>
+
+            <strong id="lives">
+                3
+            </strong>
+
         </div>
 
     </div>
 
-    <button id="musicButton" class="music-button">
+
+    <!-- MUSIC BUTTON -->
+
+    <button
+        id="musicButton"
+        class="music-button"
+        type="button">
+
         🔊
+
     </button>
 
-    <!-- GAME CANVAS -->
+
+    <!-- =========================
+         GAME CANVAS
+    ========================== -->
+
     <canvas id="canvas"></canvas>
 
-    <!-- MENU -->
-    <div id="menu" class="screen">
+
+    <!-- =========================
+         MAIN MENU
+    ========================== -->
+
+    <div
+        id="menu"
+        class="screen">
 
         <div class="menu-panel">
 
-            <div class="ninja-icon">🥷</div>
 
-            <div class="title-small">THE</div>
-
-            <h1>
-                NINJA
-                <span>FRUIT</span>
-            </h1>
-
-            <div class="blade-line">
-                <span></span>
-                ⚔
-                <span></span>
+            <div class="ninja-icon">
+                🥷
             </div>
 
+
+            <div class="title-small">
+                THE
+            </div>
+
+
+            <h1>
+
+                NINJA
+
+                <span>
+                    FRUIT
+                </span>
+
+            </h1>
+
+
+            <div class="blade-line">
+
+                <span></span>
+
+                ⚔
+
+                <span></span>
+
+            </div>
+
+
             <p class="tagline">
+
                 SLICE • COMBO • SURVIVE
+
             </p>
 
-            <button id="startBtn" class="main-button">
+
+            <button
+                id="startBtn"
+                class="main-button"
+                type="button">
+
                 START GAME
+
             </button>
 
+
             <p class="hint">
+
                 Tap start to choose your mode
+
             </p>
+
 
         </div>
 
     </div>
 
 
-    <!-- MODE SELECT -->
-    <div id="modeScreen" class="screen hidden">
+    <!-- =========================
+         MODE SCREEN
+    ========================== -->
+
+    <div
+        id="modeScreen"
+        class="screen hidden">
+
 
         <div class="mode-selection">
 
+
             <div class="mode-title">
-                <span>CHOOSE</span>
+
+                <span>
+                    CHOOSE
+                </span>
+
                 YOUR MODE
+
             </div>
 
 
             <div class="mode-rings">
 
+
                 <!-- CLASSIC -->
+
                 <button
                     id="classicBtn"
                     class="mode-ring classic-ring"
                     type="button">
 
+
                     <div class="ring-inner">
+
 
                         <div class="mode-icon">
                             💣
                         </div>
 
+
                         <strong>
                             CLASSIC
                         </strong>
+
 
                         <small>
                             MODE
                         </small>
 
+
                     </div>
+
 
                 </button>
 
 
                 <!-- ZEN -->
+
                 <button
                     id="zenBtn"
                     class="mode-ring zen-ring"
                     type="button">
 
+
                     <div class="ring-inner">
+
 
                         <div class="mode-icon">
                             🌿
                         </div>
 
+
                         <strong>
                             ZEN
                         </strong>
+
 
                         <small>
                             MODE
                         </small>
 
+
                     </div>
 
+
                 </button>
+
 
             </div>
 
 
             <p class="mode-help">
+
                 SLICE OR TAP A MODE
+
             </p>
 
 
@@ -164,43 +277,72 @@
 
             </button>
 
+
         </div>
 
     </div>
 
 
-    <!-- GAME OVER -->
-    <div id="gameOver" class="screen hidden">
+    <!-- =========================
+         GAME OVER
+    ========================== -->
+
+    <div
+        id="gameOver"
+        class="screen hidden">
+
 
         <div class="menu-panel">
+
 
             <div class="ninja-icon">
                 💥
             </div>
 
+
             <div class="title-small">
                 GAME
             </div>
 
-            <h1>OVER</h1>
+
+            <h1>
+                OVER
+            </h1>
+
 
             <div class="blade-line">
+
                 <span></span>
+
                 ⚔
+
                 <span></span>
+
             </div>
+
 
             <p class="final-label">
                 FINAL SCORE
             </p>
 
-            <div id="finalScore" class="final-score">
+
+            <div
+                id="finalScore"
+                class="final-score">
+
                 0
+
             </div>
 
-            <div id="finalMode" class="final-mode">
+
+            <div
+                id="finalMode"
+                class="final-mode">
+
                 CLASSIC MODE
+
             </div>
+
 
             <button
                 id="restartBtn"
@@ -211,6 +353,7 @@
 
             </button>
 
+
             <button
                 id="menuBtn"
                 class="back-button"
@@ -220,13 +363,18 @@
 
             </button>
 
+
         </div>
 
     </div>
 
+
 </div>
+
 
 <script src="script.js"></script>
 
 </body>
+
 </html>
+```

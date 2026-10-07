@@ -6,10 +6,8 @@
 
 html,
 body {
-
     width: 100%;
     height: 100%;
-
     overflow: hidden;
 
     background: #030604;
@@ -19,20 +17,14 @@ body {
         Helvetica,
         sans-serif;
 
-    touch-action: none;
-
     user-select: none;
-
     -webkit-user-select: none;
 
     -webkit-tap-highlight-color: transparent;
 }
 
-
 #game {
-
     position: fixed;
-
     inset: 0;
 
     width: 100%;
@@ -51,12 +43,11 @@ body {
 }
 
 
-/* =========================
+/* =================================
    CANVAS
-========================= */
+================================= */
 
 #canvas {
-
     position: absolute;
 
     inset: 0;
@@ -66,16 +57,15 @@ body {
 
     z-index: 1;
 
-    touch-action: none;
+    pointer-events: auto;
 }
 
 
-/* =========================
+/* =================================
    TOP BAR
-========================= */
+================================= */
 
 #topBar {
-
     position: absolute;
 
     top: 0;
@@ -98,6 +88,8 @@ body {
 
     z-index: 10;
 
+    pointer-events: none;
+
     background:
         linear-gradient(
             rgba(0,0,0,.72),
@@ -106,7 +98,6 @@ body {
 }
 
 .stat {
-
     display: flex;
 
     flex-direction: column;
@@ -126,7 +117,6 @@ body {
 }
 
 .stat strong {
-
     color: white;
 
     font-size: 23px;
@@ -135,12 +125,11 @@ body {
 }
 
 
-/* =========================
+/* =================================
    MUSIC
-========================= */
+================================= */
 
 .music-button {
-
     position: absolute;
 
     top: 15px;
@@ -164,16 +153,19 @@ body {
 
     z-index: 100;
 
+    cursor: pointer;
+
+    pointer-events: auto;
+
     touch-action: manipulation;
 }
 
 
-/* =========================
-   SCREEN
-========================= */
+/* =================================
+   SCREENS
+================================= */
 
 .screen {
-
     position: absolute;
 
     inset: 0;
@@ -194,6 +186,8 @@ body {
             rgba(0,0,0,.02),
             rgba(0,0,0,.64)
         );
+
+    pointer-events: auto;
 }
 
 .hidden {
@@ -201,12 +195,11 @@ body {
 }
 
 
-/* =========================
-   MENU
-========================= */
+/* =================================
+   MENU PANEL
+================================= */
 
 .menu-panel {
-
     width: 100%;
 
     max-width: 390px;
@@ -234,25 +227,29 @@ body {
     box-shadow:
         0 30px 80px
         rgba(0,0,0,.75);
+
+    pointer-events: auto;
 }
 
-.ninja-icon {
 
+/* =================================
+   NINJA
+================================= */
+
+.ninja-icon {
     font-size: 65px;
 
     line-height: 1;
 
     margin-bottom: 12px;
-
-    filter:
-        drop-shadow(
-            0 8px 15px
-            rgba(0,0,0,.6)
-        );
 }
 
-.title-small {
 
+/* =================================
+   TITLE
+================================= */
+
+.title-small {
     color:
         rgba(255,255,255,.48);
 
@@ -264,7 +261,6 @@ body {
 }
 
 h1 {
-
     color: white;
 
     font-size: 43px;
@@ -274,14 +270,9 @@ h1 {
     letter-spacing: 3px;
 
     font-weight: 900;
-
-    text-shadow:
-        0 5px 18px
-        rgba(0,0,0,.8);
 }
 
 h1 span {
-
     display: block;
 
     color: #d95038;
@@ -289,8 +280,12 @@ h1 span {
     font-size: 47px;
 }
 
-.blade-line {
 
+/* =================================
+   BLADE
+================================= */
+
+.blade-line {
     display: flex;
 
     align-items: center;
@@ -309,7 +304,6 @@ h1 span {
 }
 
 .blade-line span {
-
     width: 70px;
 
     height: 1px;
@@ -323,7 +317,6 @@ h1 span {
 }
 
 .blade-line span:last-child {
-
     background:
         linear-gradient(
             90deg,
@@ -332,8 +325,12 @@ h1 span {
         );
 }
 
-.tagline {
 
+/* =================================
+   TAGLINE
+================================= */
+
+.tagline {
     color:
         rgba(255,255,255,.5);
 
@@ -344,7 +341,15 @@ h1 span {
     margin-bottom: 25px;
 }
 
+
+/* =================================
+   START BUTTON
+================================= */
+
 .main-button {
+    position: relative;
+
+    z-index: 100;
 
     width: 100%;
 
@@ -369,11 +374,19 @@ h1 span {
 
     letter-spacing: 2px;
 
+    cursor: pointer;
+
+    pointer-events: auto;
+
+    touch-action: manipulation;
+
+    -webkit-appearance: none;
+
+    appearance: none;
+
     box-shadow:
         0 10px 30px
         rgba(190,55,35,.4);
-
-    touch-action: manipulation;
 }
 
 .main-button:active {
@@ -381,7 +394,6 @@ h1 span {
 }
 
 .hint {
-
     color:
         rgba(255,255,255,.3);
 
@@ -391,26 +403,19 @@ h1 span {
 }
 
 
-/* ==================================================
-   MODE SELECTOR
-================================================== */
+/* =================================
+   MODE SCREEN
+================================= */
 
 #modeScreen {
-
     z-index: 80;
 
-    /*
-       IMPORTANT:
-       The mode screen receives
-       the finger movement.
-    */
+    pointer-events: auto;
 
     touch-action: none;
 }
 
-
 .mode-selection {
-
     width: 100%;
 
     max-width: 450px;
@@ -418,11 +423,18 @@ h1 span {
     text-align: center;
 
     position: relative;
+
+    z-index: 90;
+
+    pointer-events: auto;
 }
 
 
-.mode-title {
+/* =================================
+   MODE TITLE
+================================= */
 
+.mode-title {
     color: white;
 
     font-size: 28px;
@@ -432,14 +444,9 @@ h1 span {
     letter-spacing: 3px;
 
     margin-bottom: 32px;
-
-    text-shadow:
-        0 4px 15px
-        rgba(0,0,0,.8);
 }
 
 .mode-title span {
-
     display: block;
 
     color:
@@ -453,12 +460,11 @@ h1 span {
 }
 
 
-/* =========================
+/* =================================
    RINGS
-========================= */
+================================= */
 
 .mode-rings {
-
     display: flex;
 
     align-items: center;
@@ -466,15 +472,19 @@ h1 span {
     justify-content: center;
 
     gap: 28px;
+
+    position: relative;
+
+    z-index: 95;
 }
 
-
 .mode-ring {
-
     position: relative;
 
     width: 160px;
     height: 160px;
+
+    flex-shrink: 0;
 
     padding: 0;
 
@@ -494,25 +504,23 @@ h1 span {
 
     cursor: pointer;
 
-    /*
-       Important:
-       Browser does not interpret
-       the swipe as page scrolling.
-    */
+    pointer-events: auto;
 
     touch-action: none;
 
-    -webkit-tap-highlight-color:
-        transparent;
+    z-index: 100;
+
+    -webkit-appearance: none;
+
+    appearance: none;
 }
 
 
-/* =========================
-   NEON OUTER RING
-========================= */
+/* =================================
+   OUTER RING
+================================= */
 
 .mode-ring::before {
-
     content: "";
 
     position: absolute;
@@ -523,26 +531,10 @@ h1 span {
 
     border: 2px solid;
 
-    background:
-        rgba(255,255,255,.035);
-
-    backdrop-filter:
-        blur(8px);
-
-    -webkit-backdrop-filter:
-        blur(8px);
-
-    transition:
-        .15s ease;
+    pointer-events: none;
 }
 
-
-/* =========================
-   SECOND RING
-========================= */
-
 .mode-ring::after {
-
     content: "";
 
     position: absolute;
@@ -559,12 +551,11 @@ h1 span {
 }
 
 
-/* =========================
-   INNER CIRCLE
-========================= */
+/* =================================
+   INNER
+================================= */
 
 .ring-inner {
-
     position: relative;
 
     z-index: 2;
@@ -589,20 +580,15 @@ h1 span {
         1px solid
         rgba(255,255,255,.1);
 
-    box-shadow:
-        inset 0 0 30px
-        rgba(0,0,0,.8);
-
     pointer-events: none;
 }
 
 
-/* =========================
+/* =================================
    CLASSIC
-========================= */
+================================= */
 
 .classic-ring::before {
-
     border-color:
         rgba(255,72,42,.85);
 
@@ -610,7 +596,6 @@ h1 span {
         rgba(255,65,35,.07);
 
     box-shadow:
-
         0 0 8px
         rgba(255,65,35,.65),
 
@@ -622,12 +607,11 @@ h1 span {
 }
 
 
-/* =========================
+/* =================================
    ZEN
-========================= */
+================================= */
 
 .zen-ring::before {
-
     border-color:
         rgba(83,255,119,.85);
 
@@ -635,7 +619,6 @@ h1 span {
         rgba(70,255,110,.07);
 
     box-shadow:
-
         0 0 8px
         rgba(70,255,110,.65),
 
@@ -647,31 +630,23 @@ h1 span {
 }
 
 
-/* =========================
-   ICON
-========================= */
+/* =================================
+   MODE TEXT
+================================= */
 
 .mode-icon {
-
     font-size: 29px;
 
     margin-bottom: 8px;
 }
 
-
-/* =========================
-   TEXT
-========================= */
-
 .mode-ring strong {
-
     font-size: 14px;
 
     letter-spacing: 1px;
 }
 
 .mode-ring small {
-
     margin-top: 5px;
 
     color:
@@ -683,23 +658,20 @@ h1 span {
 }
 
 
-/* =========================
-   PRESS
-========================= */
+/* =================================
+   MODE PRESS
+================================= */
 
 .mode-ring:active {
-
-    transform:
-        scale(.93);
+    transform: scale(.92);
 }
 
 
-/* =========================
+/* =================================
    HELP
-========================= */
+================================= */
 
 .mode-help {
-
     margin-top: 30px;
 
     color:
@@ -711,11 +683,14 @@ h1 span {
 }
 
 
-/* =========================
+/* =================================
    BACK
-========================= */
+================================= */
 
 .back-button {
+    position: relative;
+
+    z-index: 100;
 
     border: none;
 
@@ -730,18 +705,19 @@ h1 span {
 
     padding: 12px 20px;
 
-    margin-top: 4px;
+    cursor: pointer;
+
+    pointer-events: auto;
 
     touch-action: manipulation;
 }
 
 
-/* =========================
+/* =================================
    GAME OVER
-========================= */
+================================= */
 
 .final-label {
-
     color:
         rgba(255,255,255,.4);
 
@@ -753,7 +729,6 @@ h1 span {
 }
 
 .final-score {
-
     color: white;
 
     font-size: 65px;
@@ -768,7 +743,6 @@ h1 span {
 }
 
 .final-mode {
-
     color: #dc5940;
 
     font-size: 11px;
@@ -781,9 +755,9 @@ h1 span {
 }
 
 
-/* =========================
-   MOBILE
-========================= */
+/* =================================
+   SMALL PHONE
+================================= */
 
 @media (max-width: 390px) {
 

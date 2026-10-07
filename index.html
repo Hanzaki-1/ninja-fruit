@@ -1,43 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width,
-                   initial-scale=1.0,
-                   maximum-scale=1.0,
-                   user-scalable=no">
 
-    <title>Ninja Fruit Mobile</title>
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width,
+        initial-scale=1.0,
+        maximum-scale=1.0,
+        user-scalable=no"
+    >
+
+    <title>Ninja Fruit Zen</title>
+
     <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
-<div id="game">
+    <div id="game">
 
-    <div id="menu">
-        <h1>🥷 Ninja Fruit</h1>
-        <p>Swipe the fruits!</p>
-        <button id="startBtn">START GAME</button>
+        <!-- BACKGROUND MUSIC -->
+
+        <audio
+            id="zenMusic"
+            loop
+            preload="auto"
+        >
+            <source
+                src="zen.mp3"
+                type="audio/mpeg"
+            >
+        </audio>
+
+
+        <!-- TOP BAR -->
+
+        <div id="topBar">
+
+            <div class="stat">
+                SCORE
+                <strong id="score">0</strong>
+            </div>
+
+            <div class="stat">
+                SPEED
+                <strong id="speed">1x</strong>
+            </div>
+
+            <div class="stat">
+                ❤️
+                <strong id="lives">3</strong>
+            </div>
+
+        </div>
+
+
+        <!-- MUSIC BUTTON -->
+
+        <button
+            id="musicButton"
+            class="music-button"
+        >
+            🔊
+        </button>
+
+
+        <!-- GAME CANVAS -->
+
+        <canvas id="canvas"></canvas>
+
+
+        <!-- START SCREEN -->
+
+        <div
+            id="menu"
+            class="screen"
+        >
+
+            <div class="panel">
+
+                <div class="logo">
+                    🥷
+                </div>
+
+                <h1>
+                    NINJA FRUIT
+                </h1>
+
+                <p>
+                    ZEN MODE
+                </p>
+
+                <div class="instructions">
+
+                    <div>
+                        👆
+                        <span>
+                            Swipe to slice
+                        </span>
+                    </div>
+
+                    <div>
+                        💣
+                        <span>
+                            Avoid bombs
+                        </span>
+                    </div>
+
+                    <div>
+                        ⚡
+                        <span>
+                            Get faster
+                        </span>
+                    </div>
+
+                </div>
+
+                <button
+                    id="startBtn"
+                    class="main-button"
+                >
+                    START GAME
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- GAME OVER -->
+
+        <div
+            id="gameOver"
+            class="screen hidden"
+        >
+
+            <div class="panel">
+
+                <div class="logo">
+                    💥
+                </div>
+
+                <h1>
+                    GAME OVER
+                </h1>
+
+                <p>
+                    FINAL SCORE
+                </p>
+
+                <div
+                    id="finalScore"
+                    class="final-score"
+                >
+                    0
+                </div>
+
+                <button
+                    id="restartBtn"
+                    class="main-button"
+                >
+                    PLAY AGAIN
+                </button>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div id="top">
-        <span>Score: <b id="score">0</b></span>
-        <span>❤️ <b id="lives">3</b></span>
-    </div>
 
-    <canvas id="canvas"></canvas>
-
-    <div id="gameOver">
-        <h1>GAME OVER</h1>
-        <p>Score: <b id="finalScore">0</b></p>
-        <button onclick="restartGame()">TRY AGAIN</button>
-    </div>
-
-</div>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 
 </body>
+
 </html>

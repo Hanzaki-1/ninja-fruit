@@ -1,217 +1,173 @@
-```javascript
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const canvas =
+    document.getElementById("canvas");
 
-const scoreText = document.getElementById("score");
-const livesText = document.getElementById("lives");
+const ctx =
+    canvas.getContext("2d");
 
-const menu = document.getElementById("menu");
-const gameOver = document.getElementById("gameOver");
+
+const scoreText =
+    document.getElementById("score");
+
+const speedText =
+    document.getElementById("speed");
+
+const livesText =
+    document.getElementById("lives");
+
+
+const menu =
+    document.getElementById("menu");
+
+const gameOver =
+    document.getElementById("gameOver");
+
+
+const finalScore =
+    document.getElementById("finalScore");
+
+
+const startBtn =
+    document.getElementById("startBtn");
+
+
+const restartBtn =
+    document.getElementById("restartBtn");
+
+
+const musicButton =
+    document.getElementById("musicButton");
+
+
+const zenMusic =
+    document.getElementById("zenMusic");
+
+
+
+/* =================================
+   GAME VARIABLES
+================================= */
 
 let score = 0;
-let lives = 3;
 
-let fruits = [];
-let particles = [];
-let slash = [];
+let lives = 3;
 
 let playing = false;
 
-let fruitTimer;
-let nextSpawnTimer;
+let fruits = [];
+
+let particles = [];
+
+let slash = [];
+
+let spawnTimer = null;
+
+let musicOn = true;
 
 
-// =====================================
-// ZEN MUSIC
-// =====================================
+/* =================================
+   CANVAS
+================================= */
 
-let audioContext;
-let masterGain;
-let musicTimer;
-
-function startZenMusic() {
-
-    if (audioContext) return;
-
-    audioContext =
-        new (
-            window.AudioContext ||
-            window.webkitAudioContext
-        )();
-
-    masterGain =
-        audioContext.createGain();
-
-    masterGain.gain.value = 0.08;
-
-    masterGain.connect(
-        audioContext.destination
-    );
-
-    playZenLoop();
-}
-
-
-function playZenLoop() {
-
-    if (!playing || !audioContext)
-        return;
-
-
-    const notes = [
-        261.63, // C
-        329.63, // E
-        392.00, // G
-        523.25, // C
-        392.00, // G
-        329.63  // E
-    ];
-
-
-    const note =
-        notes[
-            Math.floor(
-                Math.random() *
-                notes.length
-            )
-        ];
-
-
-    const oscillator =
-        audioContext.createOscillator();
-
-    const gain =
-        audioContext.createGain();
-
-
-    oscillator.type =
-        "sine";
-
-    oscillator.frequency.value =
-        note;
-
-
-    gain.gain.setValueAtTime(
-        0,
-        audioContext.currentTime
-    );
-
-
-    gain.gain.linearRampToValueAtTime(
-        0.12,
-        audioContext.currentTime + 0.2
-    );
-
-
-    gain.gain.exponentialRampToValueAtTime(
-        0.001,
-        audioContext.currentTime + 2
-    );
-
-
-    oscillator.connect(gain);
-
-    gain.connect(masterGain);
-
-
-    oscillator.start();
-
-    oscillator.stop(
-        audioContext.currentTime + 2
-    );
-
-
-    musicTimer =
-        setTimeout(
-            playZenLoop,
-            900 + Math.random() * 900
-        );
-}
-
-
-// =====================================
-// CANVAS
-// =====================================
-
-function resize() {
+function resizeCanvas() {
 
     canvas.width =
         window.innerWidth;
 
     canvas.height =
         window.innerHeight;
+
 }
 
-resize();
+
+resizeCanvas();
+
 
 window.addEventListener(
     "resize",
-    resize
+    resizeCanvas
 );
 
 
-// =====================================
-// FRUITS
-// =====================================
+/* =================================
+   FRUIT TYPES
+================================= */
 
-const fruitsList = [
+const fruitTypes = [
+
     "🍎",
     "🍊",
     "🍉",
     "🍌",
     "🍍",
     "🥝",
-    "🍓"
+    "🍓",
+    "🍑"
+
 ];
 
 
-// =====================================
-// GAME SPEED
-// =====================================
 
-function getGameSpeed() {
+/* =================================
+   GAME SPEED
+================================= */
+
+function getSpeed() {
 
     /*
-        Every 100 points increases speed.
+       Starts at 13.
 
-        Starts around 13.
+       Gets faster every 100 points.
 
-        Maximum around 25.
+       Maximum 25.
     */
 
-    const speed =
-        13 +
-        Math.floor(score / 100) * 1.2;
-
     return Math.min(
-        speed,
-        25
+        25,
+        13 +
+        Math.floor(
+            score / 100
+        ) * 1.2
     );
+
 }
 
 
-function getPointValue() {
+function getSpeedMultiplier() {
+
+    return (
+        getSpeed() / 13
+    ).toFixed(1);
+
+}
+
+
+function getPoints() {
 
     /*
-        More speed = more points.
+       Faster game =
+       more points.
 
-        Base = 10
-
-        Every 100 points,
-        fruit value increases.
+       10
+       15
+       20
+       25
+       etc.
     */
 
     return (
         10 +
-        Math.floor(score / 100) * 5
+        Math.floor(
+            score / 100
+        ) * 5
     );
 
 }
 
 
-// =====================================
-// FRUIT
-// =====================================
+
+/* =================================
+   FRUIT CLASS
+================================= */
 
 class Fruit {
 
@@ -219,11 +175,14 @@ class Fruit {
 
         this.x =
             Math.random() *
-            (canvas.width - 120) +
-            60;
+            (
+                canvas.width - 120
+            ) + 60;
+
 
         this.y =
             canvas.height + 70;
+
 
         this.size = 65;
 
@@ -233,12 +192,20 @@ class Fruit {
 
 
         const direction =
-            centerX - this.x;
+            centerX -
+            this.x;
 
+
+        /*
+           Keep fruit moving
+           toward center.
+        */
 
         this.speedX =
             direction * 0.008 +
-            (Math.random() - 0.5) * 2;
+            (
+                Math.random() - 0.5
+            ) * 2;
 
 
         this.speedX =
@@ -253,7 +220,7 @@ class Fruit {
 
         this.speedY =
             -(
-                getGameSpeed() +
+                getSpeed() +
                 Math.random() * 4
             );
 
@@ -263,15 +230,17 @@ class Fruit {
 
 
         this.emoji =
-            fruitsList[
+            fruitTypes[
                 Math.floor(
                     Math.random() *
-                    fruitsList.length
+                    fruitTypes.length
                 )
             ];
 
 
         this.sliced = false;
+
+        this.isBomb = false;
 
     }
 
@@ -288,11 +257,13 @@ class Fruit {
             this.gravity;
 
 
-        // Keep inside screen
+        /* Keep inside screen */
 
-        if (this.x < 35) {
+        if (
+            this.x < 40
+        ) {
 
-            this.x = 35;
+            this.x = 40;
 
             this.speedX *= -0.5;
 
@@ -301,11 +272,11 @@ class Fruit {
 
         if (
             this.x >
-            canvas.width - 35
+            canvas.width - 40
         ) {
 
             this.x =
-                canvas.width - 35;
+                canvas.width - 40;
 
             this.speedX *= -0.5;
 
@@ -316,11 +287,17 @@ class Fruit {
 
     draw() {
 
+        ctx.save();
+
+
         ctx.font =
-            this.size + "px Arial";
+            this.size +
+            "px Arial";
+
 
         ctx.textAlign =
             "center";
+
 
         ctx.textBaseline =
             "middle";
@@ -332,14 +309,18 @@ class Fruit {
             this.y
         );
 
+
+        ctx.restore();
+
     }
 
 }
 
 
-// =====================================
-// BOMB
-// =====================================
+
+/* =================================
+   BOMB CLASS
+================================= */
 
 class Bomb {
 
@@ -347,11 +328,14 @@ class Bomb {
 
         this.x =
             Math.random() *
-            (canvas.width - 120) +
-            60;
+            (
+                canvas.width - 120
+            ) + 60;
+
 
         this.y =
             canvas.height + 70;
+
 
         this.size = 65;
 
@@ -361,12 +345,15 @@ class Bomb {
 
 
         const direction =
-            centerX - this.x;
+            centerX -
+            this.x;
 
 
         this.speedX =
             direction * 0.008 +
-            (Math.random() - 0.5) * 2;
+            (
+                Math.random() - 0.5
+            ) * 2;
 
 
         this.speedX =
@@ -381,7 +368,7 @@ class Bomb {
 
         this.speedY =
             -(
-                getGameSpeed() +
+                getSpeed() +
                 Math.random() * 4
             );
 
@@ -409,9 +396,11 @@ class Bomb {
             this.gravity;
 
 
-        if (this.x < 35) {
+        if (
+            this.x < 40
+        ) {
 
-            this.x = 35;
+            this.x = 40;
 
             this.speedX *= -0.5;
 
@@ -420,11 +409,11 @@ class Bomb {
 
         if (
             this.x >
-            canvas.width - 35
+            canvas.width - 40
         ) {
 
             this.x =
-                canvas.width - 35;
+                canvas.width - 40;
 
             this.speedX *= -0.5;
 
@@ -435,11 +424,17 @@ class Bomb {
 
     draw() {
 
+        ctx.save();
+
+
         ctx.font =
-            this.size + "px Arial";
+            this.size +
+            "px Arial";
+
 
         ctx.textAlign =
             "center";
+
 
         ctx.textBaseline =
             "middle";
@@ -451,14 +446,18 @@ class Bomb {
             this.y
         );
 
+
+        ctx.restore();
+
     }
 
 }
 
 
-// =====================================
-// PARTICLES
-// =====================================
+
+/* =================================
+   PARTICLES
+================================= */
 
 class Particle {
 
@@ -469,17 +468,32 @@ class Particle {
     ) {
 
         this.x = x;
+
         this.y = y;
 
         this.vx =
-            (Math.random() - 0.5) * 14;
+            (
+                Math.random() - 0.5
+            ) * (
+                bomb ? 18 : 12
+            );
 
         this.vy =
-            (Math.random() - 0.5) * 14;
+            (
+                Math.random() - 0.5
+            ) * (
+                bomb ? 18 : 12
+            );
 
         this.life = 1;
 
-        this.bomb = bomb;
+        this.size =
+            bomb
+                ? 6
+                : 4;
+
+        this.bomb =
+            bomb;
 
     }
 
@@ -503,14 +517,17 @@ class Particle {
 
     draw() {
 
+        ctx.save();
+
+
         ctx.globalAlpha =
             this.life;
 
 
         ctx.fillStyle =
             this.bomb
-                ? "orange"
-                : "white";
+                ? "#ff8c00"
+                : "#ffffff";
 
 
         ctx.beginPath();
@@ -519,7 +536,7 @@ class Particle {
         ctx.arc(
             this.x,
             this.y,
-            this.bomb ? 6 : 4,
+            this.size,
             0,
             Math.PI * 2
         );
@@ -528,68 +545,61 @@ class Particle {
         ctx.fill();
 
 
-        ctx.globalAlpha = 1;
+        ctx.restore();
 
     }
 
 }
 
 
-// =====================================
-// RANDOM SPAWN
-// =====================================
 
-function scheduleNextSpawn() {
+/* =================================
+   RANDOM SPAWN
+================================= */
+
+function scheduleSpawn() {
 
     if (!playing)
         return;
 
 
     /*
-        Spawn becomes slightly faster
-        as the game progresses.
+       Faster spawning as
+       score increases.
     */
 
-    const minimum =
+    const delay =
         Math.max(
             350,
-            850 -
-            score * 1.5
+            950 -
+            score * 1.2
         );
 
 
-    const maximum =
-        Math.max(
-            500,
-            1200 -
-            score * 1.5
-        );
+    const randomDelay =
+        delay +
+        Math.random() * 450;
 
 
-    const delay =
-        minimum +
-        Math.random() *
-        (maximum - minimum);
-
-
-    nextSpawnTimer =
+    spawnTimer =
         setTimeout(
-            () => {
+            function() {
 
                 createObject();
 
-                scheduleNextSpawn();
+                scheduleSpawn();
 
             },
-            delay
+            randomDelay
         );
 
 }
 
 
-// =====================================
-// CREATE OBJECT
-// =====================================
+
+/* =================================
+   CREATE FRUIT OR BOMB
+================================= */
 
 function createObject() {
 
@@ -598,19 +608,21 @@ function createObject() {
 
 
     /*
-        Bomb probability changes randomly.
+       Random bomb timing.
 
-        Usually 10–25%.
+       15% chance normally.
 
-        Occasionally a bomb can appear
-        after a quiet period.
+       Random means bombs don't
+       appear at fixed intervals.
     */
 
     const bombChance =
         Math.random();
 
 
-    if (bombChance < 0.18) {
+    if (
+        bombChance < 0.15
+    ) {
 
         fruits.push(
             new Bomb()
@@ -627,13 +639,18 @@ function createObject() {
 }
 
 
-// =====================================
-// SLICE FRUIT
-// =====================================
 
-function sliceFruit(fruit) {
+/* =================================
+   SLICE FRUIT
+================================= */
 
-    if (fruit.sliced)
+function sliceFruit(
+    fruit
+) {
+
+    if (
+        fruit.sliced
+    )
         return;
 
 
@@ -641,7 +658,7 @@ function sliceFruit(fruit) {
 
 
     const points =
-        getPointValue();
+        getPoints();
 
 
     score += points;
@@ -651,9 +668,18 @@ function sliceFruit(fruit) {
         score;
 
 
+    speedText.textContent =
+        getSpeedMultiplier()
+        + "x";
+
+
+    /*
+       Particles
+    */
+
     for (
         let i = 0;
-        i < 15;
+        i < 18;
         i++
     ) {
 
@@ -669,18 +695,25 @@ function sliceFruit(fruit) {
 }
 
 
-// =====================================
-// HIT BOMB
-// =====================================
 
-function hitBomb(bomb) {
+/* =================================
+   BOMB HIT
+================================= */
+
+function hitBomb(
+    bomb
+) {
 
     bomb.sliced = true;
 
 
+    /*
+       Big explosion
+    */
+
     for (
         let i = 0;
-        i < 50;
+        i < 60;
         i++
     ) {
 
@@ -700,9 +733,10 @@ function hitBomb(bomb) {
 }
 
 
-// =====================================
-// TOUCH
-// =====================================
+
+/* =================================
+   TOUCH / SLASH
+================================= */
 
 function touchMove(
     x,
@@ -720,7 +754,7 @@ function touchMove(
 
 
     if (
-        slash.length > 8
+        slash.length > 10
     ) {
 
         slash.shift();
@@ -741,7 +775,8 @@ function touchMove(
 
         if (
             distance <
-            object.size / 2 + 35
+            object.size / 2 +
+            35
         ) {
 
 
@@ -769,9 +804,10 @@ function touchMove(
 }
 
 
-// =====================================
-// TOUCH EVENTS
-// =====================================
+
+/* =================================
+   MOBILE TOUCH
+================================= */
 
 canvas.addEventListener(
     "touchstart",
@@ -834,9 +870,10 @@ canvas.addEventListener(
 );
 
 
-// =====================================
-// SLASH
-// =====================================
+
+/* =================================
+   SLASH TRAIL
+================================= */
 
 function drawSlash() {
 
@@ -844,6 +881,9 @@ function drawSlash() {
         slash.length < 2
     )
         return;
+
+
+    ctx.save();
 
 
     ctx.beginPath();
@@ -870,7 +910,7 @@ function drawSlash() {
 
 
     ctx.strokeStyle =
-        "white";
+        "rgba(255,255,255,0.9)";
 
 
     ctx.lineWidth = 6;
@@ -880,14 +920,28 @@ function drawSlash() {
         "round";
 
 
+    ctx.lineJoin =
+        "round";
+
+
+    ctx.shadowBlur = 12;
+
+    ctx.shadowColor =
+        "white";
+
+
     ctx.stroke();
+
+
+    ctx.restore();
 
 }
 
 
-// =====================================
-// GAME LOOP
-// =====================================
+
+/* =================================
+   GAME LOOP
+================================= */
 
 function gameLoop() {
 
@@ -899,10 +953,13 @@ function gameLoop() {
     );
 
 
-    // Objects
+    /*
+       OBJECTS
+    */
 
     for (
-        let i = fruits.length - 1;
+        let i =
+            fruits.length - 1;
         i >= 0;
         i--
     ) {
@@ -937,11 +994,13 @@ function gameLoop() {
         }
 
 
-        // Missed object
+        /*
+           Object leaves screen
+        */
 
         if (
             object.y >
-            canvas.height + 100
+            canvas.height + 120
         ) {
 
             fruits.splice(
@@ -950,8 +1009,12 @@ function gameLoop() {
             );
 
 
-            // Only fruits
-            // cost a life
+            /*
+               Missing fruit
+               loses life.
+
+               Bombs don't.
+            */
 
             if (
                 !object.isBomb
@@ -978,10 +1041,14 @@ function gameLoop() {
     }
 
 
-    // Particles
+
+    /*
+       PARTICLES
+    */
 
     for (
-        let i = particles.length - 1;
+        let i =
+            particles.length - 1;
         i >= 0;
         i--
     ) {
@@ -1009,6 +1076,7 @@ function gameLoop() {
     }
 
 
+
     drawSlash();
 
 
@@ -1019,15 +1087,194 @@ function gameLoop() {
 }
 
 
-// =====================================
-// START GAME
-// =====================================
 
-document
-    .getElementById(
-        "startBtn"
-    )
-    .addEventListener(
-        "click",
-        startGame
-```
+/* =================================
+   START GAME
+================================= */
+
+startBtn.addEventListener(
+    "click",
+    startGame
+);
+
+
+function startGame() {
+
+    score = 0;
+
+    lives = 3;
+
+    fruits = [];
+
+    particles = [];
+
+    slash = [];
+
+
+    scoreText.textContent =
+        "0";
+
+
+    livesText.textContent =
+        "3";
+
+
+    speedText.textContent =
+        "1x";
+
+
+    menu.classList.add(
+        "hidden"
+    );
+
+
+    gameOver.classList.add(
+        "hidden"
+    );
+
+
+    playing = true;
+
+
+    /*
+       Start music.
+
+       Mobile browsers allow
+       this because startGame()
+       was triggered by a tap.
+    */
+
+    if (musicOn) {
+
+        zenMusic.currentTime =
+            0;
+
+        zenMusic.volume =
+            0.35;
+
+
+        zenMusic.play()
+            .catch(
+                function(error) {
+
+                    console.log(
+                        "Music error:",
+                        error
+                    );
+
+                }
+            );
+
+    }
+
+
+    /*
+       Start random fruit
+       spawning.
+    */
+
+    createObject();
+
+    scheduleSpawn();
+
+}
+
+
+
+/* =================================
+   GAME OVER
+================================= */
+
+function endGame() {
+
+    if (!playing)
+        return;
+
+
+    playing = false;
+
+
+    clearTimeout(
+        spawnTimer
+    );
+
+
+    /*
+       Stop music
+    */
+
+    zenMusic.pause();
+
+
+    finalScore.textContent =
+        score;
+
+
+    gameOver.classList.remove(
+        "hidden"
+    );
+
+}
+
+
+
+/* =================================
+   RESTART
+================================= */
+
+restartBtn.addEventListener(
+    "click",
+    function() {
+
+        startGame();
+
+    }
+);
+
+
+
+/* =================================
+   MUSIC BUTTON
+================================= */
+
+musicButton.addEventListener(
+    "click",
+    function() {
+
+        if (
+            zenMusic.paused
+        ) {
+
+            musicOn = true;
+
+            zenMusic.play()
+                .catch(
+                    function() {}
+                );
+
+
+            musicButton.textContent =
+                "🔊";
+
+        } else {
+
+            musicOn = false;
+
+            zenMusic.pause();
+
+
+            musicButton.textContent =
+                "🔇";
+
+        }
+
+    }
+);
+
+
+
+/* =================================
+   GAME LOOP START
+================================= */
+
+gameLoop();

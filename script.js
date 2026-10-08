@@ -1,2301 +1,646 @@
 ```javascript
-/* =====================================================
-   NINJA FRUIT
-   ===================================================== */
+"use strict";
 
+/* ========================================
+   NINJA FRUIT — GAME SCRIPT
+======================================== */
 
-/* =====================================================
-   GET ELEMENTS
-===================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+    // Find page elements
+    const menu = document.getElementById("menu");
+    const modeScreen = document.getElementById("modeScreen");
+    const gameOver = document.getElementById("gameOver");
 
-const canvas =
-    document.getElementById("canvas");
+    const startBtn = document.getElementById("startBtn");
+    const classicBtn = document.getElementById("classicBtn");
+    const zenBtn = document.getElementById("zenBtn");
+    const backBtn = document.getElementById("backBtn");
+    const restartBtn = document.getElementById("restartBtn");
 
-const ctx =
-    canvas.getContext("2d");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas ? canvas.getContext("2d") : null;
 
+    const scoreElement = document.getElementById("score");
+    const comboElement = document.getElementById("combo");
+    const livesElement = document.getElementById("lives");
+    const musicButton = document.getElementById("musicButton");
+    const zenMusic = document.getElementById("zenMusic");
 
-const scoreText =
-    document.getElementById("score");
-
-const comboDisplay =
-    document.getElementById("comboDisplay");
-
-const livesText =
-    document.getElementById("lives");
-
-
-const menu =
-    document.getElementById("menu");
-
-const modeScreen =
-    document.getElementById("modeScreen");
-
-const gameOver =
-    document.getElementById("gameOver");
-
-
-const finalScore =
-    document.getElementById("finalScore");
-
-const finalMode =
-    document.getElementById("finalMode");
-
-
-const startBtn =
-    document.getElementById("startBtn");
-
-const classicBtn =
-    document.getElementById("classicBtn");
-
-const zenBtn =
-    document.getElementById("zenBtn");
-
-const backBtn =
-    document.getElementById("backBtn");
-
-const restartBtn =
-    document.getElementById("restartBtn");
-
-const menuBtn =
-    document.getElementById("menuBtn");
-
-const musicButton =
-    document.getElementById("musicButton");
-
-const zenMusic =
-    document.getElementById("zenMusic");
-
-
-/* =====================================================
-   GAME VARIABLES
-===================================================== */
-
-let score = 0;
-
-let lives = 3;
-
-let playing = false;
-
-let gameMode = "classic";
-
-let fruits = [];
-
-let particles = [];
-
-let slash = [];
-
-let spawnTimer = null;
-
-let comboTimer = null;
-
-let combo = 0;
-
-let lastCutTime = 0;
-
-let cutNumber = 0;
-
-let musicOn = true;
-
-
-/* =====================================================
-   MODE SLICE VARIABLES
-===================================================== */
-
-let modeSlicing = false;
-
-let previousModePoint = null;
-
-let modeSlash = [];
-
-let modeSelected = false;
-
-
-/* =====================================================
-   CANVAS
-===================================================== */
-
-function resizeCanvas() {
-
-    canvas.width =
-        window.innerWidth;
-
-    canvas.height =
-        window.innerHeight;
-}
-
-
-resizeCanvas();
-
-
-window.addEventListener(
-    "resize",
-    resizeCanvas
-);
-
-
-/* =====================================================
-   FRUIT TYPES
-===================================================== */
-
-const fruitTypes = [
-
-    "🍎",
-    "🍊",
-    "🍉",
-    "🍌",
-    "🍍",
-    "🥝",
-    "🍓",
-    "🍑",
-    "🍐"
-
-];
-
-
-/* =====================================================
-   GAME SPEED
-===================================================== */
-
-function getSpeed() {
-
-    const level =
-        Math.floor(
-            score / 100
+    // Check that the required HTML exists
+    if (!menu || !modeScreen || !startBtn) {
+        console.error(
+            "Ninja Fruit: Missing #menu, #modeScreen or #startBtn. Check index.html IDs."
         );
+        return;
+    }
 
+    /* ========================================
+       GAME STATE
+    ======================================== */
 
-    return Math.min(
-        18,
-        7 + level * 0.9
-    );
-}
+    let gameRunning = false;
+    let gameMode = "classic";
+    let score = 0;
+    let lives = 3;
+    let combo = 0;
+    let lastSliceTime = 0;
 
+    let objects = [];
+    let particles = [];
+    let bladeTrail = [];
 
-/* =====================================================
-   POINTS
-===================================================== */
+    let pointerDown = false;
+    let previousPointer = null;
+    let spawnTimer = 0;
+    let lastFrameTime = 0;
+    let animationFrame = 0;
+    let musicEnabled = true;
 
-function getPoints() {
+    /* ========================================
+       SCREEN HELPERS
+    ======================================== */
 
-    return Math.max(
-        1,
-        10 - cutNumber
-    );
-}
+    function showScreen(screenToShow) {
+        [menu, modeScreen, gameOver].forEach(screen => {
+            if (screen) screen.classList.add("hidden");
+        });
 
+        if (screenToShow) {
+            screenToShow.classList.remove("hidden");
+        }
+    }
 
-/* =====================================================
-   FRUIT
-===================================================== */
+    function openModeScreen() {
+        console.log("Start Game clicked — opening mode selection.");
+        gameRunning = false;
+        showScreen(modeScreen);
+    }
 
-class Fruit {
+    function returnToMenu() {
+        gameRunning = false;
+        showScreen(menu);
+    }
 
-    constructor() {
+    /* ========================================
+       START BUTTON
+    ======================================== */
 
-        this.x =
-            Math.random() *
-            (
-                canvas.width - 140
-            ) + 70;
+    startBtn.addEventListener("click", event => {
+        event.preventDefault();
+        openModeScreen();
+    });
 
+    if (backBtn) {
+        backBtn.addEventListener("click", event => {
+            event.preventDefault();
+            returnToMenu();
+        });
+    }
 
-        /*
-            Fruit starts higher
-            than before.
-        */
+    /* ========================================
+       CANVAS SIZE
+    ======================================== */
 
-        this.y =
-            canvas.height * 0.70;
+    function resizeCanvas() {
+        if (!canvas || !ctx) return;
 
+        const ratio = Math.min(window.devicePixelRatio || 1, 2);
 
-        this.size =
-            60 +
-            Math.random() * 10;
+        canvas.width = Math.floor(window.innerWidth * ratio);
+        canvas.height = Math.floor(window.innerHeight * ratio);
 
+        canvas.style.width = window.innerWidth + "px";
+        canvas.style.height = window.innerHeight + "px";
 
-        const centerX =
-            canvas.width / 2;
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    }
 
+    if (canvas && ctx) {
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas);
+    }
 
-        const direction =
-            centerX - this.x;
+    /* ========================================
+       SCORE DISPLAY
+    ======================================== */
 
+    function updateHUD() {
+        if (scoreElement) scoreElement.textContent = score;
+        if (comboElement) comboElement.textContent = combo;
+        if (livesElement) {
+            livesElement.textContent = "❤️".repeat(Math.max(0, lives));
+        }
+    }
 
-        this.speedX =
-            direction * 0.004 +
-            (
-                Math.random() - 0.5
-            ) * 2;
+    /* ========================================
+       START A GAME
+    ======================================== */
 
+    function startGame(mode) {
+        gameMode = mode;
+        score = 0;
+        lives = 3;
+        combo = 0;
 
-        this.speedX =
-            Math.max(
-                -3.5,
-                Math.min(
-                    3.5,
-                    this.speedX
-                )
-            );
+        objects = [];
+        particles = [];
+        bladeTrail = [];
 
+        spawnTimer = 0;
+        lastSliceTime = 0;
+        lastFrameTime = 0;
 
-        this.speedY =
-            -(
-                getSpeed() +
-                Math.random() * 2.5
-            );
+        gameRunning = true;
 
+        if (animationFrame) {
+            cancelAnimationFrame(animationFrame);
+        }
 
-        this.gravity =
-            0.28;
+        showScreen(null);
+        updateHUD();
 
+        // Audio can be blocked until the player interacts.
+        if (musicEnabled && zenMusic) {
+            zenMusic.play().catch(() => {
+                console.log("Music will play when the browser allows it.");
+            });
+        }
 
-        this.emoji =
-            fruitTypes[
-                Math.floor(
-                    Math.random() *
-                    fruitTypes.length
-                )
+        animationFrame = requestAnimationFrame(gameLoop);
+    }
+
+    if (classicBtn) {
+        classicBtn.addEventListener("click", event => {
+            event.preventDefault();
+            startGame("classic");
+        });
+    }
+
+    if (zenBtn) {
+        zenBtn.addEventListener("click", event => {
+            event.preventDefault();
+            startGame("zen");
+        });
+    }
+
+    if (restartBtn) {
+        restartBtn.addEventListener("click", event => {
+            event.preventDefault();
+            showScreen(modeScreen);
+        });
+    }
+
+    /* ========================================
+       MUSIC BUTTON
+    ======================================== */
+
+    if (musicButton) {
+        musicButton.addEventListener("click", () => {
+            musicEnabled = !musicEnabled;
+
+            if (musicEnabled) {
+                musicButton.textContent = "🔊";
+
+                if (zenMusic) {
+                    zenMusic.play().catch(() => {});
+                }
+            } else {
+                musicButton.textContent = "🔇";
+
+                if (zenMusic) {
+                    zenMusic.pause();
+                }
+            }
+        });
+    }
+
+    /* ========================================
+       GAME OBJECTS
+    ======================================== */
+
+    function randomBetween(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    function spawnObjects() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        const fruitTypes = [
+            { emoji: "🍉", color: "#ff477e" },
+            { emoji: "🍊", color: "#ff9f1c" },
+            { emoji: "🍎", color: "#ff3b30" },
+            { emoji: "🍍", color: "#ffd60a" },
+            { emoji: "🥝", color: "#8ac926" },
+            { emoji: "🍑", color: "#ffadad" },
+            { emoji: "🍌", color: "#ffe66d" }
+        ];
+
+        const count = Math.floor(randomBetween(3, 6));
+
+        for (let i = 0; i < count; i++) {
+            const fruit = fruitTypes[
+                Math.floor(Math.random() * fruitTypes.length)
             ];
 
-
-        this.sliced =
-            false;
-
-
-        this.isBomb =
-            false;
-    }
-
-
-    update() {
-
-        this.x +=
-            this.speedX;
-
-
-        this.y +=
-            this.speedY;
-
-
-        this.speedY +=
-            this.gravity;
-
-
-        if (
-            this.x < 35
-        ) {
-
-            this.x = 35;
-
-            this.speedX *=
-                -0.6;
-        }
-
-
-        if (
-            this.x >
-            canvas.width - 35
-        ) {
-
-            this.x =
-                canvas.width - 35;
-
-            this.speedX *=
-                -0.6;
+            objects.push({
+                x: randomBetween(40, Math.max(41, width - 40)),
+                y: height + randomBetween(20, 120),
+                vx: randomBetween(-3, 3),
+                vy: randomBetween(-15, -10),
+                gravity: 0.28,
+                radius: 27,
+                emoji: fruit.emoji,
+                color: fruit.color,
+                sliced: false,
+                missed: false,
+                isBomb: gameMode === "classic" && Math.random() < 0.13
+            });
         }
     }
 
+    /* ========================================
+       PARTICLES
+    ======================================== */
 
-    draw() {
-
-        ctx.save();
-
-
-        ctx.font =
-            this.size +
-            "px Arial";
-
-
-        ctx.textAlign =
-            "center";
-
-
-        ctx.textBaseline =
-            "middle";
-
-
-        ctx.shadowColor =
-            "rgba(0,0,0,.45)";
-
-
-        ctx.shadowBlur =
-            8;
-
-
-        ctx.fillText(
-            this.emoji,
-            this.x,
-            this.y
-        );
-
-
-        ctx.restore();
-    }
-}
-
-
-/* =====================================================
-   BOMB
-===================================================== */
-
-class Bomb {
-
-    constructor() {
-
-        this.x =
-            Math.random() *
-            (
-                canvas.width - 140
-            ) + 70;
-
-
-        this.y =
-            canvas.height * 0.70;
-
-
-        this.size =
-            64;
-
-
-        const centerX =
-            canvas.width / 2;
-
-
-        const direction =
-            centerX - this.x;
-
-
-        this.speedX =
-            direction * 0.004 +
-            (
-                Math.random() - 0.5
-            ) * 2;
-
-
-        this.speedX =
-            Math.max(
-                -3.5,
-                Math.min(
-                    3.5,
-                    this.speedX
-                )
-            );
-
-
-        this.speedY =
-            -(
-                getSpeed() +
-                Math.random() * 2.5
-            );
-
-
-        this.gravity =
-            0.28;
-
-
-        this.sliced =
-            false;
-
-
-        this.isBomb =
-            true;
-    }
-
-
-    update() {
-
-        this.x +=
-            this.speedX;
-
-
-        this.y +=
-            this.speedY;
-
-
-        this.speedY +=
-            this.gravity;
-
-
-        if (
-            this.x < 35
-        ) {
-
-            this.x = 35;
-
-            this.speedX *=
-                -0.6;
-        }
-
-
-        if (
-            this.x >
-            canvas.width - 35
-        ) {
-
-            this.x =
-                canvas.width - 35;
-
-            this.speedX *=
-                -0.6;
+    function makeParticles(x, y, color) {
+        for (let i = 0; i < 12; i++) {
+            particles.push({
+                x,
+                y,
+                vx: randomBetween(-4, 4),
+                vy: randomBetween(-5, 3),
+                life: 1,
+                color
+            });
         }
     }
 
-
-    draw() {
-
-        ctx.save();
-
-
-        ctx.font =
-            this.size +
-            "px Arial";
-
-
-        ctx.textAlign =
-            "center";
-
-
-        ctx.textBaseline =
-            "middle";
-
-
-        ctx.shadowColor =
-            "rgba(0,0,0,.6)";
-
-
-        ctx.shadowBlur =
-            10;
-
-
-        ctx.fillText(
-            "💣",
-            this.x,
-            this.y
-        );
-
-
-        ctx.restore();
-    }
-}
-
-
-/* =====================================================
-   PARTICLE
-===================================================== */
-
-class Particle {
-
-    constructor(
-        x,
-        y,
-        bomb = false
-    ) {
-
-        this.x =
-            x;
-
-
-        this.y =
-            y;
-
-
-        this.vx =
-            (
-                Math.random() - 0.5
-            ) *
-            (
-                bomb
-                    ? 18
-                    : 12
-            );
-
-
-        this.vy =
-            (
-                Math.random() - 0.5
-            ) *
-            (
-                bomb
-                    ? 18
-                    : 12
-            );
-
-
-        this.life =
-            1;
-
-
-        this.size =
-            bomb
-                ? 6
-                : 4;
-
-
-        this.bomb =
-            bomb;
-    }
-
-
-    update() {
-
-        this.x +=
-            this.vx;
-
-
-        this.y +=
-            this.vy;
-
-
-        this.vy +=
-            0.3;
-
-
-        this.life -=
-            0.04;
-    }
-
-
-    draw() {
-
-        ctx.save();
-
-
-        ctx.globalAlpha =
-            this.life;
-
-
-        ctx.fillStyle =
-            this.bomb
-                ? "#ff6545"
-                : "#ffffff";
-
-
-        ctx.beginPath();
-
-
-        ctx.arc(
-            this.x,
-            this.y,
-            this.size,
-            0,
-            Math.PI * 2
-        );
-
-
-        ctx.fill();
-
-
-        ctx.restore();
-    }
-}
-
-
-/* =====================================================
-   MODE RING CENTER
-===================================================== */
-
-function getRingInfo(
-    element
-) {
-
-    const rect =
-        element.getBoundingClientRect();
-
-
-    return {
-
-        x:
-            rect.left +
-            rect.width / 2,
-
-        y:
-            rect.top +
-            rect.height / 2,
-
-        radius:
-            rect.width / 2
-    };
-}
-
-
-/* =====================================================
-   CHECK SLASH THROUGH RING
-===================================================== */
-
-function lineHitsRing(
-    pointA,
-    pointB,
-    ring
-) {
-
-    const info =
-        getRingInfo(ring);
-
-
-    const dx =
-        pointB.x -
-        pointA.x;
-
-
-    const dy =
-        pointB.y -
-        pointA.y;
-
-
-    const length =
-        dx * dx +
-        dy * dy;
-
-
-    if (
-        length === 0
-    ) {
-
-        return false;
-    }
-
-
-    let t =
-        (
-            (
-                info.x -
-                pointA.x
-            ) *
-            dx +
-
-            (
-                info.y -
-                pointA.y
-            ) *
-            dy
-        ) /
-        length;
-
-
-    t =
-        Math.max(
+    /* ========================================
+       SLICE DETECTION
+    ======================================== */
+
+    function distanceToSegment(px, py, x1, y1, x2, y2) {
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+
+        if (dx === 0 && dy === 0) {
+            return Math.hypot(px - x1, py - y1);
+        }
+
+        const t = Math.max(
             0,
             Math.min(
                 1,
-                t
+                ((px - x1) * dx + (py - y1) * dy) /
+                (dx * dx + dy * dy)
             )
         );
 
+        const nearestX = x1 + t * dx;
+        const nearestY = y1 + t * dy;
 
-    const closestX =
-        pointA.x +
-        t * dx;
-
-
-    const closestY =
-        pointA.y +
-        t * dy;
-
-
-    const distance =
-        Math.hypot(
-            info.x -
-            closestX,
-
-            info.y -
-            closestY
-        );
-
-
-    /*
-        Wide hit area so
-        mobile swipes are easy.
-    */
-
-    return (
-        distance <
-        info.radius * 0.90
-    );
-}
-
-
-/* =====================================================
-   SELECT MODE
-===================================================== */
-
-function chooseMode(
-    selectedMode
-) {
-
-    if (
-        modeSelected
-    ) {
-
-        return;
+        return Math.hypot(px - nearestX, py - nearestY);
     }
 
+    function sliceObjects(x1, y1, x2, y2) {
+        const now = performance.now();
 
-    modeSelected =
-        true;
+        for (const object of objects) {
+            if (object.sliced || object.missed) continue;
 
-
-    /*
-        Small ring animation.
-    */
-
-    const selectedRing =
-        selectedMode === "classic"
-            ? classicBtn
-            : zenBtn;
-
-
-    selectedRing.style.transform =
-        "scale(1.15)";
-
-
-    setTimeout(
-        function() {
-
-            selectedRing.style.transform =
-                "";
-
-            startGame(
-                selectedMode
+            const distance = distanceToSegment(
+                object.x,
+                object.y,
+                x1,
+                y1,
+                x2,
+                y2
             );
 
-        },
-        150
-    );
-}
-
-
-/* =====================================================
-   MODE SWIPE START
-===================================================== */
-
-modeScreen.addEventListener(
-    "touchstart",
-    function(event) {
-
-        if (
-            modeSelected
-        ) {
-
-            return;
-        }
-
-
-        const touch =
-            event.touches[0];
-
-
-        modeSlicing =
-            true;
-
-
-        previousModePoint = {
-
-            x:
-                touch.clientX,
-
-            y:
-                touch.clientY
-
-        };
-
-
-        modeSlash = [
-
-            previousModePoint
-
-        ];
-
-
-    },
-    {
-        passive: true
-    }
-);
-
-
-/* =====================================================
-   MODE SWIPE MOVE
-===================================================== */
-
-modeScreen.addEventListener(
-    "touchmove",
-    function(event) {
-
-        if (
-            !modeSlicing ||
-            modeSelected
-        ) {
-
-            return;
-        }
-
-
-        const touch =
-            event.touches[0];
-
-
-        const currentPoint = {
-
-            x:
-                touch.clientX,
-
-            y:
-                touch.clientY
-
-        };
-
-
-        modeSlash.push(
-            currentPoint
-        );
-
-
-        if (
-            modeSlash.length >
-            12
-        ) {
-
-            modeSlash.shift();
-        }
-
-
-        if (
-            previousModePoint
-        ) {
-
-
-            /*
-                CLASSIC
-            */
-
-            if (
-                lineHitsRing(
-                    previousModePoint,
-                    currentPoint,
-                    classicBtn
-                )
-            ) {
-
-                chooseMode(
-                    "classic"
-                );
-
-                return;
-            }
-
-
-            /*
-                ZEN
-            */
-
-            if (
-                lineHitsRing(
-                    previousModePoint,
-                    currentPoint,
-                    zenBtn
-                )
-            ) {
-
-                chooseMode(
-                    "zen"
-                );
-
-                return;
-            }
-
-        }
-
-
-        previousModePoint =
-            currentPoint;
-
-
-    },
-    {
-        passive: true
-    }
-);
-
-
-/* =====================================================
-   MODE SWIPE END
-===================================================== */
-
-modeScreen.addEventListener(
-    "touchend",
-    function() {
-
-        modeSlicing =
-            false;
-
-        previousModePoint =
-            null;
-
-        modeSlash =
-            [];
-
-    }
-);
-
-
-/* =====================================================
-   MODE MOUSE DRAG
-===================================================== */
-
-let mouseSlicing =
-    false;
-
-
-modeScreen.addEventListener(
-    "mousedown",
-    function(event) {
-
-        if (
-            modeSelected
-        ) {
-
-            return;
-        }
-
-
-        mouseSlicing =
-            true;
-
-
-        previousModePoint = {
-
-            x:
-                event.clientX,
-
-            y:
-                event.clientY
-
-        };
-
-
-        modeSlash = [
-
-            previousModePoint
-
-        ];
-    }
-);
-
-
-modeScreen.addEventListener(
-    "mousemove",
-    function(event) {
-
-        if (
-            !mouseSlicing ||
-            modeSelected
-        ) {
-
-            return;
-        }
-
-
-        const currentPoint = {
-
-            x:
-                event.clientX,
-
-            y:
-                event.clientY
-
-        };
-
-
-        modeSlash.push(
-            currentPoint
-        );
-
-
-        if (
-            lineHitsRing(
-                previousModePoint,
-                currentPoint,
-                classicBtn
-            )
-        ) {
-
-            chooseMode(
-                "classic"
-            );
-
-            return;
-        }
-
-
-        if (
-            lineHitsRing(
-                previousModePoint,
-                currentPoint,
-                zenBtn
-            )
-        ) {
-
-            chooseMode(
-                "zen"
-            );
-
-            return;
-        }
-
-
-        previousModePoint =
-            currentPoint;
-    }
-);
-
-
-modeScreen.addEventListener(
-    "mouseup",
-    function() {
-
-        mouseSlicing =
-            false;
-
-        previousModePoint =
-            null;
-
-        modeSlash =
-            [];
-    }
-);
-
-
-/* =====================================================
-   DRAW MODE SLASH
-===================================================== */
-
-function drawModeSlash() {
-
-    if (
-        modeSlash.length <
-        2
-    ) {
-
-        return;
-    }
-
-
-    ctx.save();
-
-
-    ctx.beginPath();
-
-
-    ctx.moveTo(
-        modeSlash[0].x,
-        modeSlash[0].y
-    );
-
-
-    for (
-        let i = 1;
-        i < modeSlash.length;
-        i++
-    ) {
-
-        ctx.lineTo(
-            modeSlash[i].x,
-            modeSlash[i].y
-        );
-    }
-
-
-    ctx.strokeStyle =
-        "rgba(255,255,255,.95)";
-
-
-    ctx.lineWidth =
-        7;
-
-
-    ctx.lineCap =
-        "round";
-
-
-    ctx.lineJoin =
-        "round";
-
-
-    ctx.shadowBlur =
-        18;
-
-
-    ctx.shadowColor =
-        "white";
-
-
-    ctx.stroke();
-
-
-    ctx.restore();
-}
-
-
-/* =====================================================
-   COMBO POPUP
-===================================================== */
-
-function showCombo(
-    x,
-    y
-) {
-
-    const popup =
-        document.createElement(
-            "div"
-        );
-
-
-    popup.textContent =
-        combo + "x";
-
-
-    popup.style.position =
-        "fixed";
-
-
-    popup.style.left =
-        x + "px";
-
-
-    popup.style.top =
-        y + "px";
-
-
-    popup.style.transform =
-        "translate(-50%,-50%) scale(.7)";
-
-
-    popup.style.color =
-        "white";
-
-
-    popup.style.fontSize =
-        combo >= 5
-            ? "46px"
-            : "34px";
-
-
-    popup.style.fontWeight =
-        "900";
-
-
-    popup.style.pointerEvents =
-        "none";
-
-
-    popup.style.zIndex =
-        "200";
-
-
-    popup.style.textShadow =
-        "0 3px 18px rgba(0,0,0,.9)";
-
-
-    popup.style.transition =
-        "all .45s ease";
-
-
-    document.body.appendChild(
-        popup
-    );
-
-
-    requestAnimationFrame(
-        function() {
-
-            popup.style.top =
-                (
-                    y - 70
-                ) + "px";
-
-
-            popup.style.transform =
-                "translate(-50%,-50%) scale(1.25)";
-
-
-            popup.style.opacity =
-                "0";
-        }
-    );
-
-
-    setTimeout(
-        function() {
-
-            popup.remove();
-
-        },
-        500
-    );
-}
-
-
-/* =====================================================
-   COMBO
-===================================================== */
-
-function registerCombo(
-    x,
-    y
-) {
-
-    const now =
-        Date.now();
-
-
-    if (
-        now -
-        lastCutTime <
-        1100
-    ) {
-
-        combo++;
-
-    } else {
-
-        combo =
-            1;
-    }
-
-
-    lastCutTime =
-        now;
-
-
-    clearTimeout(
-        comboTimer
-    );
-
-
-    comboTimer =
-        setTimeout(
-            function() {
-
-                combo =
-                    0;
-
-
-                comboDisplay.textContent =
-                    "—";
-
-            },
-            1100
-        );
-
-
-    comboDisplay.textContent =
-        combo + "x";
-
-
-    showCombo(
-        x,
-        y
-    );
-}
-
-
-/* =====================================================
-   CUT FRUIT
-===================================================== */
-
-function sliceFruit(
-    fruit
-) {
-
-    if (
-        fruit.sliced
-    ) {
-
-        return;
-    }
-
-
-    fruit.sliced =
-        true;
-
-
-    const points =
-        getPoints();
-
-
-    cutNumber++;
-
-
-    const multiplier =
-        Math.max(
-            1,
-            combo + 1
-        );
-
-
-    score +=
-        points *
-        multiplier;
-
-
-    scoreText.textContent =
-        score;
-
-
-    registerCombo(
-        fruit.x,
-        fruit.y
-    );
-
-
-    for (
-        let i = 0;
-        i < 18;
-        i++
-    ) {
-
-        particles.push(
-            new Particle(
-                fruit.x,
-                fruit.y
-            )
-        );
-    }
-}
-
-
-/* =====================================================
-   BOMB HIT
-===================================================== */
-
-function hitBomb(
-    bomb
-) {
-
-    bomb.sliced =
-        true;
-
-
-    for (
-        let i = 0;
-        i < 60;
-        i++
-    ) {
-
-        particles.push(
-            new Particle(
-                bomb.x,
-                bomb.y,
-                true
-            )
-        );
-    }
-
-
-    endGame();
-}
-
-
-/* =====================================================
-   CREATE OBJECT
-===================================================== */
-
-function createObject() {
-
-    if (
-        !playing
-    ) {
-
-        return;
-    }
-
-
-    /*
-        Classic = bombs.
-        Zen = no bombs.
-    */
-
-    if (
-        gameMode === "classic" &&
-        Math.random() < 0.16
-    ) {
-
-        fruits.push(
-            new Bomb()
-        );
-
-    } else {
-
-        fruits.push(
-            new Fruit()
-        );
-    }
-}
-
-
-/* =====================================================
-   CREATE WAVE
-===================================================== */
-
-function createWave() {
-
-    if (
-        !playing
-    ) {
-
-        return;
-    }
-
-
-    const level =
-        Math.floor(
-            score / 100
-        );
-
-
-    let amount;
-
-
-    if (
-        level === 0
-    ) {
-
-        amount =
-            Math.random() < .65
-                ? 1
-                : 2;
-
-    } else if (
-        level === 1
-    ) {
-
-        amount =
-            2;
-
-    } else if (
-        level === 2
-    ) {
-
-        amount =
-            Math.random() < .5
-                ? 2
-                : 3;
-
-    } else {
-
-        amount =
-            Math.min(
-                5,
-                2 +
-                Math.floor(
-                    level / 2
-                )
-            );
-    }
-
-
-    for (
-        let i = 0;
-        i < amount;
-        i++
-    ) {
-
-        createObject();
-    }
-}
-
-
-/* =====================================================
-   SPAWN
-===================================================== */
-
-function scheduleSpawn() {
-
-    if (
-        !playing
-    ) {
-
-        return;
-    }
-
-
-    const level =
-        Math.floor(
-            score / 100
-        );
-
-
-    const delay =
-        Math.max(
-            450,
-            1250 -
-            level * 65
-        ) +
-        Math.random() * 400;
-
-
-    spawnTimer =
-        setTimeout(
-            function() {
-
-                createWave();
-
-                scheduleSpawn();
-
-            },
-            delay
-        );
-}
-
-
-/* =====================================================
-   GAME SLICE
-===================================================== */
-
-function touchMove(
-    x,
-    y
-) {
-
-    if (
-        !playing
-    ) {
-
-        return;
-    }
-
-
-    slash.push({
-
-        x: x,
-        y: y
-
-    });
-
-
-    if (
-        slash.length >
-        10
-    ) {
-
-        slash.shift();
-    }
-
-
-    for (
-        const object of fruits
-    ) {
-
-        if (
-            object.sliced
-        ) {
-
-            continue;
-        }
-
-
-        const distance =
-            Math.hypot(
-                x - object.x,
-                y - object.y
-            );
-
-
-        if (
-            distance <
-            object.size / 2 +
-            32
-        ) {
-
-
-            if (
-                object.isBomb
-            ) {
-
-                hitBomb(
-                    object
-                );
-
-                return;
-
-            }
-
-
-            sliceFruit(
-                object
-            );
-        }
-    }
-}
-
-
-/* =====================================================
-   GAME TOUCH
-===================================================== */
-
-canvas.addEventListener(
-    "touchstart",
-    function(event) {
-
-        if (
-            !playing
-        ) {
-
-            return;
-        }
-
-
-        const touch =
-            event.touches[0];
-
-
-        touchMove(
-            touch.clientX,
-            touch.clientY
-        );
-
-    },
-    {
-        passive: true
-    }
-);
-
-
-canvas.addEventListener(
-    "touchmove",
-    function(event) {
-
-        if (
-            !playing
-        ) {
-
-            return;
-        }
-
-
-        const touch =
-            event.touches[0];
-
-
-        touchMove(
-            touch.clientX,
-            touch.clientY
-        );
-
-    },
-    {
-        passive: true
-    }
-);
-
-
-canvas.addEventListener(
-    "touchend",
-    function() {
-
-        slash = [];
-    }
-);
-
-
-/* =====================================================
-   DRAW GAME SLASH
-===================================================== */
-
-function drawSlash() {
-
-    if (
-        slash.length <
-        2
-    ) {
-
-        return;
-    }
-
-
-    ctx.save();
-
-
-    ctx.beginPath();
-
-
-    ctx.moveTo(
-        slash[0].x,
-        slash[0].y
-    );
-
-
-    for (
-        let i = 1;
-        i < slash.length;
-        i++
-    ) {
-
-        ctx.lineTo(
-            slash[i].x,
-            slash[i].y
-        );
-    }
-
-
-    ctx.strokeStyle =
-        "rgba(255,255,255,.95)";
-
-
-    ctx.lineWidth =
-        6;
-
-
-    ctx.lineCap =
-        "round";
-
-
-    ctx.lineJoin =
-        "round";
-
-
-    ctx.shadowBlur =
-        15;
-
-
-    ctx.shadowColor =
-        "white";
-
-
-    ctx.stroke();
-
-
-    ctx.restore();
-}
-
-
-/* =====================================================
-   GAME LOOP
-===================================================== */
-
-function gameLoop() {
-
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-
-    /*
-        MODE SLASH
-    */
-
-    if (
-        !modeScreen.classList.contains(
-            "hidden"
-        )
-    ) {
-
-        drawModeSlash();
-    }
-
-
-    /*
-        GAME OBJECTS
-    */
-
-    for (
-        let i =
-            fruits.length - 1;
-        i >= 0;
-        i--
-    ) {
-
-        const object =
-            fruits[i];
-
-
-        object.update();
-
-
-        if (
-            !object.sliced
-        ) {
-
-            object.draw();
-        }
-
-
-        if (
-            object.sliced
-        ) {
-
-            fruits.splice(
-                i,
-                1
-            );
-
-            continue;
-        }
-
-
-        /*
-            Missed fruit.
-        */
-
-        if (
-            object.y >
-            canvas.height + 100
-        ) {
-
-            fruits.splice(
-                i,
-                1
-            );
-
-
-            if (
-                !object.isBomb
-            ) {
-
-                lives--;
-
-
-                livesText.textContent =
-                    lives;
-
-
-                if (
-                    lives <= 0
-                ) {
-
-                    endGame();
+            if (distance < object.radius + 10) {
+                object.sliced = true;
+
+                if (object.isBomb) {
+                    lives--;
+                    combo = 0;
+                    makeParticles(object.x, object.y, "#555555");
+                    updateHUD();
+
+                    if (lives <= 0) {
+                        endGame();
+                        return;
+                    }
+                } else {
+                    if (now - lastSliceTime < 900) {
+                        combo++;
+                    } else {
+                        combo = 1;
+                    }
+
+                    lastSliceTime = now;
+
+                    score += combo >= 3 ? 20 : 10;
+
+                    makeParticles(object.x, object.y, object.color);
+                    updateHUD();
                 }
             }
         }
     }
 
+    /* ========================================
+       POINTER / TOUCH CONTROLS
+    ======================================== */
 
-    /*
-        PARTICLES
-    */
-
-    for (
-        let i =
-            particles.length - 1;
-        i >= 0;
-        i--
-    ) {
-
-        const particle =
-            particles[i];
-
-
-        particle.update();
-
-
-        particle.draw();
-
-
-        if (
-            particle.life <= 0
-        ) {
-
-            particles.splice(
-                i,
-                1
-            );
-        }
+    function pointerPosition(event) {
+        return {
+            x: event.clientX,
+            y: event.clientY
+        };
     }
 
-
-    drawSlash();
-
-
-    requestAnimationFrame(
-        gameLoop
-    );
-}
-
-
-/* =====================================================
-   START BUTTON
-   =====================================================
-
-   IMPORTANT:
-   This is a simple click.
-   It is NOT controlled by the
-   canvas or swipe system.
-===================================================== */
-
-startBtn.onclick =
-    function() {
-
-        console.log(
-            "START GAME clicked"
-        );
-
-
-        menu.classList.add(
-            "hidden"
-        );
-
-
-        modeScreen.classList.remove(
-            "hidden"
-        );
-
-
-        modeSelected =
-            false;
-    };
-
-
-/* =====================================================
-   BACK BUTTON
-===================================================== */
-
-backBtn.onclick =
-    function() {
-
-        modeScreen.classList.add(
-            "hidden"
-        );
-
-
-        menu.classList.remove(
-            "hidden"
-        );
-
-
-        modeSelected =
-            false;
-
-
-        modeSlash =
-            [];
-
-
-        previousModePoint =
-            null;
-    };
-
-
-/* =====================================================
-   CLASSIC TAP
-===================================================== */
-
-classicBtn.onclick =
-    function() {
-
-        chooseMode(
-            "classic"
-        );
-    };
-
-
-/* =====================================================
-   ZEN TAP
-===================================================== */
-
-zenBtn.onclick =
-    function() {
-
-        chooseMode(
-            "zen"
-        );
-    };
-
-
-/* =====================================================
-   START ACTUAL GAME
-===================================================== */
-
-function startGame(
-    selectedMode
-) {
-
-    gameMode =
-        selectedMode;
-
-
-    score =
-        0;
-
-
-    lives =
-        3;
-
-
-    combo =
-        0;
-
-
-    cutNumber =
-        0;
-
-
-    lastCutTime =
-        0;
-
-
-    clearTimeout(
-        spawnTimer
-    );
-
-
-    clearTimeout(
-        comboTimer
-    );
-
-
-    fruits =
-        [];
-
-
-    particles =
-        [];
-
-
-    slash =
-        [];
-
-
-    scoreText.textContent =
-        "0";
-
-
-    livesText.textContent =
-        "3";
-
-
-    comboDisplay.textContent =
-        "—";
-
-
-    modeScreen.classList.add(
-        "hidden"
-    );
-
-
-    gameOver.classList.add(
-        "hidden"
-    );
-
-
-    playing =
-        true;
-
-
-    /*
-        Start music after
-        user selection.
-    */
-
-    if (
-        musicOn
-    ) {
-
-        zenMusic.currentTime =
-            0;
-
-
-        zenMusic.volume =
-            0.35;
-
-
-        zenMusic.play()
-            .catch(
-                function() {}
-            );
-    }
-
-
-    createWave();
-
-
-    scheduleSpawn();
-}
-
-
-/* =====================================================
-   GAME OVER
-===================================================== */
-
-function endGame() {
-
-    if (
-        !playing
-    ) {
-
-        return;
-    }
-
-
-    playing =
-        false;
-
-
-    clearTimeout(
-        spawnTimer
-    );
-
-
-    clearTimeout(
-        comboTimer
-    );
-
-
-    zenMusic.pause();
-
-
-    finalScore.textContent =
-        score;
-
-
-    finalMode.textContent =
-        gameMode === "classic"
-            ? "CLASSIC MODE"
-            : "ZEN MODE";
-
-
-    gameOver.classList.remove(
-        "hidden"
-    );
-}
-
-
-/* =====================================================
-   PLAY AGAIN
-===================================================== */
-
-restartBtn.onclick =
-    function() {
-
-        gameOver.classList.add(
-            "hidden"
-        );
-
-
-        modeScreen.classList.remove(
-            "hidden"
-        );
-
-
-        modeSelected =
-            false;
-    };
-
-
-/* =====================================================
-   MAIN MENU
-===================================================== */
-
-menuBtn.onclick =
-    function() {
-
-        playing =
-            false;
-
-
-        clearTimeout(
-            spawnTimer
-        );
-
-
-        clearTimeout(
-            comboTimer
-        );
-
-
-        zenMusic.pause();
-
-
-        fruits =
-            [];
-
-
-        particles =
-            [];
-
-
-        slash =
-            [];
-
-
-        gameOver.classList.add(
-            "hidden"
-        );
-
-
-        modeScreen.classList.add(
-            "hidden"
-        );
-
-
-        menu.classList.remove(
-            "hidden"
-        );
-
-
-        modeSelected =
-            false;
-    };
-
-
-/* =====================================================
-   MUSIC BUTTON
-===================================================== */
-
-musicButton.onclick =
-    function() {
-
-        if (
-            zenMusic.paused
-        ) {
-
-            musicOn =
-                true;
-
-
-            zenMusic.play()
-                .catch(
-                    function() {}
+    if (canvas) {
+        canvas.addEventListener("pointerdown", event => {
+            if (!gameRunning) return;
+
+            pointerDown = true;
+            previousPointer = pointerPosition(event);
+
+            if (canvas.setPointerCapture) {
+                try {
+                    canvas.setPointerCapture(event.pointerId);
+                } catch (_) {}
+            }
+        });
+
+        canvas.addEventListener("pointermove", event => {
+            if (!gameRunning || !pointerDown) return;
+
+            const current = pointerPosition(event);
+
+            if (previousPointer) {
+                bladeTrail.push({
+                    x: current.x,
+                    y: current.y,
+                    life: 1
+                });
+
+                sliceObjects(
+                    previousPointer.x,
+                    previousPointer.y,
+                    current.x,
+                    current.y
                 );
+            }
 
+            previousPointer = current;
+        });
 
-            musicButton.textContent =
-                "🔊";
-
-        } else {
-
-            musicOn =
-                false;
-
-
-            zenMusic.pause();
-
-
-            musicButton.textContent =
-                "🔇";
+        function stopPointer() {
+            pointerDown = false;
+            previousPointer = null;
         }
-    };
 
+        canvas.addEventListener("pointerup", stopPointer);
+        canvas.addEventListener("pointercancel", stopPointer);
+        canvas.addEventListener("pointerleave", stopPointer);
+    }
 
-/* =====================================================
-   START GAME LOOP
-===================================================== */
+    /* ========================================
+       END GAME
+    ======================================== */
 
-requestAnimationFrame(
-    gameLoop
-);
+    function endGame() {
+        gameRunning = false;
+
+        if (gameOver) {
+            const finalScore = document.getElementById("finalScore");
+            if (finalScore) finalScore.textContent = score;
+
+            showScreen(gameOver);
+        } else {
+            showScreen(modeScreen);
+            alert("Game over! Your score: " + score);
+        }
+
+        if (zenMusic) zenMusic.pause();
+    }
+
+    /* ========================================
+       DRAWING
+    ======================================== */
+
+    function drawBackground() {
+        const gradient = ctx.createLinearGradient(
+            0, 0, window.innerWidth, window.innerHeight
+        );
+
+        gradient.addColorStop(0, "#100b2e");
+        gradient.addColorStop(0.5, "#171044");
+        gradient.addColorStop(1, "#071a2e");
+
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+        // Decorative stars
+        ctx.save();
+        ctx.globalAlpha = 0.35;
+
+        for (let i = 0; i < 45; i++) {
+            const x = (i * 137) % window.innerWidth;
+            const y = (i * 83) % window.innerHeight;
+
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath();
+            ctx.arc(x, y, (i % 3) + 0.5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        ctx.restore();
+    }
+
+    function drawObjects() {
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        for (const object of objects) {
+            if (object.sliced || object.missed) continue;
+
+            if (object.isBomb) {
+                ctx.font = "48px serif";
+                ctx.fillText("💣", object.x, object.y);
+            } else {
+                ctx.font = "48px serif";
+                ctx.fillText(object.emoji, object.x, object.y);
+            }
+        }
+    }
+
+    function drawParticles() {
+        for (const particle of particles) {
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, particle.life);
+            ctx.fillStyle = particle.color;
+            ctx.beginPath();
+            ctx.arc(particle.x, particle.y, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+
+    function drawBlade() {
+        if (bladeTrail.length < 2) return;
+
+        ctx.save();
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+
+        for (let i = 1; i < bladeTrail.length; i++) {
+            const previous = bladeTrail[i - 1];
+            const current = bladeTrail[i];
+
+            ctx.globalAlpha = Math.max(0, current.life);
+            ctx.strokeStyle = "#8ffcff";
+            ctx.lineWidth = 3 + current.life * 5;
+            ctx.shadowBlur = 18;
+            ctx.shadowColor = "#00eaff";
+
+            ctx.beginPath();
+            ctx.moveTo(previous.x, previous.y);
+            ctx.lineTo(current.x, current.y);
+            ctx.stroke();
+        }
+
+        ctx.restore();
+    }
+
+    /* ========================================
+       MAIN GAME LOOP
+    ======================================== */
+
+    function gameLoop(timestamp) {
+        if (!gameRunning || !ctx) return;
+
+        const delta = lastFrameTime
+            ? Math.min((timestamp - lastFrameTime) / 16.67, 2)
+            : 1;
+
+        lastFrameTime = timestamp;
+
+        drawBackground();
+
+        spawnTimer += delta;
+
+        if (spawnTimer > 55) {
+            spawnObjects();
+            spawnTimer = 0;
+        }
+
+        for (const object of objects) {
+            if (object.sliced || object.missed) continue;
+
+            object.x += object.vx * delta;
+            object.y += object.vy * delta;
+            object.vy += object.gravity * delta;
+
+            if (object.y > window.innerHeight + 80) {
+                object.missed = true;
+            }
+        }
+
+        // Remove old objects
+        objects = objects.filter(object =>
+            !object.sliced &&
+            !object.missed &&
+            object.y < window.innerHeight + 150
+        );
+
+        for (const particle of particles) {
+            particle.x += particle.vx * delta;
+            particle.y += particle.vy * delta;
+            particle.vy += 0.15 * delta;
+            particle.life -= 0.025 * delta;
+        }
+
+        particles = particles.filter(particle => particle.life > 0);
+
+        for (const point of bladeTrail) {
+            point.life -= 0.08 * delta;
+        }
+
+        bladeTrail = bladeTrail.filter(point => point.life > 0);
+
+        drawObjects();
+        drawParticles();
+        drawBlade();
+
+        animationFrame = requestAnimationFrame(gameLoop);
+    }
+
+    /* ========================================
+       MODE RING SWIPE SUPPORT
+       Swipe across a ring to choose a mode.
+       Buttons remain tappable too.
+    ======================================== */
+
+    let modePointerStart = null;
+
+    if (modeScreen) {
+        modeScreen.addEventListener("pointerdown", event => {
+            modePointerStart = {
+                x: event.clientX,
+                y: event.clientY
+            };
+        });
+
+        modeScreen.addEventListener("pointerup", event => {
+            if (!modePointerStart) return;
+
+            const startX = modePointerStart.x;
+            const startY = modePointerStart.y;
+            const endX = event.clientX;
+            const endY = event.clientY;
+
+            const distance = Math.hypot(
+                endX - startX,
+                endY - startY
+            );
+
+            modePointerStart = null;
+
+            // A tap is handled by the ring buttons.
+            if (distance < 35) return;
+
+            const element = document.elementFromPoint(endX, endY);
+
+            if (element && element.closest("#classicBtn")) {
+                startGame("classic");
+                return;
+            }
+
+            if (element && element.closest("#zenBtn")) {
+                startGame("zen");
+                return;
+            }
+
+            // If the swipe ends on the left or right half of the screen,
+            // choose the corresponding mode.
+            if (endX < window.innerWidth / 2) {
+                startGame("classic");
+            } else {
+                startGame("zen");
+            }
+        });
+    }
+
+    /* ========================================
+       INITIAL SCREEN
+    ======================================== */
+
+    showScreen(menu);
+    updateHUD();
+
+    console.log("Ninja Fruit loaded successfully.");
+});
 ```

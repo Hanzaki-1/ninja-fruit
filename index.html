@@ -3,177 +3,170 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1,
-                   user-scalable=no, viewport-fit=cover">
 
-    <meta name="theme-color" content="#100b2e">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0,
+                   maximum-scale=1.0, user-scalable=no">
+
     <title>Ninja Fruit</title>
 
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
 </head>
 
 <body>
-<div id="game">
-
-    <!-- MUSIC -->
-    <audio id="zenMusic" loop preload="auto">
-        <source src="zen.mp3" type="audio/mpeg">
-    </audio>
-
-    <!-- GAME HUD -->
-    <header id="topBar" class="top-bar hidden">
-        <div class="hud-item">
-            <span class="hud-label">SCORE</span>
-            <span id="score" class="hud-value">0</span>
-        </div>
-
-        <div class="hud-item combo-hud">
-            <span class="hud-label">COMBO</span>
-            <span id="combo" class="hud-value">0</span>
-        </div>
-
-        <div class="hud-item">
-            <span class="hud-label">LIVES</span>
-            <span id="lives" class="hud-value">❤️❤️❤️</span>
-        </div>
-    </header>
-
-    <button id="musicButton"
-            class="music-button"
-            type="button"
-            aria-label="Toggle music">🔊</button>
-
-    <!-- GAME CANVAS -->
-    <canvas id="canvas"></canvas>
 
     <!-- MAIN MENU -->
-    <section id="menu" class="screen">
-        <div class="menu-panel">
-            <div class="ninja-icon">🥷</div>
+    <div id="menu" class="screen">
+        <div class="menu-box">
 
-            <p class="title-small">THE ULTIMATE</p>
+            <div class="ninja">🥷</div>
 
-            <h1 class="game-title">
-                NINJA <span>FRUIT</span>
+            <div class="small-title">THE ULTIMATE</div>
+
+            <h1>
+                NINJA
+                <span>FRUIT</span>
             </h1>
 
-            <div class="blade-line">
-                <span></span>
-                <b>⚔</b>
-                <span></span>
-            </div>
+            <div class="line">⚔</div>
 
-            <p class="tagline">SLICE • COMBO • SURVIVE</p>
+            <p>SLICE • COMBO • SURVIVE</p>
 
-            <button id="startBtn"
-                    class="main-button"
-                    type="button">
-                START GAME <span>➜</span>
+            <!-- IMPORTANT: THIS IS THE START BUTTON -->
+            <button id="startBtn" type="button">
+                START GAME
+                <span>➜</span>
             </button>
 
-            <p class="hint">Swipe your finger to slice fruit</p>
+            <small>
+                Tap to choose your mode
+            </small>
 
-            <div class="menu-decoration">
-                <span>🍉</span>
-                <span>🍊</span>
-                <span>🍎</span>
-            </div>
         </div>
-    </section>
+    </div>
 
-    <!-- MODE SELECTION -->
-    <section id="modeScreen" class="screen hidden">
-        <div class="mode-selection">
 
-            <p class="title-small">READY YOUR BLADE</p>
+    <!-- MODE SCREEN -->
+    <div id="modeScreen" class="screen hidden">
 
-            <h2 class="mode-heading">
+        <div class="mode-box">
+
+            <div class="small-title">
+                READY YOUR BLADE
+            </div>
+
+            <h2>
                 CHOOSE <span>YOUR MODE</span>
             </h2>
 
-            <p class="mode-description">
-                Swipe through a ring or tap to choose
+            <p>
+                Tap a mode to start
             </p>
 
-            <div class="mode-rings">
+            <div class="modes">
 
-                <!-- CLASSIC -->
                 <button id="classicBtn"
-                        class="mode-ring classic-ring"
+                        class="mode classic"
                         type="button">
-                    <span class="ring-glow"></span>
 
-                    <span class="ring-content">
-                        <span class="mode-icon">💣</span>
-                        <strong>CLASSIC</strong>
-                        <small>MODE</small>
-                        <span class="mode-divider"></span>
-                        <span class="mode-detail">3 LIVES</span>
-                        <span class="mode-detail">AVOID BOMBS</span>
-                    </span>
+                    <div class="mode-icon">💣</div>
+
+                    <strong>CLASSIC</strong>
+
+                    <small>3 LIVES • BOMBS</small>
+
                 </button>
 
-                <!-- ZEN -->
-                <button id="zenBtn"
-                        class="mode-ring zen-ring"
-                        type="button">
-                    <span class="ring-glow"></span>
 
-                    <span class="ring-content">
-                        <span class="mode-icon">🌿</span>
-                        <strong>ZEN</strong>
-                        <small>MODE</small>
-                        <span class="mode-divider"></span>
-                        <span class="mode-detail">NO BOMBS</span>
-                        <span class="mode-detail">RELAX & SLICE</span>
-                    </span>
+                <button id="zenBtn"
+                        class="mode zen"
+                        type="button">
+
+                    <div class="mode-icon">🌿</div>
+
+                    <strong>ZEN</strong>
+
+                    <small>NO BOMBS</small>
+
                 </button>
 
             </div>
 
-            <p class="mode-help">
-                <span class="help-dot"></span>
-                SLICE THE RING TO SELECT
-                <span class="help-dot"></span>
-            </p>
-
             <button id="backBtn"
-                    class="back-button"
+                    class="back"
                     type="button">
-                ← BACK TO MENU
+                ← BACK
             </button>
+
         </div>
-    </section>
+
+    </div>
+
+
+    <!-- GAME -->
+    <div id="gameScreen" class="hidden">
+
+        <canvas id="canvas"></canvas>
+
+        <div class="hud">
+
+            <div>
+                SCORE
+                <strong id="score">0</strong>
+            </div>
+
+            <div>
+                COMBO
+                <strong id="combo">0</strong>
+            </div>
+
+            <div>
+                LIVES
+                <strong id="lives">❤️❤️❤️</strong>
+            </div>
+
+        </div>
+
+        <button id="musicButton">
+            🔊
+        </button>
+
+    </div>
+
 
     <!-- GAME OVER -->
-    <section id="gameOver" class="screen hidden">
-        <div class="game-over-panel">
-            <div class="game-over-icon">💥</div>
+    <div id="gameOver" class="screen hidden">
 
-            <p class="title-small">NICE TRY, NINJA</p>
+        <div class="game-over">
 
-            <h2 class="game-over-title">GAME OVER</h2>
+            <div class="ninja">💥</div>
 
-            <p class="final-label">YOUR FINAL SCORE</p>
-            <p id="finalScore" class="final-score">0</p>
+            <div class="small-title">
+                NICE TRY, NINJA
+            </div>
 
-            <button id="restartBtn"
-                    class="main-button"
-                    type="button">
-                PLAY AGAIN <span>↻</span>
+            <h2>GAME OVER</h2>
+
+            <p>FINAL SCORE</p>
+
+            <strong id="finalScore">0</strong>
+
+            <button id="restartBtn">
+                PLAY AGAIN ↻
             </button>
 
-            <button id="menuBtn"
-                    class="back-button"
-                    type="button">
+            <button id="menuBtn" class="back">
                 MAIN MENU
             </button>
-        </div>
-    </section>
 
-</div>
+        </div>
+
+    </div>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="script.js"></script>
+
 </body>
 </html>
 ```

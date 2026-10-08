@@ -1,36 +1,60 @@
 ```javascript
 "use strict";
 
-/* =========================================
-   GET ELEMENTS
-========================================= */
 
-const modeScreen = document.getElementById("modeScreen");
-const gameScreen = document.getElementById("gameScreen");
-const gameOver = document.getElementById("gameOver");
+/* =====================================
+   ELEMENTS
+===================================== */
 
-const classicBtn = document.getElementById("classicBtn");
-const zenBtn = document.getElementById("zenBtn");
+const modeScreen =
+    document.getElementById("modeScreen");
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const gameScreen =
+    document.getElementById("gameScreen");
 
-const scoreText = document.getElementById("score");
-const comboText = document.getElementById("combo");
-const livesText = document.getElementById("lives");
+const gameOver =
+    document.getElementById("gameOver");
 
-const finalScore = document.getElementById("finalScore");
+const classicBtn =
+    document.getElementById("classicBtn");
 
-const restartBtn = document.getElementById("restartBtn");
-const menuBtn = document.getElementById("menuBtn");
+const zenBtn =
+    document.getElementById("zenBtn");
 
-const musicButton = document.getElementById("musicButton");
-const music = document.getElementById("zenMusic");
+const canvas =
+    document.getElementById("canvas");
+
+const ctx =
+    canvas.getContext("2d");
+
+const scoreText =
+    document.getElementById("score");
+
+const comboText =
+    document.getElementById("combo");
+
+const livesText =
+    document.getElementById("lives");
+
+const finalScore =
+    document.getElementById("finalScore");
+
+const restartBtn =
+    document.getElementById("restartBtn");
+
+const menuBtn =
+    document.getElementById("menuBtn");
+
+const musicButton =
+    document.getElementById("musicButton");
+
+const music =
+    document.getElementById("zenMusic");
 
 
-/* =========================================
-   GAME VARIABLES
-========================================= */
+/* =====================================
+   GAME DATA
+===================================== */
 
 let gameMode = "classic";
 
@@ -53,9 +77,9 @@ let previousPoint = null;
 let musicOn = true;
 
 
-/* =========================================
-   CANVAS SIZE
-========================================= */
+/* =====================================
+   CANVAS
+===================================== */
 
 function resizeCanvas() {
 
@@ -64,14 +88,17 @@ function resizeCanvas() {
 
 }
 
-window.addEventListener("resize", resizeCanvas);
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
 
 resizeCanvas();
 
 
-/* =========================================
-   SCREEN FUNCTIONS
-========================================= */
+/* =====================================
+   SCREEN CONTROL
+===================================== */
 
 function showModeScreen() {
 
@@ -97,88 +124,70 @@ function showGame() {
 }
 
 
-function showGameOver() {
-
-    running = false;
-
-    finalScore.textContent = score;
-
-    modeScreen.classList.add("hidden");
-
-    gameScreen.classList.add("hidden");
-
-    gameOver.classList.remove("hidden");
-
-}
-
-
-/* =========================================
-   IMPORTANT:
+/* =====================================
    MODE BUTTONS
-========================================= */
+===================================== */
 
 /*
-   We are using onclick directly.
-
-   NO SWIPE.
-   NO POINTER MOVE.
-   NO SLICE TO SELECT.
+    SIMPLE CLICK EVENTS ONLY.
 */
 
+classicBtn.addEventListener(
+    "click",
+    function () {
 
-classicBtn.onclick = function () {
+        console.log("CLASSIC SELECTED");
 
-    console.log("CLASSIC BUTTON CLICKED");
+        startGame("classic");
 
-    startGame("classic");
-
-};
-
-
-zenBtn.onclick = function () {
-
-    console.log("ZEN BUTTON CLICKED");
-
-    startGame("zen");
-
-};
+    }
+);
 
 
-/* =========================================
+zenBtn.addEventListener(
+    "click",
+    function () {
+
+        console.log("ZEN SELECTED");
+
+        startGame("zen");
+
+    }
+);
+
+
+/* =====================================
    START GAME
-========================================= */
+===================================== */
 
 function startGame(mode) {
 
-    console.log("STARTING GAME:", mode);
+    console.log(
+        "GAME START:",
+        mode
+    );
 
     gameMode = mode;
 
     score = 0;
-
     combo = 0;
-
     lives = 3;
 
     fruits = [];
-
     particles = [];
-
     blade = [];
 
     spawnTimer = 0;
-
     lastTime = 0;
 
     slicing = false;
-
     previousPoint = null;
-
-    running = true;
 
     updateHUD();
 
     showGame();
+
+    running = true;
 
     playMusic();
 
@@ -187,23 +196,19 @@ function startGame(mode) {
 }
 
 
-/* =========================================
+/* =====================================
    MUSIC
-========================================= */
+===================================== */
 
 function playMusic() {
 
-    if (!musicOn) {
-        return;
-    }
+    if (!musicOn) return;
 
     music.volume = 0.35;
 
-    music.play().catch(function () {
-
-        console.log("Music waiting for browser permission");
-
-    });
+    music.play().catch(
+        function () {}
+    );
 
 }
 
@@ -217,46 +222,55 @@ function stopMusic() {
 }
 
 
-musicButton.onclick = function () {
+musicButton.addEventListener(
+    "click",
+    function () {
 
-    musicOn = !musicOn;
+        musicOn = !musicOn;
 
-    if (musicOn) {
+        if (musicOn) {
 
-        musicButton.textContent = "🔊";
+            musicButton.textContent =
+                "🔊";
 
-        playMusic();
+            playMusic();
 
-    } else {
+        } else {
 
-        musicButton.textContent = "🔇";
+            musicButton.textContent =
+                "🔇";
 
-        stopMusic();
+            stopMusic();
+
+        }
 
     }
+);
 
-};
 
-
-/* =========================================
+/* =====================================
    HUD
-========================================= */
+===================================== */
 
 function updateHUD() {
 
-    scoreText.textContent = score;
+    scoreText.textContent =
+        score;
 
-    comboText.textContent = combo;
+    comboText.textContent =
+        combo;
 
     livesText.textContent =
-        "❤️".repeat(Math.max(0, lives));
+        "❤️".repeat(
+            Math.max(0, lives)
+        );
 
 }
 
 
-/* =========================================
-   FRUIT TYPES
-========================================= */
+/* =====================================
+   FRUITS
+===================================== */
 
 const fruitTypes = [
     "🍎",
@@ -269,10 +283,6 @@ const fruitTypes = [
     "🥥"
 ];
 
-
-/* =========================================
-   SPAWN FRUIT
-========================================= */
 
 function spawnFruit() {
 
@@ -294,40 +304,32 @@ function spawnFruit() {
 
     let bomb = false;
 
+
     if (gameMode === "classic") {
 
-        bomb = Math.random() < 0.14;
+        bomb =
+            Math.random() < 0.14;
 
     }
 
 
-    let emoji;
-
-    if (bomb) {
-
-        emoji = "💣";
-
-    } else {
-
-        emoji =
-            fruitTypes[
+    const emoji =
+        bomb
+            ? "💣"
+            : fruitTypes[
                 Math.floor(
                     Math.random() *
                     fruitTypes.length
                 )
             ];
 
-    }
-
 
     fruits.push({
 
         x: x,
-
         y: y,
 
         vx: vx,
-
         vy: vy,
 
         gravity: 0.35,
@@ -345,18 +347,25 @@ function spawnFruit() {
 }
 
 
-/* =========================================
+/* =====================================
    PARTICLES
-========================================= */
+===================================== */
 
-function createParticles(x, y, emoji) {
+function createParticles(
+    x,
+    y,
+    emoji
+) {
 
-    for (let i = 0; i < 12; i++) {
+    for (
+        let i = 0;
+        i < 12;
+        i++
+    ) {
 
         particles.push({
 
             x: x,
-
             y: y,
 
             vx:
@@ -376,9 +385,9 @@ function createParticles(x, y, emoji) {
 }
 
 
-/* =========================================
-   DISTANCE TO LINE
-========================================= */
+/* =====================================
+   LINE COLLISION
+===================================== */
 
 function distanceToLine(
     px,
@@ -389,12 +398,17 @@ function distanceToLine(
     y2
 ) {
 
-    const dx = x2 - x1;
+    const dx =
+        x2 - x1;
 
-    const dy = y2 - y1;
+    const dy =
+        y2 - y1;
 
 
-    if (dx === 0 && dy === 0) {
+    if (
+        dx === 0 &&
+        dy === 0
+    ) {
 
         return Math.hypot(
             px - x1,
@@ -437,9 +451,9 @@ function distanceToLine(
 }
 
 
-/* =========================================
-   CHECK SLICE
-========================================= */
+/* =====================================
+   SLICE
+===================================== */
 
 function checkSlice(
     x1,
@@ -491,7 +505,7 @@ function checkSlice(
 
                 if (lives <= 0) {
 
-                    showGameOver();
+                    endGame();
 
                 }
 
@@ -504,7 +518,8 @@ function checkSlice(
 
                 if (combo >= 3) {
 
-                    score += combo * 2;
+                    score +=
+                        combo * 2;
 
                 }
 
@@ -526,72 +541,84 @@ function checkSlice(
 }
 
 
-/* =========================================
-   GAME TOUCH / MOUSE
-========================================= */
+/* =====================================
+   PLAYER SLICING
+===================================== */
 
-canvas.onpointerdown = function (event) {
+canvas.addEventListener(
+    "pointerdown",
+    function (event) {
 
-    if (!running) {
-        return;
+        if (!running) return;
+
+        slicing = true;
+
+        previousPoint = {
+
+            x: event.clientX,
+            y: event.clientY
+
+        };
+
+        blade = [
+            previousPoint
+        ];
+
     }
-
-    slicing = true;
-
-    previousPoint = {
-
-        x: event.clientX,
-
-        y: event.clientY
-
-    };
-
-    blade = [previousPoint];
-
-};
+);
 
 
-canvas.onpointermove = function (event) {
+canvas.addEventListener(
+    "pointermove",
+    function (event) {
 
-    if (!slicing || !running) {
-        return;
-    }
-
-
-    const currentPoint = {
-
-        x: event.clientX,
-
-        y: event.clientY
-
-    };
+        if (
+            !slicing ||
+            !running
+        ) {
+            return;
+        }
 
 
-    if (previousPoint) {
+        const currentPoint = {
 
-        checkSlice(
-            previousPoint.x,
-            previousPoint.y,
-            currentPoint.x,
-            currentPoint.y
+            x: event.clientX,
+            y: event.clientY
+
+        };
+
+
+        if (previousPoint) {
+
+            checkSlice(
+                previousPoint.x,
+                previousPoint.y,
+                currentPoint.x,
+                currentPoint.y
+            );
+
+        }
+
+
+        blade.push(
+            currentPoint
         );
 
+
+        if (
+            blade.length > 12
+        ) {
+
+            blade.shift();
+
+        }
+
+
+        previousPoint =
+            currentPoint;
+
     }
-
-
-    blade.push(currentPoint);
-
-
-    if (blade.length > 12) {
-
-        blade.shift();
-
-    }
-
-
-    previousPoint = currentPoint;
-
-};
+);
 
 
 function stopSlicing() {
@@ -603,16 +630,25 @@ function stopSlicing() {
 }
 
 
-canvas.onpointerup = stopSlicing;
+canvas.addEventListener(
+    "pointerup",
+    stopSlicing
+);
 
-canvas.onpointercancel = stopSlicing;
+canvas.addEventListener(
+    "pointercancel",
+    stopSlicing
+);
 
-canvas.onpointerleave = stopSlicing;
+canvas.addEventListener(
+    "pointerleave",
+    stopSlicing
+);
 
 
-/* =========================================
+/* =====================================
    GAME LOOP
-========================================= */
+===================================== */
 
 function gameLoop(time) {
 
@@ -643,14 +679,16 @@ function gameLoop(time) {
     draw();
 
 
-    requestAnimationFrame(gameLoop);
+    requestAnimationFrame(
+        gameLoop
+    );
 
 }
 
 
-/* =========================================
+/* =====================================
    UPDATE
-========================================= */
+===================================== */
 
 function update(delta) {
 
@@ -663,7 +701,10 @@ function update(delta) {
             : 34;
 
 
-    if (spawnTimer > spawnRate) {
+    if (
+        spawnTimer >
+        spawnRate
+    ) {
 
         spawnFruit();
 
@@ -678,7 +719,8 @@ function update(delta) {
         i--
     ) {
 
-        const fruit = fruits[i];
+        const fruit =
+            fruits[i];
 
 
         fruit.vy +=
@@ -698,7 +740,9 @@ function update(delta) {
             canvas.height + 100
         ) {
 
-            if (!fruit.sliced) {
+            if (
+                !fruit.sliced
+            ) {
 
                 combo = 0;
 
@@ -707,7 +751,10 @@ function update(delta) {
             }
 
 
-            fruits.splice(i, 1);
+            fruits.splice(
+                i,
+                1
+            );
 
         }
 
@@ -715,33 +762,37 @@ function update(delta) {
 
 
     for (
-        let i = particles.length - 1;
+        let i =
+            particles.length - 1;
         i >= 0;
         i--
     ) {
 
-        const p = particles[i];
+        const p =
+            particles[i];
 
 
         p.x +=
             p.vx * delta;
 
-
         p.y +=
             p.vy * delta;
 
-
         p.vy +=
             0.25 * delta;
-
 
         p.life -=
             0.035 * delta;
 
 
-        if (p.life <= 0) {
+        if (
+            p.life <= 0
+        ) {
 
-            particles.splice(i, 1);
+            particles.splice(
+                i,
+                1
+            );
 
         }
 
@@ -769,9 +820,9 @@ function update(delta) {
 }
 
 
-/* =========================================
+/* =====================================
    DRAW
-========================================= */
+===================================== */
 
 function draw() {
 
@@ -783,16 +834,21 @@ function draw() {
     );
 
 
-    /* FRUITS */
+    /* FRUIT */
 
-    for (const fruit of fruits) {
+    for (
+        const fruit of fruits
+    ) {
 
         ctx.font =
-            fruit.size + "px Arial";
+            fruit.size +
+            "px Arial";
 
-        ctx.textAlign = "center";
+        ctx.textAlign =
+            "center";
 
-        ctx.textBaseline = "middle";
+        ctx.textBaseline =
+            "middle";
 
         ctx.fillText(
             fruit.emoji,
@@ -805,7 +861,9 @@ function draw() {
 
     /* PARTICLES */
 
-    for (const p of particles) {
+    for (
+        const p of particles
+    ) {
 
         ctx.globalAlpha =
             Math.max(
@@ -815,8 +873,6 @@ function draw() {
 
         ctx.font =
             "24px Arial";
-
-        ctx.textAlign = "center";
 
         ctx.fillText(
             p.emoji,
@@ -832,7 +888,9 @@ function draw() {
 
     /* BLADE */
 
-    if (blade.length > 1) {
+    if (
+        blade.length > 1
+    ) {
 
         ctx.beginPath();
 
@@ -878,42 +936,67 @@ function draw() {
 }
 
 
-/* =========================================
-   GAME OVER BUTTONS
-========================================= */
+/* =====================================
+   GAME OVER
+===================================== */
 
-restartBtn.onclick = function () {
+function endGame() {
 
-    startGame(gameMode);
+    running = false;
 
-};
+    finalScore.textContent =
+        score;
+
+    gameScreen.classList.add(
+        "hidden"
+    );
+
+    gameOver.classList.remove(
+        "hidden"
+    );
+
+}
 
 
-menuBtn.onclick = function () {
+/* =====================================
+   RESTART
+===================================== */
 
-    stopMusic();
+restartBtn.addEventListener(
+    "click",
+    function () {
 
-    showModeScreen();
+        startGame(
+            gameMode
+        );
 
-};
+    }
+);
 
 
-/* =========================================
-   INITIAL SCREEN
-========================================= */
+/* =====================================
+   MENU
+===================================== */
+
+menuBtn.addEventListener(
+    "click",
+    function () {
+
+        stopMusic();
+
+        showModeScreen();
+
+    }
+);
+
+
+/* =====================================
+   INITIAL STATE
+===================================== */
 
 showModeScreen();
 
-
-/* =========================================
-   DEBUG
-========================================= */
-
 console.log(
-    "NINJA FRUIT LOADED SUCCESSFULLY"
-);
-
-console.log(
-    "Tap CLASSIC or ZEN to start."
+    "NINJA FRUIT READY"
 );
 ```

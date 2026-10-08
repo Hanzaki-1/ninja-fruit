@@ -1,781 +1,684 @@
+```css
+/* =====================================
+   NINJA FRUIT — STYLE
+===================================== */
+
+:root {
+    --background: #100b2e;
+    --panel: rgba(23, 16, 64, 0.91);
+    --white: #ffffff;
+    --cyan: #69f7ff;
+    --pink: #ff4edb;
+    --green: #7bffb2;
+}
+
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+    -webkit-tap-highlight-color: transparent;
 }
 
 html,
 body {
     width: 100%;
     height: 100%;
+    margin: 0;
     overflow: hidden;
+    background: var(--background);
+    color: var(--white);
+    font-family: Arial, Helvetica, sans-serif;
+    overscroll-behavior: none;
+}
 
-    background: #030604;
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
+body {
     user-select: none;
     -webkit-user-select: none;
-
-    -webkit-tap-highlight-color: transparent;
 }
 
-#game {
-    position: fixed;
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
-    overflow: hidden;
-
-    background:
-        radial-gradient(
-            circle at 50% 42%,
-            #304b34 0%,
-            #17291b 35%,
-            #081109 70%,
-            #020403 100%
-        );
-}
-
-
-/* =================================
-   CANVAS
-================================= */
-
-#canvas {
-    position: absolute;
-
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
-    z-index: 1;
-
-    pointer-events: auto;
-}
-
-
-/* =================================
-   TOP BAR
-================================= */
-
-#topBar {
-    position: absolute;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 82px;
-
-    padding:
-        10px
-        72px
-        8px
-        15px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    z-index: 10;
-
-    pointer-events: none;
-
-    background:
-        linear-gradient(
-            rgba(0,0,0,.72),
-            transparent
-        );
-}
-
-.stat {
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    gap: 3px;
-
-    color:
-        rgba(255,255,255,.55);
-
-    font-size: 9px;
-
-    font-weight: bold;
-
-    letter-spacing: 2px;
-}
-
-.stat strong {
-    color: white;
-
-    font-size: 23px;
-
-    letter-spacing: 0;
-}
-
-
-/* =================================
-   MUSIC
-================================= */
-
-.music-button {
-    position: absolute;
-
-    top: 15px;
-    right: 15px;
-
-    width: 45px;
-    height: 45px;
-
-    border-radius: 50%;
-
-    border:
-        1px solid
-        rgba(255,255,255,.12);
-
-    background:
-        rgba(0,0,0,.55);
-
-    color: white;
-
-    font-size: 19px;
-
-    z-index: 100;
-
+button {
+    color: inherit;
+    font: inherit;
     cursor: pointer;
-
-    pointer-events: auto;
-
+    border: none;
+    outline: none;
     touch-action: manipulation;
 }
 
-
-/* =================================
-   SCREENS
-================================= */
-
-.screen {
-    position: absolute;
-
-    inset: 0;
-
-    z-index: 50;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    padding: 20px;
-
+#game {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    overflow: hidden;
+    isolation: isolate;
     background:
-        radial-gradient(
-            circle,
-            rgba(0,0,0,.02),
-            rgba(0,0,0,.64)
-        );
-
-    pointer-events: auto;
+        radial-gradient(ellipse at 50% 35%,
+            #292060 0%,
+            #151038 42%,
+            #080719 100%);
 }
 
 .hidden {
     display: none !important;
 }
 
-
-/* =================================
-   MENU PANEL
-================================= */
-
-.menu-panel {
-    width: 100%;
-
-    max-width: 390px;
-
-    padding:
-        30px
-        25px
-        28px;
-
-    text-align: center;
-
-    border-radius: 30px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(18,28,20,.97),
-            rgba(4,9,6,.98)
-        );
-
-    border:
-        1px solid
-        rgba(255,255,255,.08);
-
-    box-shadow:
-        0 30px 80px
-        rgba(0,0,0,.75);
-
-    pointer-events: auto;
-}
-
-
-/* =================================
-   NINJA
-================================= */
-
-.ninja-icon {
-    font-size: 65px;
-
-    line-height: 1;
-
-    margin-bottom: 12px;
-}
-
-
-/* =================================
-   TITLE
-================================= */
-
-.title-small {
-    color:
-        rgba(255,255,255,.48);
-
-    font-size: 11px;
-
-    font-weight: bold;
-
-    letter-spacing: 7px;
-}
-
-h1 {
-    color: white;
-
-    font-size: 43px;
-
-    line-height: .95;
-
-    letter-spacing: 3px;
-
-    font-weight: 900;
-}
-
-h1 span {
-    display: block;
-
-    color: #d95038;
-
-    font-size: 47px;
-}
-
-
-/* =================================
-   BLADE
-================================= */
-
-.blade-line {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 10px;
-
-    margin:
-        14px
-        0
-        12px;
-
-    color:
-        rgba(255,255,255,.6);
-}
-
-.blade-line span {
-    width: 70px;
-
-    height: 1px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(255,255,255,.4)
-        );
-}
-
-.blade-line span:last-child {
-    background:
-        linear-gradient(
-            90deg,
-            rgba(255,255,255,.4),
-            transparent
-        );
-}
-
-
-/* =================================
-   TAGLINE
-================================= */
-
-.tagline {
-    color:
-        rgba(255,255,255,.5);
-
-    font-size: 10px;
-
-    letter-spacing: 3px;
-
-    margin-bottom: 25px;
-}
-
-
-/* =================================
-   START BUTTON
-================================= */
-
-.main-button {
-    position: relative;
-
-    z-index: 100;
-
-    width: 100%;
-
-    min-height: 54px;
-
-    border: none;
-
-    border-radius: 30px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #e25b3d,
-            #a92e20
-        );
-
-    color: white;
-
-    font-size: 17px;
-
-    font-weight: 900;
-
-    letter-spacing: 2px;
-
-    cursor: pointer;
-
-    pointer-events: auto;
-
-    touch-action: manipulation;
-
-    -webkit-appearance: none;
-
-    appearance: none;
-
-    box-shadow:
-        0 10px 30px
-        rgba(190,55,35,.4);
-}
-
-.main-button:active {
-    transform: scale(.96);
-}
-
-.hint {
-    color:
-        rgba(255,255,255,.3);
-
-    font-size: 11px;
-
-    margin-top: 13px;
-}
-
-
-/* =================================
-   MODE SCREEN
-================================= */
-
-#modeScreen {
-    z-index: 80;
-
-    pointer-events: auto;
-
-    touch-action: none;
-}
-
-.mode-selection {
-    width: 100%;
-
-    max-width: 450px;
-
-    text-align: center;
-
-    position: relative;
-
-    z-index: 90;
-
-    pointer-events: auto;
-}
-
-
-/* =================================
-   MODE TITLE
-================================= */
-
-.mode-title {
-    color: white;
-
-    font-size: 28px;
-
-    font-weight: 900;
-
-    letter-spacing: 3px;
-
-    margin-bottom: 32px;
-}
-
-.mode-title span {
-    display: block;
-
-    color:
-        rgba(255,255,255,.4);
-
-    font-size: 12px;
-
-    letter-spacing: 6px;
-
-    margin-bottom: 4px;
-}
-
-
-/* =================================
-   RINGS
-================================= */
-
-.mode-rings {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 28px;
-
-    position: relative;
-
-    z-index: 95;
-}
-
-.mode-ring {
-    position: relative;
-
-    width: 160px;
-    height: 160px;
-
-    flex-shrink: 0;
-
-    padding: 0;
-
-    border: none;
-
-    border-radius: 50%;
-
-    background: transparent;
-
-    color: white;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    cursor: pointer;
-
-    pointer-events: auto;
-
-    touch-action: none;
-
-    z-index: 100;
-
-    -webkit-appearance: none;
-
-    appearance: none;
-}
-
-
-/* =================================
-   OUTER RING
-================================= */
-
-.mode-ring::before {
-    content: "";
-
+/* =====================================
+   CANVAS
+===================================== */
+
+#canvas {
     position: absolute;
-
     inset: 0;
-
-    border-radius: 50%;
-
-    border: 2px solid;
-
-    pointer-events: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    touch-action: none;
 }
 
-.mode-ring::after {
-    content: "";
+/* =====================================
+   HUD
+===================================== */
 
+.top-bar {
     position: absolute;
-
-    inset: 9px;
-
-    border-radius: 50%;
-
-    border:
-        1px solid
-        rgba(255,255,255,.25);
-
-    pointer-events: none;
-}
-
-
-/* =================================
-   INNER
-================================= */
-
-.ring-inner {
-    position: relative;
-
-    z-index: 2;
-
-    width: 128px;
-    height: 128px;
-
-    border-radius: 50%;
+    top: max(16px, env(safe-area-inset-top));
+    left: 14px;
+    right: 66px;
+    z-index: 10;
 
     display: flex;
-
-    flex-direction: column;
-
+    justify-content: space-between;
     align-items: center;
-
-    justify-content: center;
-
-    background:
-        rgba(5,14,8,.76);
-
-    border:
-        1px solid
-        rgba(255,255,255,.1);
+    gap: 8px;
 
     pointer-events: none;
 }
 
-
-/* =================================
-   CLASSIC
-================================= */
-
-.classic-ring::before {
-    border-color:
-        rgba(255,72,42,.85);
-
-    background:
-        rgba(255,65,35,.07);
-
-    box-shadow:
-        0 0 8px
-        rgba(255,65,35,.65),
-
-        0 0 25px
-        rgba(255,65,35,.3),
-
-        inset 0 0 25px
-        rgba(255,65,35,.12);
+.hud-item {
+    min-width: 65px;
+    padding: 9px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.17);
+    border-radius: 14px;
+    background: rgba(10, 7, 35, 0.72);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
-
-/* =================================
-   ZEN
-================================= */
-
-.zen-ring::before {
-    border-color:
-        rgba(83,255,119,.85);
-
-    background:
-        rgba(70,255,110,.07);
-
-    box-shadow:
-        0 0 8px
-        rgba(70,255,110,.65),
-
-        0 0 25px
-        rgba(70,255,110,.3),
-
-        inset 0 0 25px
-        rgba(70,255,110,.12);
+.hud-label {
+    display: block;
+    margin-bottom: 4px;
+    color: #aaa5d8;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 2px;
 }
 
-
-/* =================================
-   MODE TEXT
-================================= */
-
-.mode-icon {
-    font-size: 29px;
-
-    margin-bottom: 8px;
+.hud-value {
+    display: block;
+    font-size: 19px;
+    font-weight: 900;
 }
 
-.mode-ring strong {
-    font-size: 14px;
+.combo-hud .hud-value {
+    color: var(--cyan);
+}
 
+#lives {
+    font-size: 15px;
     letter-spacing: 1px;
 }
 
-.mode-ring small {
-    margin-top: 5px;
+/* =====================================
+   MUSIC BUTTON
+===================================== */
 
-    color:
-        rgba(255,255,255,.42);
+.music-button {
+    position: absolute;
+    top: max(15px, env(safe-area-inset-top));
+    right: 14px;
+    z-index: 100;
 
-    font-size: 9px;
+    display: grid;
+    place-items: center;
+    width: 43px;
+    height: 43px;
 
-    letter-spacing: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    background: rgba(28, 21, 68, 0.92);
+
+    font-size: 20px;
+    box-shadow: 0 0 18px rgba(105, 247, 255, 0.12);
 }
 
-
-/* =================================
-   MODE PRESS
-================================= */
-
-.mode-ring:active {
-    transform: scale(.92);
+.music-button:active {
+    transform: scale(0.94);
 }
 
+/* =====================================
+   SCREEN LAYERS
+===================================== */
 
-/* =================================
-   HELP
-================================= */
+.screen {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
 
-.mode-help {
-    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    color:
-        rgba(255,255,255,.42);
+    width: 100%;
+    min-height: 100%;
+    padding:
+        max(68px, env(safe-area-inset-top))
+        20px
+        max(24px, env(safe-area-inset-bottom));
 
-    font-size: 9px;
+    overflow-y: auto;
+    background:
+        radial-gradient(ellipse at 50% 42%,
+            rgba(38, 27, 94, 0.34),
+            rgba(8, 7, 25, 0.35));
 
+    text-align: center;
+}
+
+#menu {
+    z-index: 30;
+}
+
+#modeScreen {
+    z-index: 40;
+    touch-action: pan-y;
+}
+
+#gameOver {
+    z-index: 50;
+}
+
+/* =====================================
+   MAIN MENU
+===================================== */
+
+.menu-panel {
+    width: 100%;
+    max-width: 430px;
+    padding: 24px 18px;
+    animation: panelEnter 0.65s ease both;
+}
+
+.ninja-icon {
+    display: grid;
+    place-items: center;
+    width: 84px;
+    height: 84px;
+    margin: 0 auto 14px;
+
+    border: 1px solid rgba(105, 247, 255, 0.5);
+    border-radius: 28px;
+    background: linear-gradient(
+        145deg,
+        rgba(105, 247, 255, 0.12),
+        rgba(255, 78, 219, 0.12)
+    );
+
+    font-size: 51px;
+    box-shadow:
+        0 0 25px rgba(105, 247, 255, 0.16),
+        inset 0 0 18px rgba(255, 255, 255, 0.04);
+}
+
+.title-small {
+    margin: 0 0 9px;
+    color: #bcb5f7;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 5px;
+}
+
+.game-title {
+    margin: 0;
+    font-size: clamp(36px, 9vw, 59px);
+    line-height: 1;
+    font-weight: 1000;
+    font-style: italic;
+    letter-spacing: -2px;
+    text-shadow: 0 5px 30px rgba(0, 0, 0, 0.4);
+}
+
+.game-title span {
+    display: block;
+    margin-top: 7px;
+    color: var(--cyan);
+    text-shadow:
+        0 0 8px rgba(105, 247, 255, 0.75),
+        0 0 32px rgba(105, 247, 255, 0.3);
+}
+
+.blade-line {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin: 20px 0 13px;
+    color: var(--pink);
+    font-size: 22px;
+}
+
+.blade-line span {
+    width: 68px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--pink));
+}
+
+.blade-line span:last-child {
+    transform: rotate(180deg);
+}
+
+.tagline {
+    margin: 0 0 30px;
+    color: #aaa5d8;
+    font-size: 10px;
+    font-weight: 800;
     letter-spacing: 3px;
 }
 
+/* =====================================
+   BUTTONS
+===================================== */
 
-/* =================================
-   BACK
-================================= */
-
-.back-button {
+.main-button {
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
 
-    z-index: 100;
+    width: 100%;
+    max-width: 320px;
+    min-height: 58px;
+    margin: 0 auto;
 
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 16px;
 
-    background: transparent;
+    background: linear-gradient(105deg, #5b46f4, #c13ff0);
+    color: #fff;
 
-    color:
-        rgba(255,255,255,.42);
-
-    font-size: 11px;
-
+    font-size: 14px;
+    font-weight: 1000;
     letter-spacing: 2px;
 
-    padding: 12px 20px;
+    box-shadow:
+        0 8px 25px rgba(116, 62, 241, 0.32),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
 
-    cursor: pointer;
-
-    pointer-events: auto;
-
-    touch-action: manipulation;
+    transition: transform 0.15s ease, filter 0.15s ease;
 }
 
+.main-button span {
+    font-size: 21px;
+}
 
-/* =================================
+.main-button:hover {
+    filter: brightness(1.13);
+}
+
+.main-button:active {
+    transform: scale(0.97);
+}
+
+.hint {
+    margin: 15px 0 24px;
+    color: #aaa5d8;
+    font-size: 12px;
+}
+
+.menu-decoration {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    font-size: 27px;
+    opacity: 0.85;
+}
+
+.menu-decoration span:nth-child(1) {
+    transform: rotate(-18deg);
+}
+
+.menu-decoration span:nth-child(2) {
+    transform: translateY(-8px) rotate(12deg);
+}
+
+.menu-decoration span:nth-child(3) {
+    transform: rotate(18deg);
+}
+
+/* =====================================
+   MODE SELECTION
+===================================== */
+
+.mode-selection {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+    animation: panelEnter 0.45s ease both;
+}
+
+.mode-heading {
+    margin: 0;
+    font-size: clamp(25px, 6vw, 38px);
+    font-weight: 1000;
+    letter-spacing: -1px;
+}
+
+.mode-heading span {
+    color: var(--cyan);
+}
+
+.mode-description {
+    margin: 12px 0 27px;
+    color: #b6b1db;
+    font-size: 12px;
+}
+
+.mode-rings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(12px, 4vw, 25px);
+    width: 100%;
+}
+
+/* Neon rings */
+
+.mode-ring {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    flex: 0 1 205px;
+    width: min(42vw, 190px);
+    max-width: 190px;
+    aspect-ratio: 1 / 1;
+    min-width: 0;
+
+    padding: 0;
+    border: 2px solid;
+    border-radius: 50%;
+    background: rgba(13, 10, 40, 0.8);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.mode-ring:active {
+    transform: scale(0.94);
+}
+
+.classic-ring {
+    border-color: #ff62d8;
+    box-shadow:
+        0 0 8px rgba(255, 78, 219, 0.8),
+        0 0 24px rgba(255, 78, 219, 0.4),
+        inset 0 0 24px rgba(255, 78, 219, 0.13);
+}
+
+.zen-ring {
+    border-color: #6dffc0;
+    box-shadow:
+        0 0 8px rgba(109, 255, 192, 0.8),
+        0 0 24px rgba(109, 255, 192, 0.4),
+        inset 0 0 24px rgba(109, 255, 192, 0.13);
+}
+
+.classic-ring:hover {
+    background: rgba(255, 78, 219, 0.13);
+    box-shadow:
+        0 0 14px rgba(255, 78, 219, 0.9),
+        0 0 38px rgba(255, 78, 219, 0.5);
+}
+
+.zen-ring:hover {
+    background: rgba(109, 255, 192, 0.13);
+    box-shadow:
+        0 0 14px rgba(109, 255, 192, 0.9),
+        0 0 38px rgba(109, 255, 192, 0.5);
+}
+
+.ring-glow {
+    position: absolute;
+    inset: 9px;
+    border: 1px solid rgba(255, 255, 255, 0.17);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.ring-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    padding: 8px;
+    pointer-events: none;
+}
+
+.mode-icon {
+    margin-bottom: 6px;
+    font-size: clamp(28px, 8vw, 42px);
+}
+
+.ring-content strong {
+    font-size: clamp(14px, 3.8vw, 19px);
+    font-weight: 1000;
+    letter-spacing: 1px;
+}
+
+.ring-content small {
+    margin-top: 3px;
+    color: #b9b3d9;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 4px;
+}
+
+.mode-divider {
+    width: 48px;
+    height: 1px;
+    margin: 10px 0 8px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.mode-detail {
+    margin: 3px 0;
+    color: #d2cdec;
+    font-size: clamp(8px, 2.2vw, 10px);
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.mode-help {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 28px 0 20px;
+
+    color: #c2bde8;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.help-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 8px var(--cyan);
+}
+
+.back-button {
+    display: block;
+    min-height: 42px;
+    margin: 0 auto;
+    padding: 10px 20px;
+
+    border: 1px solid rgba(255, 255, 255, 0.19);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+
+    color: #c4bfe4;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.back-button:active {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+/* =====================================
    GAME OVER
-================================= */
+===================================== */
+
+.game-over-panel {
+    width: 100%;
+    max-width: 360px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 25px;
+    background: var(--panel);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+    animation: panelEnter 0.45s ease both;
+}
+
+.game-over-icon {
+    margin-bottom: 12px;
+    font-size: 54px;
+}
+
+.game-over-title {
+    margin: 5px 0 24px;
+    color: #ff70b9;
+    font-size: clamp(29px, 8vw, 40px);
+    font-weight: 1000;
+}
 
 .final-label {
-    color:
-        rgba(255,255,255,.4);
-
+    margin: 0;
+    color: #b6b1db;
     font-size: 10px;
-
-    letter-spacing: 4px;
-
-    margin-top: 15px;
+    font-weight: 900;
+    letter-spacing: 3px;
 }
 
 .final-score {
-    color: white;
-
-    font-size: 65px;
-
-    font-weight: 900;
-
-    line-height: 1;
-
-    margin:
-        8px 0
-        10px;
+    margin: 8px 0 28px;
+    color: var(--cyan);
+    font-size: 48px;
+    font-weight: 1000;
+    text-shadow: 0 0 25px rgba(105, 247, 255, 0.4);
 }
 
-.final-mode {
-    color: #dc5940;
-
-    font-size: 11px;
-
-    font-weight: bold;
-
-    letter-spacing: 2px;
-
-    margin-bottom: 25px;
+.game-over-panel .main-button {
+    margin-bottom: 12px;
 }
 
+/* =====================================
+   ANIMATIONS
+===================================== */
 
-/* =================================
-   SMALL PHONE
-================================= */
+@keyframes panelEnter {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.98);
+    }
 
-@media (max-width: 390px) {
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* =====================================
+   SMALL MOBILE SCREENS
+===================================== */
+
+@media (max-width: 360px) {
+    .screen {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
 
     .mode-rings {
-        gap: 10px;
+        gap: 9px;
     }
 
     .mode-ring {
-        width: 142px;
-        height: 142px;
+        width: 43vw;
     }
 
-    .ring-inner {
-        width: 113px;
-        height: 113px;
+    .mode-detail {
+        letter-spacing: 0;
     }
 
-    .mode-title {
-        font-size: 24px;
+    .mode-description {
+        margin-bottom: 20px;
+    }
+
+    .mode-help {
+        margin-top: 22px;
+    }
+
+    .hud-item {
+        min-width: 55px;
+        padding: 8px;
     }
 }
+
+@media (max-height: 650px) {
+    .menu-panel {
+        padding: 8px 12px;
+    }
+
+    .ninja-icon {
+        width: 58px;
+        height: 58px;
+        margin-bottom: 8px;
+        border-radius: 19px;
+        font-size: 37px;
+    }
+
+    .tagline {
+        margin-bottom: 17px;
+    }
+
+    .hint {
+        margin-bottom: 12px;
+    }
+
+    .menu-decoration {
+        font-size: 22px;
+    }
+
+    .mode-description {
+        margin-bottom: 15px;
+    }
+
+    .mode-help {
+        margin: 18px 0 12px;
+    }
+
+    .mode-ring {
+        max-width: 165px;
+    }
+}
+```

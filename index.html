@@ -19,10 +19,7 @@
 
 <div id="game">
 
-    <!-- =========================
-         MODE SELECTION
-    ========================== -->
-
+    <!-- MODE SELECT -->
     <section id="modeScreen">
 
         <div class="mode-container">
@@ -34,21 +31,17 @@
             </div>
 
             <h1>
-                CHOOSE
+                CHOOSE<br>
                 <span>YOUR MODE</span>
             </h1>
 
             <p class="instruction">
-                SLICE THROUGH A MODE TO SELECT
+                SELECT YOUR BATTLE
             </p>
-
-
-            <!-- MODE RINGS -->
 
             <div class="mode-rings">
 
                 <!-- CLASSIC -->
-
                 <button
                     id="classicBtn"
                     class="mode-ring classic-ring"
@@ -65,7 +58,7 @@
                         </strong>
 
                         <small>
-                            BOMBS
+                            3 LIVES
                         </small>
 
                     </div>
@@ -74,7 +67,6 @@
 
 
                 <!-- ZEN -->
-
                 <button
                     id="zenBtn"
                     class="mode-ring zen-ring"
@@ -100,22 +92,16 @@
 
             </div>
 
-
-            <div class="slice-hint">
-                <span>↙</span>
-                SWIPE
-                <span>↘</span>
-            </div>
+            <p class="mode-description">
+                TAP A MODE TO BEGIN
+            </p>
 
         </div>
 
     </section>
 
 
-    <!-- =========================
-         GAME
-    ========================== -->
-
+    <!-- GAME -->
     <section id="gameScreen" class="hidden">
 
         <canvas id="canvas"></canvas>
@@ -134,7 +120,9 @@
 
             <div class="hud-box">
                 <small>LIVES</small>
-                <strong id="lives">❤️❤️❤️</strong>
+                <strong id="lives">
+                    ❤️❤️❤️
+                </strong>
             </div>
 
         </div>
@@ -146,10 +134,7 @@
     </section>
 
 
-    <!-- =========================
-         GAME OVER
-    ========================== -->
-
+    <!-- GAME OVER -->
     <section id="gameOver" class="hidden">
 
         <div class="game-over-box">
@@ -188,7 +173,6 @@
 
 
     <!-- MUSIC -->
-
     <audio id="zenMusic" loop preload="auto">
         <source src="zen.mp3" type="audio/mpeg">
     </audio>

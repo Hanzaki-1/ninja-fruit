@@ -1,43 +1,58 @@
 ```javascript
 "use strict";
 
-/* ==========================================
-   NINJA FRUIT
-   MODE SLICE SELECTION
-========================================== */
-
-
-/* ==========================================
+/* =========================
    ELEMENTS
-========================================== */
+========================= */
 
 const modeScreen = document.getElementById("modeScreen");
 
-const classicBtn = document.getElementById("classicBtn");
-const zenBtn = document.getElementById("zenBtn");
+const classicBtn =
+    document.getElementById("classicBtn");
 
-const gameScreen = document.getElementById("gameScreen");
-const gameOver = document.getElementById("gameOver");
+const zenBtn =
+    document.getElementById("zenBtn");
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const gameScreen =
+    document.getElementById("gameScreen");
 
-const scoreText = document.getElementById("score");
-const comboText = document.getElementById("combo");
-const livesText = document.getElementById("lives");
+const gameOver =
+    document.getElementById("gameOver");
 
-const finalScore = document.getElementById("finalScore");
+const canvas =
+    document.getElementById("canvas");
 
-const restartBtn = document.getElementById("restartBtn");
-const menuBtn = document.getElementById("menuBtn");
+const ctx =
+    canvas.getContext("2d");
 
-const musicButton = document.getElementById("musicButton");
-const music = document.getElementById("zenMusic");
+const scoreText =
+    document.getElementById("score");
+
+const comboText =
+    document.getElementById("combo");
+
+const livesText =
+    document.getElementById("lives");
+
+const finalScore =
+    document.getElementById("finalScore");
+
+const restartBtn =
+    document.getElementById("restartBtn");
+
+const menuBtn =
+    document.getElementById("menuBtn");
+
+const musicButton =
+    document.getElementById("musicButton");
+
+const music =
+    document.getElementById("zenMusic");
 
 
-/* ==========================================
+/* =========================
    GAME VARIABLES
-========================================== */
+========================= */
 
 let gameMode = "classic";
 
@@ -60,9 +75,9 @@ let previousPoint = null;
 let musicOn = true;
 
 
-/* ==========================================
+/* =========================
    CANVAS
-========================================== */
+========================= */
 
 function resizeCanvas() {
 
@@ -71,14 +86,17 @@ function resizeCanvas() {
 
 }
 
-window.addEventListener("resize", resizeCanvas);
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
 
 resizeCanvas();
 
 
-/* ==========================================
-   SCREEN FUNCTIONS
-========================================== */
+/* =========================
+   SCREEN CONTROL
+========================= */
 
 function showModeScreen() {
 
@@ -119,98 +137,38 @@ function showGameOver() {
 }
 
 
-/* ==========================================
+/* =========================
    MODE BUTTONS
-========================================== */
+========================= */
 
-classicBtn.addEventListener("click", function () {
+/*
+   ONLY TAP WORKS HERE.
+   NO SWIPE.
+*/
 
-    startGame("classic");
-
-});
-
-
-zenBtn.addEventListener("click", function () {
-
-    startGame("zen");
-
-});
-
-
-/* ==========================================
-   MODE SLICE
-========================================== */
-
-let modeSliceStart = null;
-
-modeScreen.addEventListener("pointerdown", function (event) {
-
-    modeSliceStart = {
-        x: event.clientX,
-        y: event.clientY
-    };
-
-});
-
-
-modeScreen.addEventListener("pointermove", function (event) {
-
-    if (!modeSliceStart) return;
-
-    const dx = event.clientX - modeSliceStart.x;
-    const dy = event.clientY - modeSliceStart.y;
-
-    const distance = Math.sqrt(
-        dx * dx + dy * dy
-    );
-
-    /*
-       Only trigger after a real swipe.
-       This prevents accidental selection.
-    */
-
-    if (distance < 45) return;
-
-
-    /*
-       Determine where the swipe started.
-
-       Left side = CLASSIC
-       Right side = ZEN
-    */
-
-    if (modeSliceStart.x < window.innerWidth / 2) {
+classicBtn.addEventListener(
+    "click",
+    function () {
 
         startGame("classic");
 
-    } else {
+    }
+);
+
+
+zenBtn.addEventListener(
+    "click",
+    function () {
 
         startGame("zen");
 
     }
-
-    modeSliceStart = null;
-
-});
+);
 
 
-modeScreen.addEventListener("pointerup", function () {
-
-    modeSliceStart = null;
-
-});
-
-
-modeScreen.addEventListener("pointercancel", function () {
-
-    modeSliceStart = null;
-
-});
-
-
-/* ==========================================
+/* =========================
    START GAME
-========================================== */
+========================= */
 
 function startGame(mode) {
 
@@ -249,45 +207,57 @@ function startGame(mode) {
 }
 
 
-/* ==========================================
+/* =========================
    MUSIC
-========================================== */
+========================= */
 
 function playMusic() {
 
     if (!musicOn) return;
 
-    music.play().catch(function () {});
+    music.volume = 0.35;
+
+    music.play().catch(() => {});
 
 }
 
 
-musicButton.addEventListener("click", function () {
+function stopMusic() {
 
-    musicOn = !musicOn;
+    music.pause();
 
-    if (musicOn) {
+    music.currentTime = 0;
 
-        musicButton.textContent = "🔊";
+}
 
-        if (running) {
-            music.play().catch(function () {});
+
+musicButton.addEventListener(
+    "click",
+    function () {
+
+        musicOn = !musicOn;
+
+        if (musicOn) {
+
+            musicButton.textContent = "🔊";
+
+            playMusic();
+
+        } else {
+
+            musicButton.textContent = "🔇";
+
+            stopMusic();
+
         }
 
-    } else {
-
-        musicButton.textContent = "🔇";
-
-        music.pause();
-
     }
+);
 
-});
 
-
-/* ==========================================
+/* =========================
    HUD
-========================================== */
+========================= */
 
 function updateHUD() {
 
@@ -296,132 +266,104 @@ function updateHUD() {
     comboText.textContent = combo;
 
     livesText.textContent =
-        "❤️".repeat(Math.max(0, lives));
+        "❤️".repeat(lives);
 
 }
 
 
-/* ==========================================
-   FRUIT DATA
-========================================== */
+/* =========================
+   FRUIT
+========================= */
 
 const fruitTypes = [
-
-    {
-        emoji: "🍉",
-        color: "#ff477e"
-    },
-
-    {
-        emoji: "🍊",
-        color: "#ff9f1c"
-    },
-
-    {
-        emoji: "🍎",
-        color: "#ff3b30"
-    },
-
-    {
-        emoji: "🍍",
-        color: "#ffd60a"
-    },
-
-    {
-        emoji: "🥝",
-        color: "#8ac926"
-    },
-
-    {
-        emoji: "🍑",
-        color: "#ffadad"
-    },
-
-    {
-        emoji: "🍌",
-        color: "#ffe66d"
-    }
-
+    "🍎",
+    "🍊",
+    "🍉",
+    "🍌",
+    "🍓",
+    "🥝",
+    "🍍",
+    "🥥"
 ];
 
 
-/* ==========================================
-   RANDOM
-========================================== */
-
-function random(min, max) {
-
-    return Math.random() * (max - min) + min;
-
-}
-
-
-/* ==========================================
-   SPAWN FRUIT
-========================================== */
-
 function spawnFruit() {
 
-    const fruit =
-        fruitTypes[
-            Math.floor(
-                Math.random() *
-                fruitTypes.length
-            )
-        ];
+    const size = 55;
 
+    const x =
+        Math.random() *
+        (canvas.width - size * 2) +
+        size;
 
-    const bomb =
-        gameMode === "classic" &&
-        Math.random() < 0.14;
+    const y =
+        canvas.height + size;
+
+    const velocityX =
+        (Math.random() - 0.5) * 7;
+
+    const velocityY =
+        -(Math.random() * 9 + 12);
+
+    const gravity = 0.35;
+
+    let isBomb = false;
+
+    if (gameMode === "classic") {
+
+        isBomb =
+            Math.random() < 0.14;
+
+    }
 
 
     fruits.push({
 
-        x: random(
-            35,
-            canvas.width - 35
-        ),
+        x: x,
 
-        y:
-            canvas.height + 50,
+        y: y,
 
-        vx:
-            random(-3, 3),
+        vx: velocityX,
 
-        vy:
-            random(-15, -10),
+        vy: velocityY,
 
-        gravity:
-            0.28,
+        gravity: gravity,
 
-        radius:
-            28,
+        size: size,
 
-        emoji:
-            bomb ? "💣" : fruit.emoji,
+        emoji: isBomb
+            ? "💣"
+            : fruitTypes[
+                Math.floor(
+                    Math.random() *
+                    fruitTypes.length
+                )
+            ],
 
-        color:
-            bomb ? "#777777" : fruit.color,
+        bomb: isBomb,
 
-        bomb:
-            bomb,
-
-        sliced:
-            false
+        sliced: false
 
     });
 
 }
 
 
-/* ==========================================
+/* =========================
    PARTICLES
-========================================== */
+========================= */
 
-function createParticles(x, y, color) {
+function createParticles(
+    x,
+    y,
+    emoji
+) {
 
-    for (let i = 0; i < 15; i++) {
+    for (
+        let i = 0;
+        i < 12;
+        i++
+    ) {
 
         particles.push({
 
@@ -429,13 +371,17 @@ function createParticles(x, y, color) {
 
             y: y,
 
-            vx: random(-5, 5),
+            vx:
+                (Math.random() - 0.5) *
+                8,
 
-            vy: random(-5, 3),
+            vy:
+                (Math.random() - 0.5) *
+                8,
 
             life: 1,
 
-            color: color
+            emoji: emoji
 
         });
 
@@ -444,9 +390,9 @@ function createParticles(x, y, color) {
 }
 
 
-/* ==========================================
+/* =========================
    DISTANCE TO LINE
-========================================== */
+========================= */
 
 function distanceToLine(
     px,
@@ -458,14 +404,10 @@ function distanceToLine(
 ) {
 
     const dx = x2 - x1;
+
     const dy = y2 - y1;
 
-    const length =
-        dx * dx +
-        dy * dy;
-
-
-    if (length === 0) {
+    if (dx === 0 && dy === 0) {
 
         return Math.hypot(
             px - x1,
@@ -474,39 +416,38 @@ function distanceToLine(
 
     }
 
+    const t =
+        (
+            (px - x1) * dx +
+            (py - y1) * dy
+        ) /
+        (dx * dx + dy * dy);
 
-    let t =
-        ((px - x1) * dx +
-        (py - y1) * dy) /
-        length;
+    const clamped =
+        Math.max(
+            0,
+            Math.min(1, t)
+        );
 
+    const cx =
+        x1 + clamped * dx;
 
-    t = Math.max(
-        0,
-        Math.min(1, t)
-    );
-
-
-    const nearestX =
-        x1 + t * dx;
-
-    const nearestY =
-        y1 + t * dy;
-
+    const cy =
+        y1 + clamped * dy;
 
     return Math.hypot(
-        px - nearestX,
-        py - nearestY
+        px - cx,
+        py - cy
     );
 
 }
 
 
-/* ==========================================
+/* =========================
    SLICE FRUIT
-========================================== */
+========================= */
 
-function sliceFruit(
+function checkSlice(
     x1,
     y1,
     x2,
@@ -516,7 +457,6 @@ function sliceFruit(
     for (const fruit of fruits) {
 
         if (fruit.sliced) continue;
-
 
         const distance =
             distanceToLine(
@@ -528,67 +468,65 @@ function sliceFruit(
                 y2
             );
 
-
         if (
-            distance >
-            fruit.radius + 12
-        ) continue;
+            distance <
+            fruit.size * 0.75
+        ) {
 
+            fruit.sliced = true;
 
-        fruit.sliced = true;
+            if (fruit.bomb) {
 
+                lives--;
 
-        createParticles(
-            fruit.x,
-            fruit.y,
-            fruit.color
-        );
+                combo = 0;
 
+                createParticles(
+                    fruit.x,
+                    fruit.y,
+                    "💥"
+                );
 
-        /* BOMB */
+                updateHUD();
 
-        if (fruit.bomb) {
+                if (lives <= 0) {
 
-            lives--;
+                    showGameOver();
 
-            combo = 0;
+                }
 
-            updateHUD();
+            } else {
 
+                score += 10;
 
-            if (lives <= 0) {
+                combo++;
 
-                showGameOver();
+                if (combo >= 3) {
 
-                return;
+                    score += combo * 2;
+
+                }
+
+                createParticles(
+                    fruit.x,
+                    fruit.y,
+                    fruit.emoji
+                );
+
+                updateHUD();
 
             }
 
-            continue;
-
         }
-
-
-        /* FRUIT */
-
-        combo++;
-
-        score +=
-            combo >= 3
-                ? 20
-                : 10;
-
-
-        updateHUD();
 
     }
 
 }
 
 
-/* ==========================================
-   PLAYER SWIPE
-========================================== */
+/* =========================
+   POINTER CONTROLS
+========================= */
 
 canvas.addEventListener(
     "pointerdown",
@@ -606,14 +544,11 @@ canvas.addEventListener(
 
         };
 
+        blade = [
 
-        try {
+            previousPoint
 
-            canvas.setPointerCapture(
-                event.pointerId
-            );
-
-        } catch (error) {}
+        ];
 
     }
 );
@@ -623,14 +558,9 @@ canvas.addEventListener(
     "pointermove",
     function (event) {
 
-        if (
-            !running ||
-            !slicing ||
-            !previousPoint
-        ) return;
+        if (!slicing || !running) return;
 
-
-        const current = {
+        const currentPoint = {
 
             x: event.clientX,
 
@@ -638,38 +568,33 @@ canvas.addEventListener(
 
         };
 
+        if (previousPoint) {
 
-        blade.push({
+            checkSlice(
+                previousPoint.x,
+                previousPoint.y,
+                currentPoint.x,
+                currentPoint.y
+            );
 
-            x: current.x,
+        }
 
-            y: current.y,
+        blade.push(currentPoint);
 
-            life: 1
+        if (blade.length > 12) {
 
-        });
+            blade.shift();
 
+        }
 
-        sliceFruit(
-
-            previousPoint.x,
-
-            previousPoint.y,
-
-            current.x,
-
-            current.y
-
-        );
-
-
-        previousPoint = current;
+        previousPoint =
+            currentPoint;
 
     }
 );
 
 
-function stopSlice() {
+function stopSlicing() {
 
     slicing = false;
 
@@ -680,76 +605,182 @@ function stopSlice() {
 
 canvas.addEventListener(
     "pointerup",
-    stopSlice
+    stopSlicing
 );
 
 canvas.addEventListener(
     "pointercancel",
-    stopSlice
+    stopSlicing
+);
+
+canvas.addEventListener(
+    "pointerleave",
+    stopSlicing
 );
 
 
-/* ==========================================
-   DRAW BACKGROUND
-========================================== */
+/* =========================
+   GAME LOOP
+========================= */
 
-function drawBackground() {
+function gameLoop(time) {
 
-    const gradient =
-        ctx.createLinearGradient(
-            0,
-            0,
-            canvas.width,
-            canvas.height
+    if (!running) return;
+
+    if (!lastTime) {
+
+        lastTime = time;
+
+    }
+
+    const delta =
+        Math.min(
+            (time - lastTime) / 16.67,
+            2
         );
 
+    lastTime = time;
 
-    gradient.addColorStop(
-        0,
-        "#100b2e"
+    update(delta);
+
+    draw();
+
+    requestAnimationFrame(
+        gameLoop
     );
 
-    gradient.addColorStop(
-        0.5,
-        "#191144"
-    );
-
-    gradient.addColorStop(
-        1,
-        "#071a2e"
-    );
+}
 
 
-    ctx.fillStyle = gradient;
+/* =========================
+   UPDATE
+========================= */
 
-    ctx.fillRect(
+function update(delta) {
+
+    spawnTimer += delta;
+
+    const spawnRate =
+        gameMode === "zen"
+            ? 28
+            : 34;
+
+
+    if (spawnTimer > spawnRate) {
+
+        spawnFruit();
+
+        spawnTimer = 0;
+
+    }
+
+
+    for (
+        let i = fruits.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const fruit = fruits[i];
+
+        fruit.vy +=
+            fruit.gravity * delta;
+
+        fruit.x +=
+            fruit.vx * delta;
+
+        fruit.y +=
+            fruit.vy * delta;
+
+
+        if (
+            fruit.y >
+            canvas.height + 100
+        ) {
+
+            if (!fruit.sliced) {
+
+                combo = 0;
+
+                updateHUD();
+
+            }
+
+            fruits.splice(i, 1);
+
+        }
+
+    }
+
+
+    for (
+        let i = particles.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const p = particles[i];
+
+        p.x += p.vx * delta;
+
+        p.y += p.vy * delta;
+
+        p.vy +=
+            0.25 * delta;
+
+        p.life -=
+            0.035 * delta;
+
+
+        if (p.life <= 0) {
+
+            particles.splice(i, 1);
+
+        }
+
+    }
+
+
+    for (const point of blade) {
+
+        point.life =
+            (point.life || 1) -
+            0.08 * delta;
+
+    }
+
+    blade =
+        blade.filter(
+            point => point.life > 0
+        );
+
+}
+
+
+/* =========================
+   DRAW
+========================= */
+
+function draw() {
+
+    ctx.clearRect(
         0,
         0,
         canvas.width,
         canvas.height
     );
 
-}
 
-
-/* ==========================================
-   DRAW FRUIT
-========================================== */
-
-function drawFruits() {
-
-    ctx.textAlign = "center";
-
-    ctx.textBaseline = "middle";
-
+    /* FRUITS */
 
     for (const fruit of fruits) {
 
-        if (fruit.sliced) continue;
+        ctx.font =
+            `${fruit.size}px Arial`;
 
+        ctx.textAlign = "center";
 
-        ctx.font = "48px serif";
-
+        ctx.textBaseline = "middle";
 
         ctx.fillText(
             fruit.emoji,
@@ -759,252 +790,81 @@ function drawFruits() {
 
     }
 
-}
-
-
-/* ==========================================
-   DRAW PARTICLES
-========================================== */
-
-function drawParticles() {
-
-    for (const particle of particles) {
-
-        ctx.save();
-
-        ctx.globalAlpha =
-            Math.max(
-                0,
-                particle.life
-            );
-
-        ctx.fillStyle =
-            particle.color;
-
-
-        ctx.beginPath();
-
-        ctx.arc(
-            particle.x,
-            particle.y,
-            4,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fill();
-
-        ctx.restore();
-
-    }
-
-}
-
-
-/* ==========================================
-   DRAW BLADE
-========================================== */
-
-function drawBlade() {
-
-    if (blade.length < 2) return;
-
-
-    ctx.save();
-
-    ctx.lineCap = "round";
-
-    ctx.lineJoin = "round";
-
-
-    for (
-        let i = 1;
-        i < blade.length;
-        i++
-    ) {
-
-        const a = blade[i - 1];
-
-        const b = blade[i];
-
-
-        ctx.globalAlpha =
-            b.life;
-
-
-        ctx.strokeStyle =
-            "#8ffcff";
-
-        ctx.lineWidth =
-            3 + b.life * 5;
-
-
-        ctx.shadowBlur = 20;
-
-        ctx.shadowColor =
-            "#00eaff";
-
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            a.x,
-            a.y
-        );
-
-        ctx.lineTo(
-            b.x,
-            b.y
-        );
-
-        ctx.stroke();
-
-    }
-
-
-    ctx.restore();
-
-}
-
-
-/* ==========================================
-   GAME LOOP
-========================================== */
-
-function gameLoop(time) {
-
-    if (!running) return;
-
-
-    const delta =
-        lastTime
-            ? Math.min(
-                (time - lastTime) /
-                16.67,
-                2
-            )
-            : 1;
-
-
-    lastTime = time;
-
-
-    drawBackground();
-
-
-    /* SPAWN */
-
-    spawnTimer += delta;
-
-
-    if (spawnTimer > 45) {
-
-        spawnFruit();
-
-        if (Math.random() > 0.55) {
-            spawnFruit();
-        }
-
-        spawnTimer = 0;
-
-    }
-
-
-    /* FRUIT */
-
-    for (const fruit of fruits) {
-
-        if (fruit.sliced) continue;
-
-
-        fruit.x +=
-            fruit.vx * delta;
-
-
-        fruit.y +=
-            fruit.vy * delta;
-
-
-        fruit.vy +=
-            fruit.gravity * delta;
-
-    }
-
-
-    fruits =
-        fruits.filter(
-            fruit =>
-                !fruit.sliced &&
-                fruit.y <
-                canvas.height + 100
-        );
-
 
     /* PARTICLES */
 
-    for (const particle of particles) {
+    for (const p of particles) {
 
-        particle.x +=
-            particle.vx * delta;
+        ctx.globalAlpha =
+            Math.max(0, p.life);
 
-        particle.y +=
-            particle.vy * delta;
+        ctx.font = "24px Arial";
 
-        particle.vy +=
-            0.15 * delta;
-
-        particle.life -=
-            0.025 * delta;
+        ctx.fillText(
+            p.emoji,
+            p.x,
+            p.y
+        );
 
     }
 
-
-    particles =
-        particles.filter(
-            p => p.life > 0
-        );
+    ctx.globalAlpha = 1;
 
 
     /* BLADE */
 
-    for (const point of blade) {
+    if (blade.length > 1) {
 
-        point.life -=
-            0.09 * delta;
+        ctx.beginPath();
 
-    }
-
-
-    blade =
-        blade.filter(
-            point =>
-                point.life > 0
+        ctx.moveTo(
+            blade[0].x,
+            blade[0].y
         );
 
+        for (
+            let i = 1;
+            i < blade.length;
+            i++
+        ) {
 
-    drawFruits();
+            ctx.lineTo(
+                blade[i].x,
+                blade[i].y
+            );
 
-    drawParticles();
+        }
 
-    drawBlade();
+        ctx.strokeStyle =
+            "rgba(255,255,255,0.9)";
 
+        ctx.lineWidth = 5;
 
-    requestAnimationFrame(
-        gameLoop
-    );
+        ctx.lineCap = "round";
+
+        ctx.shadowBlur = 15;
+
+        ctx.shadowColor =
+            "rgba(0,255,255,0.9)";
+
+        ctx.stroke();
+
+        ctx.shadowBlur = 0;
+
+    }
 
 }
 
 
-/* ==========================================
-   GAME OVER BUTTONS
-========================================== */
+/* =========================
+   BUTTONS
+========================= */
 
 restartBtn.addEventListener(
     "click",
     function () {
 
-        showModeScreen();
+        startGame(gameMode);
 
     }
 );
@@ -1014,15 +874,17 @@ menuBtn.addEventListener(
     "click",
     function () {
 
+        stopMusic();
+
         showModeScreen();
 
     }
 );
 
 
-/* ==========================================
-   INITIAL STATE
-========================================== */
+/* =========================
+   START AT MODE SELECT
+========================= */
 
 showModeScreen();
 

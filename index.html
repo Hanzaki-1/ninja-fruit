@@ -1,7 +1,8 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 
 <meta name="viewport"
@@ -13,6 +14,10 @@ user-scalable=no">
 <title>Ninja Fruit</title>
 
 <style>
+
+/* =========================================
+   BASIC
+========================================= */
 
 *{
     box-sizing:border-box;
@@ -39,6 +44,11 @@ body{
     display:none !important;
 }
 
+
+/* =========================================
+   GAME CONTAINER
+========================================= */
+
 #game{
     position:fixed;
     inset:0;
@@ -48,20 +58,22 @@ body{
     background:
         radial-gradient(
             circle at 50% 20%,
-            rgba(120,0,200,.18),
+            rgba(100,0,160,.18),
             transparent 40%
         ),
         #050509;
 }
 
 
-/* =========================
+/* =========================================
    MODE SCREEN
-========================= */
+========================================= */
 
 #modeScreen{
+
     position:fixed;
     inset:0;
+
     z-index:1000;
 
     width:100%;
@@ -94,31 +106,53 @@ body{
 .ninja{
     font-size:48px;
     margin-bottom:8px;
-    animation:ninjaFloat 2s ease-in-out infinite;
+
+    animation:
+        ninjaFloat 2s ease-in-out infinite;
 }
 
 @keyframes ninjaFloat{
-    0%,100%{transform:translateY(0)}
-    50%{transform:translateY(-7px)}
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-7px);
+    }
+
 }
 
 .small-title{
     font-size:10px;
     font-weight:900;
     letter-spacing:4px;
+
     color:rgba(255,255,255,.6);
+
     margin-bottom:10px;
 }
 
 h1{
+
     margin:0;
-    font-size:clamp(32px,8vw,58px);
+
+    font-size:
+        clamp(
+            32px,
+            8vw,
+            58px
+        );
+
     line-height:.95;
+
     font-weight:900;
+
     letter-spacing:2px;
 }
 
 h1 span{
+
     background:
         linear-gradient(
             90deg,
@@ -126,38 +160,57 @@ h1 span{
             #9b5cff,
             #24e9ff
         );
+
     -webkit-background-clip:text;
     background-clip:text;
+
     color:transparent;
 }
 
 .instruction{
-    margin:18px 0 28px;
+
+    margin:
+        18px 0 28px;
+
     font-size:11px;
+
     font-weight:800;
+
     letter-spacing:3px;
-    color:rgba(255,255,255,.5);
+
+    color:
+        rgba(255,255,255,.5);
 }
 
 .mode-rings{
+
     display:flex;
+
     justify-content:center;
+
     align-items:center;
+
     gap:16px;
 }
 
 .mode-ring{
+
     position:relative;
 
     width:42vw;
+
     max-width:190px;
+
     min-width:140px;
+
     aspect-ratio:1/1;
 
     border-radius:50%;
 
     display:flex;
+
     align-items:center;
+
     justify-content:center;
 
     cursor:pointer;
@@ -170,6 +223,7 @@ h1 span{
 }
 
 .classic-ring{
+
     border:5px solid #ff32c8;
 
     box-shadow:
@@ -177,10 +231,12 @@ h1 span{
         0 0 30px rgba(255,50,200,.7),
         0 0 60px rgba(255,50,200,.35);
 
-    animation:pinkPulse 2s infinite;
+    animation:
+        pinkPulse 2s infinite;
 }
 
 .zen-ring{
+
     border:5px solid #34f5b1;
 
     box-shadow:
@@ -188,44 +244,55 @@ h1 span{
         0 0 30px rgba(52,245,177,.7),
         0 0 60px rgba(52,245,177,.3);
 
-    animation:greenPulse 2s infinite;
+    animation:
+        greenPulse 2s infinite;
 }
 
 @keyframes pinkPulse{
+
     0%,100%{
         box-shadow:
-        0 0 10px #ff32c8,
-        0 0 30px rgba(255,50,200,.7);
+            0 0 10px #ff32c8,
+            0 0 30px rgba(255,50,200,.7);
     }
+
     50%{
         box-shadow:
-        0 0 18px #ff32c8,
-        0 0 50px rgba(255,50,200,.9);
+            0 0 18px #ff32c8,
+            0 0 50px rgba(255,50,200,.9);
     }
+
 }
 
 @keyframes greenPulse{
+
     0%,100%{
         box-shadow:
-        0 0 10px #34f5b1,
-        0 0 30px rgba(52,245,177,.7);
+            0 0 10px #34f5b1,
+            0 0 30px rgba(52,245,177,.7);
     }
+
     50%{
         box-shadow:
-        0 0 18px #34f5b1,
-        0 0 50px rgba(52,245,177,.9);
+            0 0 18px #34f5b1,
+            0 0 50px rgba(52,245,177,.9);
     }
+
 }
 
 .inner-ring{
+
     width:78%;
     height:78%;
 
     border-radius:50%;
 
     display:flex;
+
     flex-direction:column;
+
     align-items:center;
+
     justify-content:center;
 
     background:
@@ -244,40 +311,59 @@ h1 span{
 }
 
 .mode-ring strong{
+
     font-size:15px;
+
     font-weight:900;
+
     letter-spacing:2px;
 }
 
 .mode-ring small{
+
     margin-top:4px;
+
     font-size:7px;
+
     font-weight:800;
+
     letter-spacing:1.5px;
-    color:rgba(255,255,255,.5);
+
+    color:
+        rgba(255,255,255,.5);
 }
 
 .mode-ring:active{
+
     transform:scale(.88);
+
     filter:brightness(1.4);
 }
 
 .mode-description{
+
     margin-top:25px;
+
     font-size:9px;
+
     font-weight:800;
+
     letter-spacing:3px;
-    color:rgba(255,255,255,.4);
+
+    color:
+        rgba(255,255,255,.4);
 }
 
 
-/* =========================
-   GAME
-========================= */
+/* =========================================
+   GAME SCREEN
+========================================= */
 
 #gameScreen{
+
     position:fixed;
     inset:0;
+
     z-index:10;
 
     width:100%;
@@ -287,6 +373,7 @@ h1 span{
 }
 
 #canvas{
+
     position:absolute;
     inset:0;
 
@@ -298,22 +385,31 @@ h1 span{
     touch-action:none;
 }
 
+
+/* =========================================
+   HUD
+========================================= */
+
 .hud{
+
     position:absolute;
 
     top:12px;
+
     left:9px;
     right:9px;
 
     z-index:20;
 
     display:flex;
+
     justify-content:space-between;
 
     pointer-events:none;
 }
 
 .hud-box{
+
     min-width:70px;
 
     padding:8px;
@@ -322,38 +418,48 @@ h1 span{
 
     text-align:center;
 
-    background:rgba(10,10,18,.75);
+    background:
+        rgba(10,10,18,.75);
 
     border:
-        1px solid rgba(255,255,255,.1);
+        1px solid
+        rgba(255,255,255,.1);
 
-    backdrop-filter:blur(10px);
+    backdrop-filter:
+        blur(10px);
 }
 
 .hud-box small{
+
     display:block;
 
     font-size:7px;
+
     font-weight:900;
 
     letter-spacing:2px;
 
-    color:rgba(255,255,255,.45);
+    color:
+        rgba(255,255,255,.45);
 }
 
 .hud-box strong{
+
     display:block;
 
     margin-top:3px;
 
     font-size:18px;
+
     font-weight:900;
 }
 
 #musicButton{
+
     position:absolute;
 
     top:72px;
+
     right:10px;
 
     z-index:30;
@@ -364,9 +470,11 @@ h1 span{
     border-radius:50%;
 
     border:
-        1px solid rgba(255,255,255,.12);
+        1px solid
+        rgba(255,255,255,.12);
 
-    background:rgba(10,10,18,.8);
+    background:
+        rgba(10,10,18,.8);
 
     color:white;
 
@@ -374,27 +482,34 @@ h1 span{
 }
 
 
-/* =========================
+/* =========================================
    GAME OVER
-========================= */
+========================================= */
 
 #gameOver{
+
     position:fixed;
+
     inset:0;
 
     z-index:2000;
 
     display:flex;
+
     align-items:center;
+
     justify-content:center;
 
     padding:20px;
 
-    background:rgba(2,2,7,.97);
+    background:
+        rgba(2,2,7,.97);
 }
 
 .game-over-box{
-    width:min(90vw,430px);
+
+    width:
+        min(90vw,430px);
 
     padding:35px 22px;
 
@@ -410,7 +525,8 @@ h1 span{
         );
 
     border:
-        1px solid rgba(255,255,255,.1);
+        1px solid
+        rgba(255,255,255,.1);
 }
 
 .game-over-icon{
@@ -418,27 +534,36 @@ h1 span{
 }
 
 .game-over-box h2{
-    margin:10px 0 20px;
+
+    margin:
+        10px 0 20px;
 
     font-size:36px;
+
     font-weight:900;
 }
 
 .game-over-box p{
+
     margin:0;
 
     font-size:9px;
+
     letter-spacing:3px;
 
-    color:rgba(255,255,255,.45);
+    color:
+        rgba(255,255,255,.45);
 }
 
 #finalScore{
+
     display:block;
 
-    margin:5px 0 25px;
+    margin:
+        5px 0 25px;
 
     font-size:48px;
+
     font-weight:900;
 
     background:
@@ -450,6 +575,7 @@ h1 span{
         );
 
     -webkit-background-clip:text;
+
     background-clip:text;
 
     color:transparent;
@@ -457,6 +583,7 @@ h1 span{
 
 #restartBtn,
 #menuBtn{
+
     width:100%;
 
     min-height:52px;
@@ -466,11 +593,14 @@ h1 span{
     border-radius:14px;
 
     font-size:12px;
+
     font-weight:900;
+
     letter-spacing:2px;
 }
 
 #restartBtn{
+
     color:white;
 
     background:
@@ -482,18 +612,21 @@ h1 span{
 }
 
 #menuBtn{
+
     color:white;
 
-    background:rgba(255,255,255,.07);
+    background:
+        rgba(255,255,255,.07);
 
     border:
-        1px solid rgba(255,255,255,.1);
+        1px solid
+        rgba(255,255,255,.1);
 }
 
 
-/* =========================
-   SMALL PHONES
-========================= */
+/* =========================================
+   SMALL PHONE
+========================================= */
 
 @media(max-width:380px){
 
@@ -524,9 +657,11 @@ h1 span{
     .mode-ring small{
         font-size:6px;
     }
+
 }
 
 </style>
+
 </head>
 
 
@@ -535,15 +670,17 @@ h1 span{
 <div id="game">
 
 
-<!-- =========================
+<!-- =====================================
      MODE SCREEN
-========================= -->
+===================================== -->
 
 <div id="modeScreen">
 
     <div class="mode-container">
 
-        <div class="ninja">🥷</div>
+        <div class="ninja">
+            🥷
+        </div>
 
         <div class="small-title">
             NINJA FRUIT
@@ -562,11 +699,8 @@ h1 span{
         <div class="mode-rings">
 
 
-            <!-- CLASSIC -->
-
             <div
                 class="mode-ring classic-ring"
-                id="classicBtn"
                 onclick="startGame('classic')">
 
                 <div class="inner-ring">
@@ -588,11 +722,8 @@ h1 span{
             </div>
 
 
-            <!-- ZEN -->
-
             <div
                 class="mode-ring zen-ring"
-                id="zenBtn"
                 onclick="startGame('zen')">
 
                 <div class="inner-ring">
@@ -625,9 +756,9 @@ h1 span{
 </div>
 
 
-<!-- =========================
-     GAME SCREEN
-========================= -->
+<!-- =====================================
+     GAME
+===================================== -->
 
 <div id="gameScreen" class="hidden">
 
@@ -684,9 +815,9 @@ h1 span{
 </div>
 
 
-<!-- =========================
+<!-- =====================================
      GAME OVER
-========================= -->
+===================================== -->
 
 <div id="gameOver" class="hidden">
 
@@ -740,53 +871,77 @@ h1 span{
 
 <script>
 
-/* =================================
+/* =========================================
    ELEMENTS
-================================= */
+========================================= */
 
 const modeScreen =
-    document.getElementById("modeScreen");
+    document.getElementById(
+        "modeScreen"
+    );
 
 const gameScreen =
-    document.getElementById("gameScreen");
+    document.getElementById(
+        "gameScreen"
+    );
 
 const gameOver =
-    document.getElementById("gameOver");
+    document.getElementById(
+        "gameOver"
+    );
 
 const canvas =
-    document.getElementById("canvas");
+    document.getElementById(
+        "canvas"
+    );
 
 const ctx =
     canvas.getContext("2d");
 
 const scoreText =
-    document.getElementById("score");
+    document.getElementById(
+        "score"
+    );
 
 const comboText =
-    document.getElementById("combo");
+    document.getElementById(
+        "combo"
+    );
 
 const livesText =
-    document.getElementById("lives");
+    document.getElementById(
+        "lives"
+    );
 
 const finalScore =
-    document.getElementById("finalScore");
+    document.getElementById(
+        "finalScore"
+    );
 
 const music =
-    document.getElementById("zenMusic");
+    document.getElementById(
+        "zenMusic"
+    );
 
 const musicButton =
-    document.getElementById("musicButton");
+    document.getElementById(
+        "musicButton"
+    );
 
 const restartBtn =
-    document.getElementById("restartBtn");
+    document.getElementById(
+        "restartBtn"
+    );
 
 const menuBtn =
-    document.getElementById("menuBtn");
+    document.getElementById(
+        "menuBtn"
+    );
 
 
-/* =================================
-   VARIABLES
-================================= */
+/* =========================================
+   GAME VARIABLES
+========================================= */
 
 let gameMode = "classic";
 
@@ -797,6 +952,8 @@ let combo = 0;
 let lives = 3;
 
 let fruits = [];
+
+let pieces = [];
 
 let particles = [];
 
@@ -815,9 +972,50 @@ let previousPoint = null;
 let musicOn = true;
 
 
-/* =================================
+/* =========================================
+   FRUITS
+========================================= */
+
+const fruitTypes = [
+
+    {
+        emoji:"🍎"
+    },
+
+    {
+        emoji:"🍊"
+    },
+
+    {
+        emoji:"🍉"
+    },
+
+    {
+        emoji:"🍌"
+    },
+
+    {
+        emoji:"🍓"
+    },
+
+    {
+        emoji:"🥝"
+    },
+
+    {
+        emoji:"🍍"
+    },
+
+    {
+        emoji:"🥥"
+    }
+
+];
+
+
+/* =========================================
    CANVAS
-================================= */
+========================================= */
 
 function resizeCanvas(){
 
@@ -837,9 +1035,9 @@ window.addEventListener(
 );
 
 
-/* =================================
+/* =========================================
    START GAME
-================================= */
+========================================= */
 
 function startGame(mode){
 
@@ -853,6 +1051,8 @@ function startGame(mode){
 
     fruits = [];
 
+    pieces = [];
+
     particles = [];
 
     blade = [];
@@ -864,6 +1064,7 @@ function startGame(mode){
     slicing = false;
 
     previousPoint = null;
+
 
     updateHUD();
 
@@ -884,9 +1085,7 @@ function startGame(mode){
     running = true;
 
 
-    if(
-        musicOn
-    ){
+    if(musicOn){
 
         music.volume = .3;
 
@@ -904,9 +1103,9 @@ function startGame(mode){
 }
 
 
-/* =================================
+/* =========================================
    HUD
-================================= */
+========================================= */
 
 function updateHUD(){
 
@@ -918,29 +1117,40 @@ function updateHUD(){
 
     livesText.textContent =
         "❤️".repeat(
-            Math.max(0,lives)
+            Math.max(
+                0,
+                lives
+            )
         );
 
 }
 
 
-/* =================================
-   FRUITS
-================================= */
+/* =========================================
+   LOSE LIFE
+========================================= */
 
-const fruitTypes = [
+function loseLife(){
 
-    "🍎",
-    "🍊",
-    "🍉",
-    "🍌",
-    "🍓",
-    "🥝",
-    "🍍",
-    "🥥"
+    lives--;
 
-];
+    combo = 0;
 
+    updateHUD();
+
+
+    if(lives <= 0){
+
+        endGame();
+
+    }
+
+}
+
+
+/* =========================================
+   SPAWN FRUIT
+========================================= */
 
 function spawnFruit(){
 
@@ -979,6 +1189,11 @@ function spawnFruit(){
     let bomb = false;
 
 
+    /*
+        CLASSIC ONLY
+        14% BOMB CHANCE
+    */
+
     if(
         gameMode === "classic"
     ){
@@ -989,76 +1204,249 @@ function spawnFruit(){
     }
 
 
-    const emoji =
+    const fruit =
+
         bomb
-        ? "💣"
-        : fruitTypes[
-            Math.floor(
-                Math.random() *
-                fruitTypes.length
-            )
-        ];
+
+        ?
+
+        {
+            x:x,
+            y:y,
+
+            vx:vx,
+            vy:vy,
+
+            gravity:.35,
+
+            size:size,
+
+            emoji:"💣",
+
+            bomb:true,
+
+            sliced:false
+
+        }
+
+        :
+
+        {
+            x:x,
+            y:y,
+
+            vx:vx,
+            vy:vy,
+
+            gravity:.35,
+
+            size:size,
+
+            emoji:
+                fruitTypes[
+                    Math.floor(
+                        Math.random() *
+                        fruitTypes.length
+                    )
+                ].emoji,
+
+            bomb:false,
+
+            sliced:false
+
+        };
 
 
-    fruits.push({
+    fruits.push(
+        fruit
+    );
 
-        x,
-        y,
+}
 
-        vx,
-        vy,
 
-        gravity:.35,
+/* =========================================
+   SLICE FRUIT
+========================================= */
 
-        size,
+function sliceFruit(fruit){
 
-        emoji,
+    fruit.sliced = true;
 
-        bomb,
 
-        sliced:false
+    /*
+        BOMB
+        ----------------
+        Cutting bomb = lose life
+    */
+
+    if(fruit.bomb){
+
+        createExplosion(
+            fruit.x,
+            fruit.y
+        );
+
+        loseLife();
+
+        return;
+
+    }
+
+
+    /*
+        NORMAL FRUIT
+        ----------------
+        One fruit becomes TWO pieces.
+    */
+
+    score += 10;
+
+    combo++;
+
+
+    if(combo >= 3){
+
+        score +=
+            combo * 2;
+
+    }
+
+
+    createFruitPieces(
+        fruit
+    );
+
+
+    updateHUD();
+
+}
+
+
+/* =========================================
+   CREATE TWO FRUIT PIECES
+========================================= */
+
+function createFruitPieces(
+    fruit
+){
+
+    const pieceSize =
+        fruit.size * .82;
+
+
+    /*
+        LEFT HALF
+    */
+
+    pieces.push({
+
+        x:fruit.x - 7,
+
+        y:fruit.y,
+
+        vx:
+            fruit.vx - 2.2,
+
+        vy:
+            fruit.vy + 1,
+
+        gravity:.42,
+
+        size:pieceSize,
+
+        emoji:fruit.emoji,
+
+        rotation:
+            -0.25,
+
+        rotationSpeed:
+            -0.08,
+
+        side:"left",
+
+        life:1
+
+    });
+
+
+    /*
+        RIGHT HALF
+    */
+
+    pieces.push({
+
+        x:fruit.x + 7,
+
+        y:fruit.y,
+
+        vx:
+            fruit.vx + 2.2,
+
+        vy:
+            fruit.vy + 1,
+
+        gravity:.42,
+
+        size:pieceSize,
+
+        emoji:fruit.emoji,
+
+        rotation:
+            0.25,
+
+        rotationSpeed:
+            0.08,
+
+        side:"right",
+
+        life:1
 
     });
 
 }
 
 
-/* =================================
-   PARTICLES
-================================= */
+/* =========================================
+   BOMB EXPLOSION
+========================================= */
 
-function createParticles(
+function createExplosion(
     x,
-    y,
-    emoji
+    y
 ){
 
     for(
         let i=0;
-        i<12;
+        i<18;
         i++
     ){
 
         particles.push({
 
-            x,
-            y,
+            x:x,
+
+            y:y,
 
             vx:
                 (
                     Math.random() -
                     .5
-                ) * 8,
+                ) * 12,
 
             vy:
                 (
                     Math.random() -
                     .5
-                ) * 8,
+                ) * 12,
+
+            gravity:.3,
 
             life:1,
 
-            emoji
+            emoji:
+                Math.random() < .5
+                ? "💥"
+                : "🔥"
 
         });
 
@@ -1067,9 +1455,9 @@ function createParticles(
 }
 
 
-/* =================================
-   LINE COLLISION
-================================= */
+/* =========================================
+   SLICE LINE COLLISION
+========================================= */
 
 function distanceToLine(
     px,
@@ -1088,8 +1476,8 @@ function distanceToLine(
 
 
     if(
-        dx===0 &&
-        dy===0
+        dx === 0 &&
+        dy === 0
     ){
 
         return Math.hypot(
@@ -1126,6 +1514,7 @@ function distanceToLine(
         x1 +
         clamped*dx;
 
+
     const closestY =
         y1 +
         clamped*dy;
@@ -1139,9 +1528,9 @@ function distanceToLine(
 }
 
 
-/* =================================
-   SLICE
-================================= */
+/* =========================================
+   CHECK SLICE
+========================================= */
 
 function checkSlice(
     x1,
@@ -1174,67 +1563,12 @@ function checkSlice(
 
         if(
             distance <
-            fruit.size*.75
+            fruit.size * .70
         ){
 
-            fruit.sliced = true;
-
-
-            if(
-                fruit.bomb
-            ){
-
-                lives--;
-
-                combo = 0;
-
-
-                createParticles(
-                    fruit.x,
-                    fruit.y,
-                    "💥"
-                );
-
-
-                updateHUD();
-
-
-                if(
-                    lives<=0
-                ){
-
-                    endGame();
-
-                }
-
-            }
-            else{
-
-                score += 10;
-
-                combo++;
-
-
-                if(
-                    combo>=3
-                ){
-
-                    score +=
-                        combo*2;
-
-                }
-
-
-                createParticles(
-                    fruit.x,
-                    fruit.y,
-                    fruit.emoji
-                );
-
-
-                updateHUD();
-
-            }
+            sliceFruit(
+                fruit
+            );
 
         }
 
@@ -1243,17 +1577,15 @@ function checkSlice(
 }
 
 
-/* =================================
-   TOUCH / POINTER
-================================= */
+/* =========================================
+   POINTER DOWN
+========================================= */
 
 canvas.addEventListener(
     "pointerdown",
     function(e){
 
-        if(
-            !running
-        ){
+        if(!running){
             return;
         }
 
@@ -1264,22 +1596,33 @@ canvas.addEventListener(
         previousPoint = {
 
             x:e.clientX,
+
             y:e.clientY
 
         };
 
 
         blade = [
+
             {
+
                 x:e.clientX,
+
                 y:e.clientY,
+
                 life:1
+
             }
+
         ];
 
     }
 );
 
+
+/* =========================================
+   POINTER MOVE
+========================================= */
 
 canvas.addEventListener(
     "pointermove",
@@ -1289,27 +1632,33 @@ canvas.addEventListener(
             !running ||
             !slicing
         ){
+
             return;
+
         }
 
 
         const current = {
 
             x:e.clientX,
+
             y:e.clientY
 
         };
 
 
-        if(
-            previousPoint
-        ){
+        if(previousPoint){
 
             checkSlice(
+
                 previousPoint.x,
+
                 previousPoint.y,
+
                 current.x,
+
                 current.y
+
             );
 
         }
@@ -1318,14 +1667,16 @@ canvas.addEventListener(
         blade.push({
 
             x:current.x,
+
             y:current.y,
+
             life:1
 
         });
 
 
         if(
-            blade.length>12
+            blade.length > 12
         ){
 
             blade.shift();
@@ -1340,6 +1691,10 @@ canvas.addEventListener(
 );
 
 
+/* =========================================
+   STOP SLICE
+========================================= */
+
 function stopSlicing(){
 
     slicing = false;
@@ -1347,7 +1702,6 @@ function stopSlicing(){
     previousPoint = null;
 
 }
-
 
 canvas.addEventListener(
     "pointerup",
@@ -1365,22 +1719,18 @@ canvas.addEventListener(
 );
 
 
-/* =================================
+/* =========================================
    GAME LOOP
-================================= */
+========================================= */
 
 function gameLoop(time){
 
-    if(
-        !running
-    ){
+    if(!running){
         return;
     }
 
 
-    if(
-        !lastTime
-    ){
+    if(!lastTime){
 
         lastTime = time;
 
@@ -1392,6 +1742,7 @@ function gameLoop(time){
             (
                 time-lastTime
             ) / 16.67,
+
             2
         );
 
@@ -1411,19 +1762,23 @@ function gameLoop(time){
 }
 
 
-/* =================================
+/* =========================================
    UPDATE
-================================= */
+========================================= */
 
 function update(delta){
 
     spawnTimer += delta;
 
 
+    /*
+        Faster spawning over time
+    */
+
     const spawnRate =
         gameMode === "zen"
-        ? 27
-        : 32;
+        ? 25
+        : 30;
 
 
     if(
@@ -1438,9 +1793,16 @@ function update(delta){
     }
 
 
+    /* ==============================
+       ORIGINAL FRUITS
+    ============================== */
+
     for(
-        let i=fruits.length-1;
-        i>=0;
+        let i =
+            fruits.length-1;
+
+        i >= 0;
+
         i--
     ){
 
@@ -1463,18 +1825,31 @@ function update(delta){
             delta;
 
 
+        /*
+            FRUIT FALLS OFF SCREEN
+        */
+
         if(
             fruit.y >
-            canvas.height+100
+            canvas.height + 100
         ){
 
+            /*
+                IMPORTANT:
+                Only a missed NORMAL FRUIT
+                costs a life.
+
+                Bombs that simply fall away
+                do NOT cost a life.
+            */
+
             if(
-                !fruit.sliced
+                !fruit.sliced &&
+                !fruit.bomb &&
+                gameMode === "classic"
             ){
 
-                combo = 0;
-
-                updateHUD();
+                loseLife();
 
             }
 
@@ -1489,9 +1864,74 @@ function update(delta){
     }
 
 
+    /* ==============================
+       SPLIT FRUIT PIECES
+    ============================== */
+
     for(
-        let i=particles.length-1;
-        i>=0;
+        let i =
+            pieces.length-1;
+
+        i >= 0;
+
+        i--
+    ){
+
+        const piece =
+            pieces[i];
+
+
+        piece.vy +=
+            piece.gravity *
+            delta;
+
+
+        piece.x +=
+            piece.vx *
+            delta;
+
+
+        piece.y +=
+            piece.vy *
+            delta;
+
+
+        piece.rotation +=
+            piece.rotationSpeed *
+            delta;
+
+
+        piece.life -=
+            .012 *
+            delta;
+
+
+        if(
+            piece.y >
+                canvas.height + 150 ||
+            piece.life <= 0
+        ){
+
+            pieces.splice(
+                i,
+                1
+            );
+
+        }
+
+    }
+
+
+    /* ==============================
+       EXPLOSION PARTICLES
+    ============================== */
+
+    for(
+        let i =
+            particles.length-1;
+
+        i >= 0;
+
         i--
     ){
 
@@ -1499,21 +1939,28 @@ function update(delta){
             particles[i];
 
 
+        p.vy +=
+            p.gravity *
+            delta;
+
+
         p.x +=
-            p.vx*delta;
+            p.vx *
+            delta;
+
 
         p.y +=
-            p.vy*delta;
+            p.vy *
+            delta;
 
-        p.vy +=
-            .25*delta;
 
         p.life -=
-            .035*delta;
+            .035 *
+            delta;
 
 
         if(
-            p.life<=0
+            p.life <= 0
         ){
 
             particles.splice(
@@ -1526,12 +1973,17 @@ function update(delta){
     }
 
 
+    /* ==============================
+       BLADE
+    ============================== */
+
     for(
         const point of blade
     ){
 
         point.life -=
-            .08*delta;
+            .08 *
+            delta;
 
     }
 
@@ -1539,15 +1991,15 @@ function update(delta){
     blade =
         blade.filter(
             p =>
-                p.life>0
+                p.life > 0
         );
 
 }
 
 
-/* =================================
+/* =========================================
    DRAW
-================================= */
+========================================= */
 
 function draw(){
 
@@ -1559,11 +2011,16 @@ function draw(){
     );
 
 
-    /* FRUITS */
+    /* ==============================
+       ORIGINAL FRUITS
+    ============================== */
 
     for(
         const fruit of fruits
     ){
+
+        ctx.save();
+
 
         ctx.font =
             fruit.size +
@@ -1577,19 +2034,118 @@ function draw(){
 
 
         ctx.fillText(
+
             fruit.emoji,
+
             fruit.x,
+
             fruit.y
+
         );
+
+
+        ctx.restore();
 
     }
 
 
-    /* PARTICLES */
+    /* ==============================
+       CUT FRUIT PIECES
+    ============================== */
+
+    for(
+        const piece of pieces
+    ){
+
+        ctx.save();
+
+
+        ctx.translate(
+            piece.x,
+            piece.y
+        );
+
+
+        ctx.rotate(
+            piece.rotation
+        );
+
+
+        /*
+            Clip each fruit so visually
+            it behaves like two halves.
+        */
+
+        ctx.beginPath();
+
+
+        if(
+            piece.side === "left"
+        ){
+
+            ctx.rect(
+                -piece.size/2,
+                -piece.size/2,
+                piece.size/2,
+                piece.size
+            );
+
+        }
+        else{
+
+            ctx.rect(
+                0,
+                -piece.size/2,
+                piece.size/2,
+                piece.size
+            );
+
+        }
+
+
+        ctx.clip();
+
+
+        ctx.font =
+            piece.size +
+            "px Arial";
+
+        ctx.textAlign =
+            "center";
+
+        ctx.textBaseline =
+            "middle";
+
+
+        ctx.globalAlpha =
+            Math.max(
+                0,
+                piece.life
+            );
+
+
+        ctx.fillText(
+            piece.emoji,
+            0,
+            0
+        );
+
+
+        ctx.restore();
+
+    }
+
+
+    /* ==============================
+       EXPLOSION
+    ============================== */
 
     for(
         const p of particles
     ){
+
+        ctx.save();
+
 
         ctx.globalAlpha =
             Math.max(
@@ -1599,10 +2155,13 @@ function draw(){
 
 
         ctx.font =
-            "24px Arial";
+            "25px Arial";
 
         ctx.textAlign =
             "center";
+
+        ctx.textBaseline =
+            "middle";
 
 
         ctx.fillText(
@@ -1611,17 +2170,25 @@ function draw(){
             p.y
         );
 
+
+        ctx.restore();
+
     }
 
 
     ctx.globalAlpha = 1;
 
 
-    /* BLADE */
+    /* ==============================
+       BLADE
+    ============================== */
 
     if(
-        blade.length>1
+        blade.length > 1
     ){
+
+        ctx.save();
+
 
         ctx.beginPath();
 
@@ -1634,7 +2201,9 @@ function draw(){
 
         for(
             let i=1;
+
             i<blade.length;
+
             i++
         ){
 
@@ -1647,30 +2216,36 @@ function draw(){
 
 
         ctx.strokeStyle =
-            "rgba(255,255,255,.9)";
+            "rgba(255,255,255,.95)";
 
         ctx.lineWidth = 5;
 
         ctx.lineCap =
             "round";
 
+        ctx.lineJoin =
+            "round";
+
+
         ctx.shadowBlur = 15;
 
         ctx.shadowColor =
             "rgba(0,255,255,.9)";
 
+
         ctx.stroke();
 
-        ctx.shadowBlur = 0;
+
+        ctx.restore();
 
     }
 
 }
 
 
-/* =================================
+/* =========================================
    GAME OVER
-================================= */
+========================================= */
 
 function endGame(){
 
@@ -1692,9 +2267,9 @@ function endGame(){
 }
 
 
-/* =================================
+/* =========================================
    RESTART
-================================= */
+========================================= */
 
 restartBtn.onclick =
     function(){
@@ -1706,9 +2281,9 @@ restartBtn.onclick =
     };
 
 
-/* =================================
-   MENU
-================================= */
+/* =========================================
+   MODE MENU
+========================================= */
 
 menuBtn.onclick =
     function(){
@@ -1735,9 +2310,9 @@ menuBtn.onclick =
     };
 
 
-/* =================================
+/* =========================================
    MUSIC
-================================= */
+========================================= */
 
 musicButton.onclick =
     function(e){
@@ -1749,9 +2324,7 @@ musicButton.onclick =
             !musicOn;
 
 
-        if(
-            musicOn
-        ){
+        if(musicOn){
 
             musicButton.textContent =
                 "🔊";
@@ -1778,4 +2351,3 @@ musicButton.onclick =
 
 </body>
 </html>
-```

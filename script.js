@@ -1,58 +1,36 @@
 ```javascript
 "use strict";
 
-/* =========================
-   ELEMENTS
-========================= */
+/* =========================================
+   GET ELEMENTS
+========================================= */
 
 const modeScreen = document.getElementById("modeScreen");
+const gameScreen = document.getElementById("gameScreen");
+const gameOver = document.getElementById("gameOver");
 
-const classicBtn =
-    document.getElementById("classicBtn");
+const classicBtn = document.getElementById("classicBtn");
+const zenBtn = document.getElementById("zenBtn");
 
-const zenBtn =
-    document.getElementById("zenBtn");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-const gameScreen =
-    document.getElementById("gameScreen");
+const scoreText = document.getElementById("score");
+const comboText = document.getElementById("combo");
+const livesText = document.getElementById("lives");
 
-const gameOver =
-    document.getElementById("gameOver");
+const finalScore = document.getElementById("finalScore");
 
-const canvas =
-    document.getElementById("canvas");
+const restartBtn = document.getElementById("restartBtn");
+const menuBtn = document.getElementById("menuBtn");
 
-const ctx =
-    canvas.getContext("2d");
-
-const scoreText =
-    document.getElementById("score");
-
-const comboText =
-    document.getElementById("combo");
-
-const livesText =
-    document.getElementById("lives");
-
-const finalScore =
-    document.getElementById("finalScore");
-
-const restartBtn =
-    document.getElementById("restartBtn");
-
-const menuBtn =
-    document.getElementById("menuBtn");
-
-const musicButton =
-    document.getElementById("musicButton");
-
-const music =
-    document.getElementById("zenMusic");
+const musicButton = document.getElementById("musicButton");
+const music = document.getElementById("zenMusic");
 
 
-/* =========================
+/* =========================================
    GAME VARIABLES
-========================= */
+========================================= */
 
 let gameMode = "classic";
 
@@ -75,9 +53,9 @@ let previousPoint = null;
 let musicOn = true;
 
 
-/* =========================
-   CANVAS
-========================= */
+/* =========================================
+   CANVAS SIZE
+========================================= */
 
 function resizeCanvas() {
 
@@ -86,17 +64,14 @@ function resizeCanvas() {
 
 }
 
-window.addEventListener(
-    "resize",
-    resizeCanvas
-);
+window.addEventListener("resize", resizeCanvas);
 
 resizeCanvas();
 
 
-/* =========================
-   SCREEN CONTROL
-========================= */
+/* =========================================
+   SCREEN FUNCTIONS
+========================================= */
 
 function showModeScreen() {
 
@@ -115,9 +90,9 @@ function showGame() {
 
     modeScreen.classList.add("hidden");
 
-    gameOver.classList.add("hidden");
-
     gameScreen.classList.remove("hidden");
+
+    gameOver.classList.add("hidden");
 
 }
 
@@ -128,49 +103,54 @@ function showGameOver() {
 
     finalScore.textContent = score;
 
-    gameScreen.classList.add("hidden");
-
     modeScreen.classList.add("hidden");
+
+    gameScreen.classList.add("hidden");
 
     gameOver.classList.remove("hidden");
 
 }
 
 
-/* =========================
+/* =========================================
+   IMPORTANT:
    MODE BUTTONS
-========================= */
+========================================= */
 
 /*
-   ONLY TAP WORKS HERE.
+   We are using onclick directly.
+
    NO SWIPE.
+   NO POINTER MOVE.
+   NO SLICE TO SELECT.
 */
 
-classicBtn.addEventListener(
-    "click",
-    function () {
 
-        startGame("classic");
+classicBtn.onclick = function () {
 
-    }
-);
+    console.log("CLASSIC BUTTON CLICKED");
 
+    startGame("classic");
 
-zenBtn.addEventListener(
-    "click",
-    function () {
-
-        startGame("zen");
-
-    }
-);
+};
 
 
-/* =========================
+zenBtn.onclick = function () {
+
+    console.log("ZEN BUTTON CLICKED");
+
+    startGame("zen");
+
+};
+
+
+/* =========================================
    START GAME
-========================= */
+========================================= */
 
 function startGame(mode) {
+
+    console.log("STARTING GAME:", mode);
 
     gameMode = mode;
 
@@ -207,17 +187,23 @@ function startGame(mode) {
 }
 
 
-/* =========================
+/* =========================================
    MUSIC
-========================= */
+========================================= */
 
 function playMusic() {
 
-    if (!musicOn) return;
+    if (!musicOn) {
+        return;
+    }
 
     music.volume = 0.35;
 
-    music.play().catch(() => {});
+    music.play().catch(function () {
+
+        console.log("Music waiting for browser permission");
+
+    });
 
 }
 
@@ -231,33 +217,30 @@ function stopMusic() {
 }
 
 
-musicButton.addEventListener(
-    "click",
-    function () {
+musicButton.onclick = function () {
 
-        musicOn = !musicOn;
+    musicOn = !musicOn;
 
-        if (musicOn) {
+    if (musicOn) {
 
-            musicButton.textContent = "🔊";
+        musicButton.textContent = "🔊";
 
-            playMusic();
+        playMusic();
 
-        } else {
+    } else {
 
-            musicButton.textContent = "🔇";
+        musicButton.textContent = "🔇";
 
-            stopMusic();
-
-        }
+        stopMusic();
 
     }
-);
+
+};
 
 
-/* =========================
+/* =========================================
    HUD
-========================= */
+========================================= */
 
 function updateHUD() {
 
@@ -266,14 +249,14 @@ function updateHUD() {
     comboText.textContent = combo;
 
     livesText.textContent =
-        "❤️".repeat(lives);
+        "❤️".repeat(Math.max(0, lives));
 
 }
 
 
-/* =========================
-   FRUIT
-========================= */
+/* =========================================
+   FRUIT TYPES
+========================================= */
 
 const fruitTypes = [
     "🍎",
@@ -287,6 +270,10 @@ const fruitTypes = [
 ];
 
 
+/* =========================================
+   SPAWN FRUIT
+========================================= */
+
 function spawnFruit() {
 
     const size = 55;
@@ -299,20 +286,36 @@ function spawnFruit() {
     const y =
         canvas.height + size;
 
-    const velocityX =
+    const vx =
         (Math.random() - 0.5) * 7;
 
-    const velocityY =
+    const vy =
         -(Math.random() * 9 + 12);
 
-    const gravity = 0.35;
-
-    let isBomb = false;
+    let bomb = false;
 
     if (gameMode === "classic") {
 
-        isBomb =
-            Math.random() < 0.14;
+        bomb = Math.random() < 0.14;
+
+    }
+
+
+    let emoji;
+
+    if (bomb) {
+
+        emoji = "💣";
+
+    } else {
+
+        emoji =
+            fruitTypes[
+                Math.floor(
+                    Math.random() *
+                    fruitTypes.length
+                )
+            ];
 
     }
 
@@ -323,24 +326,17 @@ function spawnFruit() {
 
         y: y,
 
-        vx: velocityX,
+        vx: vx,
 
-        vy: velocityY,
+        vy: vy,
 
-        gravity: gravity,
+        gravity: 0.35,
 
         size: size,
 
-        emoji: isBomb
-            ? "💣"
-            : fruitTypes[
-                Math.floor(
-                    Math.random() *
-                    fruitTypes.length
-                )
-            ],
+        emoji: emoji,
 
-        bomb: isBomb,
+        bomb: bomb,
 
         sliced: false
 
@@ -349,21 +345,13 @@ function spawnFruit() {
 }
 
 
-/* =========================
+/* =========================================
    PARTICLES
-========================= */
+========================================= */
 
-function createParticles(
-    x,
-    y,
-    emoji
-) {
+function createParticles(x, y, emoji) {
 
-    for (
-        let i = 0;
-        i < 12;
-        i++
-    ) {
+    for (let i = 0; i < 12; i++) {
 
         particles.push({
 
@@ -372,12 +360,10 @@ function createParticles(
             y: y,
 
             vx:
-                (Math.random() - 0.5) *
-                8,
+                (Math.random() - 0.5) * 8,
 
             vy:
-                (Math.random() - 0.5) *
-                8,
+                (Math.random() - 0.5) * 8,
 
             life: 1,
 
@@ -390,9 +376,9 @@ function createParticles(
 }
 
 
-/* =========================
+/* =========================================
    DISTANCE TO LINE
-========================= */
+========================================= */
 
 function distanceToLine(
     px,
@@ -407,6 +393,7 @@ function distanceToLine(
 
     const dy = y2 - y1;
 
+
     if (dx === 0 && dy === 0) {
 
         return Math.hypot(
@@ -416,12 +403,17 @@ function distanceToLine(
 
     }
 
+
     const t =
         (
             (px - x1) * dx +
             (py - y1) * dy
         ) /
-        (dx * dx + dy * dy);
+        (
+            dx * dx +
+            dy * dy
+        );
+
 
     const clamped =
         Math.max(
@@ -429,23 +421,25 @@ function distanceToLine(
             Math.min(1, t)
         );
 
-    const cx =
+
+    const closestX =
         x1 + clamped * dx;
 
-    const cy =
+    const closestY =
         y1 + clamped * dy;
 
+
     return Math.hypot(
-        px - cx,
-        py - cy
+        px - closestX,
+        py - closestY
     );
 
 }
 
 
-/* =========================
-   SLICE FRUIT
-========================= */
+/* =========================================
+   CHECK SLICE
+========================================= */
 
 function checkSlice(
     x1,
@@ -456,7 +450,10 @@ function checkSlice(
 
     for (const fruit of fruits) {
 
-        if (fruit.sliced) continue;
+        if (fruit.sliced) {
+            continue;
+        }
+
 
         const distance =
             distanceToLine(
@@ -468,12 +465,14 @@ function checkSlice(
                 y2
             );
 
+
         if (
             distance <
             fruit.size * 0.75
         ) {
 
             fruit.sliced = true;
+
 
             if (fruit.bomb) {
 
@@ -489,6 +488,7 @@ function checkSlice(
 
                 updateHUD();
 
+
                 if (lives <= 0) {
 
                     showGameOver();
@@ -501,11 +501,13 @@ function checkSlice(
 
                 combo++;
 
+
                 if (combo >= 3) {
 
                     score += combo * 2;
 
                 }
+
 
                 createParticles(
                     fruit.x,
@@ -524,74 +526,72 @@ function checkSlice(
 }
 
 
-/* =========================
-   POINTER CONTROLS
-========================= */
+/* =========================================
+   GAME TOUCH / MOUSE
+========================================= */
 
-canvas.addEventListener(
-    "pointerdown",
-    function (event) {
+canvas.onpointerdown = function (event) {
 
-        if (!running) return;
+    if (!running) {
+        return;
+    }
 
-        slicing = true;
+    slicing = true;
 
-        previousPoint = {
+    previousPoint = {
 
-            x: event.clientX,
+        x: event.clientX,
 
-            y: event.clientY
+        y: event.clientY
 
-        };
+    };
 
-        blade = [
+    blade = [previousPoint];
 
-            previousPoint
+};
 
-        ];
+
+canvas.onpointermove = function (event) {
+
+    if (!slicing || !running) {
+        return;
+    }
+
+
+    const currentPoint = {
+
+        x: event.clientX,
+
+        y: event.clientY
+
+    };
+
+
+    if (previousPoint) {
+
+        checkSlice(
+            previousPoint.x,
+            previousPoint.y,
+            currentPoint.x,
+            currentPoint.y
+        );
 
     }
-);
 
 
-canvas.addEventListener(
-    "pointermove",
-    function (event) {
+    blade.push(currentPoint);
 
-        if (!slicing || !running) return;
 
-        const currentPoint = {
+    if (blade.length > 12) {
 
-            x: event.clientX,
-
-            y: event.clientY
-
-        };
-
-        if (previousPoint) {
-
-            checkSlice(
-                previousPoint.x,
-                previousPoint.y,
-                currentPoint.x,
-                currentPoint.y
-            );
-
-        }
-
-        blade.push(currentPoint);
-
-        if (blade.length > 12) {
-
-            blade.shift();
-
-        }
-
-        previousPoint =
-            currentPoint;
+        blade.shift();
 
     }
-);
+
+
+    previousPoint = currentPoint;
+
+};
 
 
 function stopSlicing() {
@@ -603,29 +603,23 @@ function stopSlicing() {
 }
 
 
-canvas.addEventListener(
-    "pointerup",
-    stopSlicing
-);
+canvas.onpointerup = stopSlicing;
 
-canvas.addEventListener(
-    "pointercancel",
-    stopSlicing
-);
+canvas.onpointercancel = stopSlicing;
 
-canvas.addEventListener(
-    "pointerleave",
-    stopSlicing
-);
+canvas.onpointerleave = stopSlicing;
 
 
-/* =========================
+/* =========================================
    GAME LOOP
-========================= */
+========================================= */
 
 function gameLoop(time) {
 
-    if (!running) return;
+    if (!running) {
+        return;
+    }
+
 
     if (!lastTime) {
 
@@ -633,32 +627,35 @@ function gameLoop(time) {
 
     }
 
+
     const delta =
         Math.min(
             (time - lastTime) / 16.67,
             2
         );
 
+
     lastTime = time;
+
 
     update(delta);
 
     draw();
 
-    requestAnimationFrame(
-        gameLoop
-    );
+
+    requestAnimationFrame(gameLoop);
 
 }
 
 
-/* =========================
+/* =========================================
    UPDATE
-========================= */
+========================================= */
 
 function update(delta) {
 
     spawnTimer += delta;
+
 
     const spawnRate =
         gameMode === "zen"
@@ -683,11 +680,14 @@ function update(delta) {
 
         const fruit = fruits[i];
 
+
         fruit.vy +=
             fruit.gravity * delta;
 
+
         fruit.x +=
             fruit.vx * delta;
+
 
         fruit.y +=
             fruit.vy * delta;
@@ -706,6 +706,7 @@ function update(delta) {
 
             }
 
+
             fruits.splice(i, 1);
 
         }
@@ -721,12 +722,18 @@ function update(delta) {
 
         const p = particles[i];
 
-        p.x += p.vx * delta;
 
-        p.y += p.vy * delta;
+        p.x +=
+            p.vx * delta;
+
+
+        p.y +=
+            p.vy * delta;
+
 
         p.vy +=
             0.25 * delta;
+
 
         p.life -=
             0.035 * delta;
@@ -749,17 +756,22 @@ function update(delta) {
 
     }
 
+
     blade =
         blade.filter(
-            point => point.life > 0
+            function (point) {
+
+                return point.life > 0;
+
+            }
         );
 
 }
 
 
-/* =========================
+/* =========================================
    DRAW
-========================= */
+========================================= */
 
 function draw() {
 
@@ -776,7 +788,7 @@ function draw() {
     for (const fruit of fruits) {
 
         ctx.font =
-            `${fruit.size}px Arial`;
+            fruit.size + "px Arial";
 
         ctx.textAlign = "center";
 
@@ -796,9 +808,15 @@ function draw() {
     for (const p of particles) {
 
         ctx.globalAlpha =
-            Math.max(0, p.life);
+            Math.max(
+                0,
+                p.life
+            );
 
-        ctx.font = "24px Arial";
+        ctx.font =
+            "24px Arial";
+
+        ctx.textAlign = "center";
 
         ctx.fillText(
             p.emoji,
@@ -807,6 +825,7 @@ function draw() {
         );
 
     }
+
 
     ctx.globalAlpha = 1;
 
@@ -817,10 +836,12 @@ function draw() {
 
         ctx.beginPath();
 
+
         ctx.moveTo(
             blade[0].x,
             blade[0].y
         );
+
 
         for (
             let i = 1;
@@ -834,6 +855,7 @@ function draw() {
             );
 
         }
+
 
         ctx.strokeStyle =
             "rgba(255,255,255,0.9)";
@@ -856,39 +878,42 @@ function draw() {
 }
 
 
-/* =========================
-   BUTTONS
-========================= */
+/* =========================================
+   GAME OVER BUTTONS
+========================================= */
 
-restartBtn.addEventListener(
-    "click",
-    function () {
+restartBtn.onclick = function () {
 
-        startGame(gameMode);
+    startGame(gameMode);
 
-    }
-);
+};
 
 
-menuBtn.addEventListener(
-    "click",
-    function () {
+menuBtn.onclick = function () {
 
-        stopMusic();
+    stopMusic();
 
-        showModeScreen();
+    showModeScreen();
 
-    }
-);
+};
 
 
-/* =========================
-   START AT MODE SELECT
-========================= */
+/* =========================================
+   INITIAL SCREEN
+========================================= */
 
 showModeScreen();
 
+
+/* =========================================
+   DEBUG
+========================================= */
+
 console.log(
-    "NINJA FRUIT — MODE SELECT READY"
+    "NINJA FRUIT LOADED SUCCESSFULLY"
+);
+
+console.log(
+    "Tap CLASSIC or ZEN to start."
 );
 ```

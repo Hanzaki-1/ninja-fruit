@@ -3,38 +3,30 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta name="viewport"
-          content="width=device-width,
-                   initial-scale=1.0,
-                   maximum-scale=1.0,
-                   user-scalable=no">
+        content="width=device-width,
+        initial-scale=1.0,
+        maximum-scale=1.0,
+        user-scalable=no">
 
     <title>Ninja Fruit</title>
 
     <link rel="stylesheet" href="style.css">
-
 </head>
-
 
 <body>
 
 <div id="game">
 
+    <!-- MODE SCREEN -->
 
-    <!-- =========================
-         MODE SELECT
-    ========================== -->
-
-    <section id="modeScreen">
+    <div id="modeScreen">
 
         <div class="mode-container">
 
-            <div class="ninja">
-                🥷
-            </div>
+            <div class="ninja">🥷</div>
 
             <div class="small-title">
                 NINJA FRUIT
@@ -46,57 +38,39 @@
             </h1>
 
             <p class="instruction">
-                SELECT YOUR BATTLE
+                TAP TO PLAY
             </p>
-
 
             <div class="mode-rings">
 
-
-                <!-- CLASSIC -->
-
-                <button
-                    id="classicBtn"
+                <div
                     class="mode-ring classic-ring"
-                    type="button"
-                    onclick="startClassic()">
+                    id="classicBtn">
 
                     <div class="inner-ring">
 
-                        <div class="mode-icon">
-                            💣
-                        </div>
+                        <div class="mode-icon">💣</div>
 
-                        <strong>
-                            CLASSIC
-                        </strong>
+                        <strong>CLASSIC</strong>
 
                         <small>
-                            3 LIVES
+                            BOMBS • 3 LIVES
                         </small>
 
                     </div>
 
-                </button>
+                </div>
 
 
-                <!-- ZEN -->
-
-                <button
-                    id="zenBtn"
+                <div
                     class="mode-ring zen-ring"
-                    type="button"
-                    onclick="startZen()">
+                    id="zenBtn">
 
                     <div class="inner-ring">
 
-                        <div class="mode-icon">
-                            🌿
-                        </div>
+                        <div class="mode-icon">🌿</div>
 
-                        <strong>
-                            ZEN
-                        </strong>
+                        <strong>ZEN</strong>
 
                         <small>
                             NO BOMBS
@@ -104,90 +78,54 @@
 
                     </div>
 
-                </button>
+                </div>
 
             </div>
 
-
-            <p class="mode-description">
-                TAP A MODE TO BEGIN
-            </p>
+            <div class="mode-description">
+                CHOOSE YOUR CHALLENGE
+            </div>
 
         </div>
 
-    </section>
+    </div>
 
 
+    <!-- GAME -->
 
-    <!-- =========================
-         GAME SCREEN
-    ========================== -->
-
-    <section
-        id="gameScreen"
-        class="hidden">
+    <div id="gameScreen" class="hidden">
 
         <canvas id="canvas"></canvas>
-
 
         <div class="hud">
 
             <div class="hud-box">
-
-                <small>
-                    SCORE
-                </small>
-
-                <strong id="score">
-                    0
-                </strong>
-
+                <small>SCORE</small>
+                <strong id="score">0</strong>
             </div>
 
-
             <div class="hud-box">
-
-                <small>
-                    COMBO
-                </small>
-
-                <strong id="combo">
-                    0
-                </strong>
-
+                <small>COMBO</small>
+                <strong id="combo">0</strong>
             </div>
 
-
             <div class="hud-box">
-
-                <small>
-                    LIVES
-                </small>
-
-                <strong id="lives">
-                    ❤️❤️❤️
-                </strong>
-
+                <small>LIVES</small>
+                <strong id="lives">❤️❤️❤️</strong>
             </div>
 
         </div>
-
 
         <button id="musicButton">
             🔊
         </button>
 
-    </section>
+    </div>
 
 
+    <!-- GAME OVER -->
 
-    <!-- =========================
-         GAME OVER
-    ========================== -->
-
-    <section
-        id="gameOver"
-        class="hidden">
+    <div id="gameOver" class="hidden">
 
         <div class="game-over-box">
 
@@ -211,52 +149,28 @@
                 0
             </strong>
 
-
-            <button
-                id="restartBtn"
-                onclick="restartGame()">
-
+            <button id="restartBtn">
                 PLAY AGAIN
-
             </button>
 
-
-            <button
-                id="menuBtn"
-                onclick="goToMenu()">
-
+            <button id="menuBtn">
                 MODE SELECT
-
             </button>
 
         </div>
 
-    </section>
+    </div>
 
 
-
-    <!-- MUSIC -->
-
-    <audio
-        id="zenMusic"
-        loop
-        preload="auto">
-
-        <source
-            src="zen.mp3"
-            type="audio/mpeg">
-
+    <audio id="zenMusic" loop preload="auto">
+        <source src="zen.mp3" type="audio/mpeg">
     </audio>
 
 
-    <!-- JAVASCRIPT -->
-
     <script src="./script.js"></script>
-
 
 </div>
 
 </body>
-
 </html>
 ```

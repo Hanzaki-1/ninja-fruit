@@ -1,173 +1,1778 @@
 ```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta name="viewport"
-        content="width=device-width,
-        initial-scale=1.0,
-        maximum-scale=1.0,
-        user-scalable=no">
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no">
 
-    <title>Ninja Fruit</title>
+<title>Ninja Fruit</title>
 
-    <link rel="stylesheet" href="style.css">
+<style>
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+    user-select:none;
+}
+
+html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#050509;
+    font-family:Arial,Helvetica,sans-serif;
+    color:white;
+}
+
+body{
+    touch-action:none;
+}
+
+.hidden{
+    display:none !important;
+}
+
+#game{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100dvh;
+    overflow:hidden;
+    background:
+        radial-gradient(
+            circle at 50% 20%,
+            rgba(120,0,200,.18),
+            transparent 40%
+        ),
+        #050509;
+}
+
+
+/* =========================
+   MODE SCREEN
+========================= */
+
+#modeScreen{
+    position:fixed;
+    inset:0;
+    z-index:1000;
+
+    width:100%;
+    height:100dvh;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            rgba(120,0,200,.20),
+            transparent 40%
+        ),
+        linear-gradient(
+            180deg,
+            #08050e,
+            #030307
+        );
+}
+
+.mode-container{
+    width:100%;
+    padding:20px 14px;
+}
+
+.ninja{
+    font-size:48px;
+    margin-bottom:8px;
+    animation:ninjaFloat 2s ease-in-out infinite;
+}
+
+@keyframes ninjaFloat{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-7px)}
+}
+
+.small-title{
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:4px;
+    color:rgba(255,255,255,.6);
+    margin-bottom:10px;
+}
+
+h1{
+    margin:0;
+    font-size:clamp(32px,8vw,58px);
+    line-height:.95;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+h1 span{
+    background:
+        linear-gradient(
+            90deg,
+            #ff39d4,
+            #9b5cff,
+            #24e9ff
+        );
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+}
+
+.instruction{
+    margin:18px 0 28px;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:3px;
+    color:rgba(255,255,255,.5);
+}
+
+.mode-rings{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:16px;
+}
+
+.mode-ring{
+    position:relative;
+
+    width:42vw;
+    max-width:190px;
+    min-width:140px;
+    aspect-ratio:1/1;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    cursor:pointer;
+
+    transition:
+        transform .12s ease,
+        filter .12s ease;
+
+    touch-action:manipulation;
+}
+
+.classic-ring{
+    border:5px solid #ff32c8;
+
+    box-shadow:
+        0 0 10px #ff32c8,
+        0 0 30px rgba(255,50,200,.7),
+        0 0 60px rgba(255,50,200,.35);
+
+    animation:pinkPulse 2s infinite;
+}
+
+.zen-ring{
+    border:5px solid #34f5b1;
+
+    box-shadow:
+        0 0 10px #34f5b1,
+        0 0 30px rgba(52,245,177,.7),
+        0 0 60px rgba(52,245,177,.3);
+
+    animation:greenPulse 2s infinite;
+}
+
+@keyframes pinkPulse{
+    0%,100%{
+        box-shadow:
+        0 0 10px #ff32c8,
+        0 0 30px rgba(255,50,200,.7);
+    }
+    50%{
+        box-shadow:
+        0 0 18px #ff32c8,
+        0 0 50px rgba(255,50,200,.9);
+    }
+}
+
+@keyframes greenPulse{
+    0%,100%{
+        box-shadow:
+        0 0 10px #34f5b1,
+        0 0 30px rgba(52,245,177,.7);
+    }
+    50%{
+        box-shadow:
+        0 0 18px #34f5b1,
+        0 0 50px rgba(52,245,177,.9);
+    }
+}
+
+.inner-ring{
+    width:78%;
+    height:78%;
+
+    border-radius:50%;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.09),
+            rgba(0,0,0,.4)
+        );
+
+    pointer-events:none;
+}
+
+.mode-icon{
+    font-size:34px;
+    margin-bottom:5px;
+}
+
+.mode-ring strong{
+    font-size:15px;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+.mode-ring small{
+    margin-top:4px;
+    font-size:7px;
+    font-weight:800;
+    letter-spacing:1.5px;
+    color:rgba(255,255,255,.5);
+}
+
+.mode-ring:active{
+    transform:scale(.88);
+    filter:brightness(1.4);
+}
+
+.mode-description{
+    margin-top:25px;
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:3px;
+    color:rgba(255,255,255,.4);
+}
+
+
+/* =========================
+   GAME
+========================= */
+
+#gameScreen{
+    position:fixed;
+    inset:0;
+    z-index:10;
+
+    width:100%;
+    height:100dvh;
+
+    background:#050509;
+}
+
+#canvas{
+    position:absolute;
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    display:block;
+
+    touch-action:none;
+}
+
+.hud{
+    position:absolute;
+
+    top:12px;
+    left:9px;
+    right:9px;
+
+    z-index:20;
+
+    display:flex;
+    justify-content:space-between;
+
+    pointer-events:none;
+}
+
+.hud-box{
+    min-width:70px;
+
+    padding:8px;
+
+    border-radius:12px;
+
+    text-align:center;
+
+    background:rgba(10,10,18,.75);
+
+    border:
+        1px solid rgba(255,255,255,.1);
+
+    backdrop-filter:blur(10px);
+}
+
+.hud-box small{
+    display:block;
+
+    font-size:7px;
+    font-weight:900;
+
+    letter-spacing:2px;
+
+    color:rgba(255,255,255,.45);
+}
+
+.hud-box strong{
+    display:block;
+
+    margin-top:3px;
+
+    font-size:18px;
+    font-weight:900;
+}
+
+#musicButton{
+    position:absolute;
+
+    top:72px;
+    right:10px;
+
+    z-index:30;
+
+    width:42px;
+    height:42px;
+
+    border-radius:50%;
+
+    border:
+        1px solid rgba(255,255,255,.12);
+
+    background:rgba(10,10,18,.8);
+
+    color:white;
+
+    font-size:17px;
+}
+
+
+/* =========================
+   GAME OVER
+========================= */
+
+#gameOver{
+    position:fixed;
+    inset:0;
+
+    z-index:2000;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    background:rgba(2,2,7,.97);
+}
+
+.game-over-box{
+    width:min(90vw,430px);
+
+    padding:35px 22px;
+
+    text-align:center;
+
+    border-radius:24px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #181820,
+            #07070c
+        );
+
+    border:
+        1px solid rgba(255,255,255,.1);
+}
+
+.game-over-icon{
+    font-size:50px;
+}
+
+.game-over-box h2{
+    margin:10px 0 20px;
+
+    font-size:36px;
+    font-weight:900;
+}
+
+.game-over-box p{
+    margin:0;
+
+    font-size:9px;
+    letter-spacing:3px;
+
+    color:rgba(255,255,255,.45);
+}
+
+#finalScore{
+    display:block;
+
+    margin:5px 0 25px;
+
+    font-size:48px;
+    font-weight:900;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff39d4,
+            #9b5cff,
+            #24e9ff
+        );
+
+    -webkit-background-clip:text;
+    background-clip:text;
+
+    color:transparent;
+}
+
+#restartBtn,
+#menuBtn{
+    width:100%;
+
+    min-height:52px;
+
+    margin-top:10px;
+
+    border-radius:14px;
+
+    font-size:12px;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+#restartBtn{
+    color:white;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff32c8,
+            #9b5cff
+        );
+}
+
+#menuBtn{
+    color:white;
+
+    background:rgba(255,255,255,.07);
+
+    border:
+        1px solid rgba(255,255,255,.1);
+}
+
+
+/* =========================
+   SMALL PHONES
+========================= */
+
+@media(max-width:380px){
+
+    .ninja{
+        font-size:38px;
+    }
+
+    h1{
+        font-size:29px;
+    }
+
+    .instruction{
+        margin-bottom:20px;
+    }
+
+    .mode-ring{
+        min-width:125px;
+    }
+
+    .mode-icon{
+        font-size:28px;
+    }
+
+    .mode-ring strong{
+        font-size:13px;
+    }
+
+    .mode-ring small{
+        font-size:6px;
+    }
+}
+
+</style>
 </head>
+
 
 <body>
 
 <div id="game">
 
-    <!-- MODE SCREEN -->
 
-    <div id="modeScreen">
+<!-- =========================
+     MODE SCREEN
+========================= -->
 
-        <div class="mode-container">
+<div id="modeScreen">
 
-            <div class="ninja">🥷</div>
+    <div class="mode-container">
 
-            <div class="small-title">
-                NINJA FRUIT
-            </div>
+        <div class="ninja">🥷</div>
 
-            <h1>
-                CHOOSE<br>
-                <span>YOUR MODE</span>
-            </h1>
+        <div class="small-title">
+            NINJA FRUIT
+        </div>
 
-            <p class="instruction">
-                TAP TO PLAY
-            </p>
+        <h1>
+            CHOOSE<br>
+            <span>YOUR MODE</span>
+        </h1>
 
-            <div class="mode-rings">
+        <div class="instruction">
+            TAP TO PLAY
+        </div>
 
-                <div
-                    class="mode-ring classic-ring"
-                    id="classicBtn">
 
-                    <div class="inner-ring">
+        <div class="mode-rings">
 
-                        <div class="mode-icon">💣</div>
 
-                        <strong>CLASSIC</strong>
+            <!-- CLASSIC -->
 
-                        <small>
-                            BOMBS • 3 LIVES
-                        </small>
+            <div
+                class="mode-ring classic-ring"
+                id="classicBtn"
+                onclick="startGame('classic')">
 
+                <div class="inner-ring">
+
+                    <div class="mode-icon">
+                        💣
                     </div>
 
-                </div>
+                    <strong>
+                        CLASSIC
+                    </strong>
 
-
-                <div
-                    class="mode-ring zen-ring"
-                    id="zenBtn">
-
-                    <div class="inner-ring">
-
-                        <div class="mode-icon">🌿</div>
-
-                        <strong>ZEN</strong>
-
-                        <small>
-                            NO BOMBS
-                        </small>
-
-                    </div>
+                    <small>
+                        BOMBS • 3 LIVES
+                    </small>
 
                 </div>
 
             </div>
 
-            <div class="mode-description">
-                CHOOSE YOUR CHALLENGE
+
+            <!-- ZEN -->
+
+            <div
+                class="mode-ring zen-ring"
+                id="zenBtn"
+                onclick="startGame('zen')">
+
+                <div class="inner-ring">
+
+                    <div class="mode-icon">
+                        🌿
+                    </div>
+
+                    <strong>
+                        ZEN
+                    </strong>
+
+                    <small>
+                        NO BOMBS
+                    </small>
+
+                </div>
+
             </div>
+
+        </div>
+
+
+        <div class="mode-description">
+            CHOOSE YOUR CHALLENGE
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     GAME SCREEN
+========================= -->
+
+<div id="gameScreen" class="hidden">
+
+    <canvas id="canvas"></canvas>
+
+
+    <div class="hud">
+
+        <div class="hud-box">
+
+            <small>
+                SCORE
+            </small>
+
+            <strong id="score">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="hud-box">
+
+            <small>
+                COMBO
+            </small>
+
+            <strong id="combo">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="hud-box">
+
+            <small>
+                LIVES
+            </small>
+
+            <strong id="lives">
+                ❤️❤️❤️
+            </strong>
 
         </div>
 
     </div>
 
 
-    <!-- GAME -->
+    <button id="musicButton">
+        🔊
+    </button>
 
-    <div id="gameScreen" class="hidden">
+</div>
 
-        <canvas id="canvas"></canvas>
 
-        <div class="hud">
+<!-- =========================
+     GAME OVER
+========================= -->
 
-            <div class="hud-box">
-                <small>SCORE</small>
-                <strong id="score">0</strong>
-            </div>
+<div id="gameOver" class="hidden">
 
-            <div class="hud-box">
-                <small>COMBO</small>
-                <strong id="combo">0</strong>
-            </div>
+    <div class="game-over-box">
 
-            <div class="hud-box">
-                <small>LIVES</small>
-                <strong id="lives">❤️❤️❤️</strong>
-            </div>
-
+        <div class="game-over-icon">
+            💥
         </div>
 
-        <button id="musicButton">
-            🔊
+        <div class="small-title">
+            NICE TRY, NINJA
+        </div>
+
+        <h2>
+            GAME OVER
+        </h2>
+
+        <p>
+            FINAL SCORE
+        </p>
+
+        <strong id="finalScore">
+            0
+        </strong>
+
+
+        <button id="restartBtn">
+            PLAY AGAIN
+        </button>
+
+        <button id="menuBtn">
+            MODE SELECT
         </button>
 
     </div>
 
-
-    <!-- GAME OVER -->
-
-    <div id="gameOver" class="hidden">
-
-        <div class="game-over-box">
-
-            <div class="game-over-icon">
-                💥
-            </div>
-
-            <div class="small-title">
-                NICE TRY, NINJA
-            </div>
-
-            <h2>
-                GAME OVER
-            </h2>
-
-            <p>
-                FINAL SCORE
-            </p>
-
-            <strong id="finalScore">
-                0
-            </strong>
-
-            <button id="restartBtn">
-                PLAY AGAIN
-            </button>
-
-            <button id="menuBtn">
-                MODE SELECT
-            </button>
-
-        </div>
-
-    </div>
+</div>
 
 
-    <audio id="zenMusic" loop preload="auto">
-        <source src="zen.mp3" type="audio/mpeg">
-    </audio>
+<audio
+    id="zenMusic"
+    loop
+    preload="auto">
+
+    <source
+        src="zen.mp3"
+        type="audio/mpeg">
+
+</audio>
 
 
-    <script src="./script.js"></script>
+<script>
+
+/* =================================
+   ELEMENTS
+================================= */
+
+const modeScreen =
+    document.getElementById("modeScreen");
+
+const gameScreen =
+    document.getElementById("gameScreen");
+
+const gameOver =
+    document.getElementById("gameOver");
+
+const canvas =
+    document.getElementById("canvas");
+
+const ctx =
+    canvas.getContext("2d");
+
+const scoreText =
+    document.getElementById("score");
+
+const comboText =
+    document.getElementById("combo");
+
+const livesText =
+    document.getElementById("lives");
+
+const finalScore =
+    document.getElementById("finalScore");
+
+const music =
+    document.getElementById("zenMusic");
+
+const musicButton =
+    document.getElementById("musicButton");
+
+const restartBtn =
+    document.getElementById("restartBtn");
+
+const menuBtn =
+    document.getElementById("menuBtn");
+
+
+/* =================================
+   VARIABLES
+================================= */
+
+let gameMode = "classic";
+
+let score = 0;
+
+let combo = 0;
+
+let lives = 3;
+
+let fruits = [];
+
+let particles = [];
+
+let blade = [];
+
+let running = false;
+
+let lastTime = 0;
+
+let spawnTimer = 0;
+
+let slicing = false;
+
+let previousPoint = null;
+
+let musicOn = true;
+
+
+/* =================================
+   CANVAS
+================================= */
+
+function resizeCanvas(){
+
+    canvas.width =
+        window.innerWidth;
+
+    canvas.height =
+        window.innerHeight;
+
+}
+
+resizeCanvas();
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+
+/* =================================
+   START GAME
+================================= */
+
+function startGame(mode){
+
+    gameMode = mode;
+
+    score = 0;
+
+    combo = 0;
+
+    lives = 3;
+
+    fruits = [];
+
+    particles = [];
+
+    blade = [];
+
+    spawnTimer = 0;
+
+    lastTime = 0;
+
+    slicing = false;
+
+    previousPoint = null;
+
+    updateHUD();
+
+
+    modeScreen.classList.add(
+        "hidden"
+    );
+
+    gameOver.classList.add(
+        "hidden"
+    );
+
+    gameScreen.classList.remove(
+        "hidden"
+    );
+
+
+    running = true;
+
+
+    if(
+        musicOn
+    ){
+
+        music.volume = .3;
+
+        music.play().catch(
+            ()=>{}
+        );
+
+    }
+
+
+    requestAnimationFrame(
+        gameLoop
+    );
+
+}
+
+
+/* =================================
+   HUD
+================================= */
+
+function updateHUD(){
+
+    scoreText.textContent =
+        score;
+
+    comboText.textContent =
+        combo;
+
+    livesText.textContent =
+        "❤️".repeat(
+            Math.max(0,lives)
+        );
+
+}
+
+
+/* =================================
+   FRUITS
+================================= */
+
+const fruitTypes = [
+
+    "🍎",
+    "🍊",
+    "🍉",
+    "🍌",
+    "🍓",
+    "🥝",
+    "🍍",
+    "🥥"
+
+];
+
+
+function spawnFruit(){
+
+    const size = 58;
+
+
+    const x =
+        Math.random() *
+        (
+            canvas.width -
+            size * 2
+        )
+        +
+        size;
+
+
+    const y =
+        canvas.height +
+        size;
+
+
+    const vx =
+        (
+            Math.random() -
+            .5
+        ) * 7;
+
+
+    const vy =
+        -(
+            Math.random() * 8 +
+            12
+        );
+
+
+    let bomb = false;
+
+
+    if(
+        gameMode === "classic"
+    ){
+
+        bomb =
+            Math.random() < .14;
+
+    }
+
+
+    const emoji =
+        bomb
+        ? "💣"
+        : fruitTypes[
+            Math.floor(
+                Math.random() *
+                fruitTypes.length
+            )
+        ];
+
+
+    fruits.push({
+
+        x,
+        y,
+
+        vx,
+        vy,
+
+        gravity:.35,
+
+        size,
+
+        emoji,
+
+        bomb,
+
+        sliced:false
+
+    });
+
+}
+
+
+/* =================================
+   PARTICLES
+================================= */
+
+function createParticles(
+    x,
+    y,
+    emoji
+){
+
+    for(
+        let i=0;
+        i<12;
+        i++
+    ){
+
+        particles.push({
+
+            x,
+            y,
+
+            vx:
+                (
+                    Math.random() -
+                    .5
+                ) * 8,
+
+            vy:
+                (
+                    Math.random() -
+                    .5
+                ) * 8,
+
+            life:1,
+
+            emoji
+
+        });
+
+    }
+
+}
+
+
+/* =================================
+   LINE COLLISION
+================================= */
+
+function distanceToLine(
+    px,
+    py,
+    x1,
+    y1,
+    x2,
+    y2
+){
+
+    const dx =
+        x2-x1;
+
+    const dy =
+        y2-y1;
+
+
+    if(
+        dx===0 &&
+        dy===0
+    ){
+
+        return Math.hypot(
+            px-x1,
+            py-y1
+        );
+
+    }
+
+
+    const t =
+        (
+            (px-x1)*dx +
+            (py-y1)*dy
+        )
+        /
+        (
+            dx*dx +
+            dy*dy
+        );
+
+
+    const clamped =
+        Math.max(
+            0,
+            Math.min(
+                1,
+                t
+            )
+        );
+
+
+    const closestX =
+        x1 +
+        clamped*dx;
+
+    const closestY =
+        y1 +
+        clamped*dy;
+
+
+    return Math.hypot(
+        px-closestX,
+        py-closestY
+    );
+
+}
+
+
+/* =================================
+   SLICE
+================================= */
+
+function checkSlice(
+    x1,
+    y1,
+    x2,
+    y2
+){
+
+    for(
+        const fruit of fruits
+    ){
+
+        if(
+            fruit.sliced
+        ){
+            continue;
+        }
+
+
+        const distance =
+            distanceToLine(
+                fruit.x,
+                fruit.y,
+                x1,
+                y1,
+                x2,
+                y2
+            );
+
+
+        if(
+            distance <
+            fruit.size*.75
+        ){
+
+            fruit.sliced = true;
+
+
+            if(
+                fruit.bomb
+            ){
+
+                lives--;
+
+                combo = 0;
+
+
+                createParticles(
+                    fruit.x,
+                    fruit.y,
+                    "💥"
+                );
+
+
+                updateHUD();
+
+
+                if(
+                    lives<=0
+                ){
+
+                    endGame();
+
+                }
+
+            }
+            else{
+
+                score += 10;
+
+                combo++;
+
+
+                if(
+                    combo>=3
+                ){
+
+                    score +=
+                        combo*2;
+
+                }
+
+
+                createParticles(
+                    fruit.x,
+                    fruit.y,
+                    fruit.emoji
+                );
+
+
+                updateHUD();
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* =================================
+   TOUCH / POINTER
+================================= */
+
+canvas.addEventListener(
+    "pointerdown",
+    function(e){
+
+        if(
+            !running
+        ){
+            return;
+        }
+
+
+        slicing = true;
+
+
+        previousPoint = {
+
+            x:e.clientX,
+            y:e.clientY
+
+        };
+
+
+        blade = [
+            {
+                x:e.clientX,
+                y:e.clientY,
+                life:1
+            }
+        ];
+
+    }
+);
+
+
+canvas.addEventListener(
+    "pointermove",
+    function(e){
+
+        if(
+            !running ||
+            !slicing
+        ){
+            return;
+        }
+
+
+        const current = {
+
+            x:e.clientX,
+            y:e.clientY
+
+        };
+
+
+        if(
+            previousPoint
+        ){
+
+            checkSlice(
+                previousPoint.x,
+                previousPoint.y,
+                current.x,
+                current.y
+            );
+
+        }
+
+
+        blade.push({
+
+            x:current.x,
+            y:current.y,
+            life:1
+
+        });
+
+
+        if(
+            blade.length>12
+        ){
+
+            blade.shift();
+
+        }
+
+
+        previousPoint =
+            current;
+
+    }
+);
+
+
+function stopSlicing(){
+
+    slicing = false;
+
+    previousPoint = null;
+
+}
+
+
+canvas.addEventListener(
+    "pointerup",
+    stopSlicing
+);
+
+canvas.addEventListener(
+    "pointercancel",
+    stopSlicing
+);
+
+canvas.addEventListener(
+    "pointerleave",
+    stopSlicing
+);
+
+
+/* =================================
+   GAME LOOP
+================================= */
+
+function gameLoop(time){
+
+    if(
+        !running
+    ){
+        return;
+    }
+
+
+    if(
+        !lastTime
+    ){
+
+        lastTime = time;
+
+    }
+
+
+    const delta =
+        Math.min(
+            (
+                time-lastTime
+            ) / 16.67,
+            2
+        );
+
+
+    lastTime = time;
+
+
+    update(delta);
+
+    draw();
+
+
+    requestAnimationFrame(
+        gameLoop
+    );
+
+}
+
+
+/* =================================
+   UPDATE
+================================= */
+
+function update(delta){
+
+    spawnTimer += delta;
+
+
+    const spawnRate =
+        gameMode === "zen"
+        ? 27
+        : 32;
+
+
+    if(
+        spawnTimer >
+        spawnRate
+    ){
+
+        spawnFruit();
+
+        spawnTimer = 0;
+
+    }
+
+
+    for(
+        let i=fruits.length-1;
+        i>=0;
+        i--
+    ){
+
+        const fruit =
+            fruits[i];
+
+
+        fruit.vy +=
+            fruit.gravity *
+            delta;
+
+
+        fruit.x +=
+            fruit.vx *
+            delta;
+
+
+        fruit.y +=
+            fruit.vy *
+            delta;
+
+
+        if(
+            fruit.y >
+            canvas.height+100
+        ){
+
+            if(
+                !fruit.sliced
+            ){
+
+                combo = 0;
+
+                updateHUD();
+
+            }
+
+
+            fruits.splice(
+                i,
+                1
+            );
+
+        }
+
+    }
+
+
+    for(
+        let i=particles.length-1;
+        i>=0;
+        i--
+    ){
+
+        const p =
+            particles[i];
+
+
+        p.x +=
+            p.vx*delta;
+
+        p.y +=
+            p.vy*delta;
+
+        p.vy +=
+            .25*delta;
+
+        p.life -=
+            .035*delta;
+
+
+        if(
+            p.life<=0
+        ){
+
+            particles.splice(
+                i,
+                1
+            );
+
+        }
+
+    }
+
+
+    for(
+        const point of blade
+    ){
+
+        point.life -=
+            .08*delta;
+
+    }
+
+
+    blade =
+        blade.filter(
+            p =>
+                p.life>0
+        );
+
+}
+
+
+/* =================================
+   DRAW
+================================= */
+
+function draw(){
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    /* FRUITS */
+
+    for(
+        const fruit of fruits
+    ){
+
+        ctx.font =
+            fruit.size +
+            "px Arial";
+
+        ctx.textAlign =
+            "center";
+
+        ctx.textBaseline =
+            "middle";
+
+
+        ctx.fillText(
+            fruit.emoji,
+            fruit.x,
+            fruit.y
+        );
+
+    }
+
+
+    /* PARTICLES */
+
+    for(
+        const p of particles
+    ){
+
+        ctx.globalAlpha =
+            Math.max(
+                0,
+                p.life
+            );
+
+
+        ctx.font =
+            "24px Arial";
+
+        ctx.textAlign =
+            "center";
+
+
+        ctx.fillText(
+            p.emoji,
+            p.x,
+            p.y
+        );
+
+    }
+
+
+    ctx.globalAlpha = 1;
+
+
+    /* BLADE */
+
+    if(
+        blade.length>1
+    ){
+
+        ctx.beginPath();
+
+
+        ctx.moveTo(
+            blade[0].x,
+            blade[0].y
+        );
+
+
+        for(
+            let i=1;
+            i<blade.length;
+            i++
+        ){
+
+            ctx.lineTo(
+                blade[i].x,
+                blade[i].y
+            );
+
+        }
+
+
+        ctx.strokeStyle =
+            "rgba(255,255,255,.9)";
+
+        ctx.lineWidth = 5;
+
+        ctx.lineCap =
+            "round";
+
+        ctx.shadowBlur = 15;
+
+        ctx.shadowColor =
+            "rgba(0,255,255,.9)";
+
+        ctx.stroke();
+
+        ctx.shadowBlur = 0;
+
+    }
+
+}
+
+
+/* =================================
+   GAME OVER
+================================= */
+
+function endGame(){
+
+    running = false;
+
+
+    finalScore.textContent =
+        score;
+
+
+    gameScreen.classList.add(
+        "hidden"
+    );
+
+    gameOver.classList.remove(
+        "hidden"
+    );
+
+}
+
+
+/* =================================
+   RESTART
+================================= */
+
+restartBtn.onclick =
+    function(){
+
+        startGame(
+            gameMode
+        );
+
+    };
+
+
+/* =================================
+   MENU
+================================= */
+
+menuBtn.onclick =
+    function(){
+
+        running = false;
+
+        music.pause();
+
+        music.currentTime = 0;
+
+
+        gameOver.classList.add(
+            "hidden"
+        );
+
+        gameScreen.classList.add(
+            "hidden"
+        );
+
+        modeScreen.classList.remove(
+            "hidden"
+        );
+
+    };
+
+
+/* =================================
+   MUSIC
+================================= */
+
+musicButton.onclick =
+    function(e){
+
+        e.stopPropagation();
+
+
+        musicOn =
+            !musicOn;
+
+
+        if(
+            musicOn
+        ){
+
+            musicButton.textContent =
+                "🔊";
+
+            music.play().catch(
+                ()=>{}
+            );
+
+        }
+        else{
+
+            musicButton.textContent =
+                "🔇";
+
+            music.pause();
+
+        }
+
+    };
+
+</script>
 
 </div>
 

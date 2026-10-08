@@ -1,7 +1,9 @@
 ```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta name="viewport"
@@ -13,18 +15,26 @@
     <title>Ninja Fruit</title>
 
     <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
 <div id="game">
 
-    <!-- MODE SELECT -->
+
+    <!-- =========================
+         MODE SELECT
+    ========================== -->
+
     <section id="modeScreen">
 
         <div class="mode-container">
 
-            <div class="ninja">🥷</div>
+            <div class="ninja">
+                🥷
+            </div>
 
             <div class="small-title">
                 NINJA FRUIT
@@ -39,13 +49,17 @@
                 SELECT YOUR BATTLE
             </p>
 
+
             <div class="mode-rings">
 
+
                 <!-- CLASSIC -->
+
                 <button
                     id="classicBtn"
                     class="mode-ring classic-ring"
-                    type="button">
+                    type="button"
+                    onclick="startClassic()">
 
                     <div class="inner-ring">
 
@@ -67,10 +81,12 @@
 
 
                 <!-- ZEN -->
+
                 <button
                     id="zenBtn"
                     class="mode-ring zen-ring"
-                    type="button">
+                    type="button"
+                    onclick="startZen()">
 
                     <div class="inner-ring">
 
@@ -92,6 +108,7 @@
 
             </div>
 
+
             <p class="mode-description">
                 TAP A MODE TO BEGIN
             </p>
@@ -101,31 +118,60 @@
     </section>
 
 
-    <!-- GAME -->
-    <section id="gameScreen" class="hidden">
+
+    <!-- =========================
+         GAME SCREEN
+    ========================== -->
+
+    <section
+        id="gameScreen"
+        class="hidden">
 
         <canvas id="canvas"></canvas>
+
 
         <div class="hud">
 
             <div class="hud-box">
-                <small>SCORE</small>
-                <strong id="score">0</strong>
+
+                <small>
+                    SCORE
+                </small>
+
+                <strong id="score">
+                    0
+                </strong>
+
             </div>
 
-            <div class="hud-box">
-                <small>COMBO</small>
-                <strong id="combo">0</strong>
-            </div>
 
             <div class="hud-box">
-                <small>LIVES</small>
+
+                <small>
+                    COMBO
+                </small>
+
+                <strong id="combo">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="hud-box">
+
+                <small>
+                    LIVES
+                </small>
+
                 <strong id="lives">
                     ❤️❤️❤️
                 </strong>
+
             </div>
 
         </div>
+
 
         <button id="musicButton">
             🔊
@@ -134,8 +180,14 @@
     </section>
 
 
-    <!-- GAME OVER -->
-    <section id="gameOver" class="hidden">
+
+    <!-- =========================
+         GAME OVER
+    ========================== -->
+
+    <section
+        id="gameOver"
+        class="hidden">
 
         <div class="game-over-box">
 
@@ -159,12 +211,22 @@
                 0
             </strong>
 
-            <button id="restartBtn">
+
+            <button
+                id="restartBtn"
+                onclick="restartGame()">
+
                 PLAY AGAIN
+
             </button>
 
-            <button id="menuBtn">
+
+            <button
+                id="menuBtn"
+                onclick="goToMenu()">
+
                 MODE SELECT
+
             </button>
 
         </div>
@@ -172,16 +234,29 @@
     </section>
 
 
+
     <!-- MUSIC -->
-    <audio id="zenMusic" loop preload="auto">
-        <source src="zen.mp3" type="audio/mpeg">
+
+    <audio
+        id="zenMusic"
+        loop
+        preload="auto">
+
+        <source
+            src="zen.mp3"
+            type="audio/mpeg">
+
     </audio>
 
 
-    <script src="script.js"></script>
+    <!-- JAVASCRIPT -->
+
+    <script src="./script.js"></script>
+
 
 </div>
 
 </body>
+
 </html>
 ```

@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
 
     <meta name="viewport"
-          content="width=device-width, initial-scale=1.0,
-                   maximum-scale=1.0, user-scalable=no">
+          content="width=device-width,
+                   initial-scale=1.0,
+                   maximum-scale=1.0,
+                   user-scalable=no">
 
     <title>Ninja Fruit</title>
 
@@ -15,113 +17,123 @@
 
 <body>
 
-    <!-- MAIN MENU -->
-    <div id="menu" class="screen">
-        <div class="menu-box">
+<div id="game">
+
+    <!-- =========================
+         MODE SELECTION
+    ========================== -->
+
+    <section id="modeScreen">
+
+        <div class="mode-container">
 
             <div class="ninja">🥷</div>
 
-            <div class="small-title">THE ULTIMATE</div>
+            <div class="small-title">
+                NINJA FRUIT
+            </div>
 
             <h1>
-                NINJA
-                <span>FRUIT</span>
+                CHOOSE
+                <span>YOUR MODE</span>
             </h1>
 
-            <div class="line">⚔</div>
-
-            <p>SLICE • COMBO • SURVIVE</p>
-
-            <!-- IMPORTANT: THIS IS THE START BUTTON -->
-            <button id="startBtn" type="button">
-                START GAME
-                <span>➜</span>
-            </button>
-
-            <small>
-                Tap to choose your mode
-            </small>
-
-        </div>
-    </div>
-
-
-    <!-- MODE SCREEN -->
-    <div id="modeScreen" class="screen hidden">
-
-        <div class="mode-box">
-
-            <div class="small-title">
-                READY YOUR BLADE
-            </div>
-
-            <h2>
-                CHOOSE <span>YOUR MODE</span>
-            </h2>
-
-            <p>
-                Tap a mode to start
+            <p class="instruction">
+                SLICE THROUGH A MODE TO SELECT
             </p>
 
-            <div class="modes">
 
-                <button id="classicBtn"
-                        class="mode classic"
-                        type="button">
+            <!-- MODE RINGS -->
 
-                    <div class="mode-icon">💣</div>
+            <div class="mode-rings">
 
-                    <strong>CLASSIC</strong>
+                <!-- CLASSIC -->
 
-                    <small>3 LIVES • BOMBS</small>
+                <button
+                    id="classicBtn"
+                    class="mode-ring classic-ring"
+                    type="button">
+
+                    <div class="inner-ring">
+
+                        <div class="mode-icon">
+                            💣
+                        </div>
+
+                        <strong>
+                            CLASSIC
+                        </strong>
+
+                        <small>
+                            BOMBS
+                        </small>
+
+                    </div>
 
                 </button>
 
 
-                <button id="zenBtn"
-                        class="mode zen"
-                        type="button">
+                <!-- ZEN -->
 
-                    <div class="mode-icon">🌿</div>
+                <button
+                    id="zenBtn"
+                    class="mode-ring zen-ring"
+                    type="button">
 
-                    <strong>ZEN</strong>
+                    <div class="inner-ring">
 
-                    <small>NO BOMBS</small>
+                        <div class="mode-icon">
+                            🌿
+                        </div>
+
+                        <strong>
+                            ZEN
+                        </strong>
+
+                        <small>
+                            NO BOMBS
+                        </small>
+
+                    </div>
 
                 </button>
 
             </div>
 
-            <button id="backBtn"
-                    class="back"
-                    type="button">
-                ← BACK
-            </button>
+
+            <div class="slice-hint">
+                <span>↙</span>
+                SWIPE
+                <span>↘</span>
+            </div>
 
         </div>
 
-    </div>
+    </section>
 
 
-    <!-- GAME -->
-    <div id="gameScreen" class="hidden">
+    <!-- =========================
+         GAME
+    ========================== -->
+
+    <section id="gameScreen" class="hidden">
 
         <canvas id="canvas"></canvas>
 
         <div class="hud">
 
-            <div>
-                SCORE
+            <div class="hud-box">
+                <small>SCORE</small>
                 <strong id="score">0</strong>
             </div>
 
-            <div>
-                COMBO
+            <div class="hud-box">
+                <small>COMBO</small>
                 <strong id="combo">0</strong>
             </div>
 
-            <div>
-                LIVES
+            <div class="hud-box">
+                <small>LIVES</small>
                 <strong id="lives">❤️❤️❤️</strong>
             </div>
 
@@ -131,41 +143,60 @@
             🔊
         </button>
 
-    </div>
+    </section>
 
 
-    <!-- GAME OVER -->
-    <div id="gameOver" class="screen hidden">
+    <!-- =========================
+         GAME OVER
+    ========================== -->
 
-        <div class="game-over">
+    <section id="gameOver" class="hidden">
 
-            <div class="ninja">💥</div>
+        <div class="game-over-box">
+
+            <div class="game-over-icon">
+                💥
+            </div>
 
             <div class="small-title">
                 NICE TRY, NINJA
             </div>
 
-            <h2>GAME OVER</h2>
+            <h2>
+                GAME OVER
+            </h2>
 
-            <p>FINAL SCORE</p>
+            <p>
+                FINAL SCORE
+            </p>
 
-            <strong id="finalScore">0</strong>
+            <strong id="finalScore">
+                0
+            </strong>
 
             <button id="restartBtn">
-                PLAY AGAIN ↻
+                PLAY AGAIN
             </button>
 
-            <button id="menuBtn" class="back">
-                MAIN MENU
+            <button id="menuBtn">
+                MODE SELECT
             </button>
 
         </div>
 
-    </div>
+    </section>
 
 
-    <!-- JAVASCRIPT -->
+    <!-- MUSIC -->
+
+    <audio id="zenMusic" loop preload="auto">
+        <source src="zen.mp3" type="audio/mpeg">
+    </audio>
+
+
     <script src="script.js"></script>
+
+</div>
 
 </body>
 </html>
